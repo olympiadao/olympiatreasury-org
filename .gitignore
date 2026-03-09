@@ -33,7 +33,17 @@ yarn-error.log*
 .env.*
 !.env.example
 *.key
+*.p12
+*.pfx
 credentials.json
+service-account.json
+secrets/
+keystore/
+*.keystore
+wallet.json
+mnemonic.txt
+*.scratch.*
+*.draft.*
 
 # Claude internal
 .claude/SESSION_NOTES.md

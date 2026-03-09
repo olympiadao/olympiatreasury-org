@@ -75,3 +75,21 @@ All copy from `/media/dev/2tb/dev/olympiadao/olympia-framework/README.md`
 - Commit secrets
 - Add R3F, GSAP, or Lenis (CSS transitions only)
 - Use colors outside the Olympia palette
+
+## Protected Files
+
+Modify with care — these affect the entire site:
+- `app/globals.css` — design tokens and Tailwind theme
+- `app/layout.tsx` — root layout, fonts, metadata
+- `public/logo.svg` — brand logomark (do not regenerate)
+- `tsconfig.json`, `next.config.ts` — build configuration
+
+## Validation
+
+Before every commit:
+
+```bash
+pnpm lint && pnpm typecheck && pnpm build
+```
+
+All three must pass.
