@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* ==========================================
+   Olympia Treasury Design Tokens
+   ========================================== */
+
+:root {
+  /* Brand */
+  --brand-green: #00ffae;
+  --brand-green-hover: #14f1b4;
+  --brand-green-active: #00cc8a;
+  --brand-green-muted: #007a53;
+  --brand-green-subtle: rgba(0, 255, 174, 0.08);
+  --brand-green-glow: rgba(0, 255, 174, 0.4);
+  --brand-amber: #F59E0B;
+  --brand-amber-subtle: rgba(245, 158, 11, 0.08);
+  --brand-amber-border: rgba(245, 158, 11, 0.3);
+
+  /* Backgrounds */
+  --background: #0a0f10;
+  --foreground: #ffffff;
+  --bg-surface: #0f1614;
+  --bg-elevated: #162420;
+  --bg-overlay: rgba(10, 15, 16, 0.85);
+  --bg-card: rgba(0, 0, 0, 0.35);
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #c3c5cb;
+  --text-muted: #9ca3af;
+  --text-subtle: #6b7280;
+
+  /* Borders */
+  --border-default: #1f292b;
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-brand: rgba(0, 255, 174, 0.3);
+
+  /* Semantic */
+  --color-success: #00ffae;
+  --color-error: #ef4444;
+  --color-warning: #F59E0B;
+  --color-info: #38bdf8;
+
+  /* Card */
+  --card-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  --card-hover-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-hover: var(--brand-green-hover);
+  --color-brand-green-subtle: var(--brand-green-subtle);
+  --color-brand-amber: var(--brand-amber);
+  --color-brand-amber-subtle: var(--brand-amber-subtle);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-card: var(--bg-card);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-brand: var(--border-brand);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--brand-green);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--brand-green-glow);
+  color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
