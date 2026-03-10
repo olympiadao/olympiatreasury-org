@@ -54,7 +54,7 @@ All copy from `/media/dev/2tb/dev/olympiadao/olympia-framework/README.md`
 
 ## Key Addresses
 
-- Treasury: `0xCfE1e0ECbff745e6c800fF980178a8dDEf94bEe2`
+- Treasury: `0xd6165F3aF4281037bce810621F62B43077Fb0e37`
 - Network: Mordor testnet (chain 63)
 - Activation: block 15,800,850 (~March 28, 2026)
 

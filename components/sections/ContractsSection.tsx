@@ -5,7 +5,7 @@ const MORDOR_EXPLORER = "https://explorer.etcnodes.org/mordor/address";
 const contracts = [
   {
     name: "Treasury",
-    address: "0xCfE1e0ECbff745e6c800fF980178a8dDEf94bEe2",
+    address: "0xd6165F3aF4281037bce810621F62B43077Fb0e37",
     ecip: "ECIP-1112",
     description: "Protocol-controlled vault for basefee revenue",
   },

@@ -46,7 +46,7 @@ export function NavHeader() {
             </a>
           ))}
           <a
-            href="https://etc.blockscout.com/address/0xCfE1e0ECbff745e6c800fF980178a8dDEf94bEe2"
+            href="https://etc.blockscout.com/address/0xd6165F3aF4281037bce810621F62B43077Fb0e37"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full bg-[var(--brand-green)] px-5 py-2 text-sm font-semibold text-[var(--background)] transition-all duration-200 hover:brightness-110"

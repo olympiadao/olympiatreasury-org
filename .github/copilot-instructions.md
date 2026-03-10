@@ -47,7 +47,7 @@ pnpm typecheck    # tsc --noEmit
 5. Use JetBrains Mono (`font-mono`) for contract addresses
 6. CSS transitions only — no GSAP, R3F, or Lenis
 7. Contract addresses must match olympia-framework README
-8. Treasury address: `0xCfE1e0ECbff745e6c800fF980178a8dDEf94bEe2`
+8. Treasury address: `0xd6165F3aF4281037bce810621F62B43077Fb0e37`
 
 ## Protected Files
 

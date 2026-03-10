@@ -1,6 +1,6 @@
 import { Vault, ExternalLink } from "lucide-react";
 
-const TREASURY_ADDRESS = "0xCfE1e0ECbff745e6c800fF980178a8dDEf94bEe2";
+const TREASURY_ADDRESS = "0xd6165F3aF4281037bce810621F62B43077Fb0e37";
 
 export function HeroSection() {
   return (
