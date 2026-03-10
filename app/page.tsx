@@ -10,11 +10,17 @@ export default function Home() {
         </p>
 
         <h1 className="mb-4 text-4xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl">
-          Deploying Soon
+          Demo v0.1
         </h1>
 
         <p className="text-lg leading-relaxed text-[var(--text-muted)]">
           Protocol-controlled vault for Ethereum Classic.
+        </p>
+
+        <p className="mt-4 text-sm leading-relaxed text-[var(--text-muted)]">
+          Live demo deployment — real-time monitoring of the ECIP-1112 protocol
+          vault. Treasury balance, basefee inflows, withdrawal outflows, and
+          public metrics for full transparency.
         </p>
       </div>
     </main>
