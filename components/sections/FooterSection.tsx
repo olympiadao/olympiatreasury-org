@@ -1,42 +1,54 @@
-import { ExternalLink } from "lucide-react";
-
-const links = [
-  {
-    label: "OlympiaDAO",
-    href: "https://olympiadao.org",
-  },
-  {
-    label: "Framework",
-    href: "https://github.com/olympiadao/olympia-framework",
-  },
-  {
-    label: "GitHub",
-    href: "https://github.com/olympiadao",
-  },
-];
+import { Github } from "lucide-react";
 
 export function FooterSection() {
   return (
-    <footer className="border-t border-[var(--border-default)] px-6 py-12">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 sm:flex-row sm:justify-between">
-        <p className="text-sm text-[var(--text-subtle)]">
-          CC0 — No rights reserved.
-        </p>
+    <footer className="border-t border-[var(--border-default)] py-12">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
+          <span className="text-sm font-semibold tracking-tight text-[var(--text-muted)]">
+            OLYMPIA TREASURY
+          </span>
 
-        <div className="flex items-center gap-6">
-          {links.map((link) => (
+          <div className="flex items-center gap-6">
             <a
-              key={link.label}
-              href={link.href}
+              href="https://olympiadao.org"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+              className="text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
             >
-              {link.label}
-              <ExternalLink size={12} />
+              OlympiaDAO
             </a>
-          ))}
+            <a
+              href="https://app.olympiadao.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+            >
+              Governance App
+            </a>
+            <a
+              href="https://github.com/olympiadao/olympia-framework"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+            >
+              Framework
+            </a>
+            <a
+              href="https://github.com/olympiadao"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+              aria-label="GitHub"
+            >
+              <Github size={20} />
+            </a>
+          </div>
         </div>
+
+        <p className="mt-8 text-center text-xs text-[var(--text-subtle)]">
+          A community-driven initiative for Ethereum Classic protocol funding.
+        </p>
       </div>
     </footer>
   );

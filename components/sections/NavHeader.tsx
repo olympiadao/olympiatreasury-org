@@ -26,8 +26,10 @@ export function NavHeader() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-3">
           <Image src="/logo.svg" alt="Olympia" width={36} height={36} />
-          <span className="text-lg font-bold tracking-tight">
-            TREASURY
+          <span className="text-lg font-bold tracking-tight">TREASURY</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-amber-border)] bg-[var(--brand-amber-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--brand-amber)]">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--brand-amber)]" />
+            Demo
           </span>
         </Link>
 
@@ -46,12 +48,12 @@ export function NavHeader() {
             </a>
           ))}
           <a
-            href="https://etc.blockscout.com/address/0xd6165F3aF4281037bce810621F62B43077Fb0e37"
+            href="https://app.olympiadao.org"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full bg-[var(--brand-green)] px-5 py-2 text-sm font-semibold text-[var(--background)] transition-all duration-200 hover:brightness-110"
           >
-            View on Explorer
+            Launch App
           </a>
         </div>
 
