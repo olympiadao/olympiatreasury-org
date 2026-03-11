@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 
-const MORDOR_EXPLORER = "https://explorer.etcnodes.org/mordor/address";
+const MORDOR_EXPLORER = "https://etc-mordor.blockscout.com/address";
 
 const contracts = [
   {

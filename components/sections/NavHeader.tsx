@@ -29,7 +29,7 @@ export function NavHeader() {
           <span className="text-lg font-bold tracking-tight">TREASURY</span>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-amber-border)] bg-[var(--brand-amber-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--brand-amber)]">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--brand-amber)]" />
-            Demo
+            Demo · Mordor
           </span>
         </Link>
 

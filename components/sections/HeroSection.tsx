@@ -32,7 +32,7 @@ export function HeroSection() {
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row">
         <a
-          href={`https://etc.blockscout.com/address/${TREASURY_ADDRESS}`}
+          href={`https://etc-mordor.blockscout.com/address/${TREASURY_ADDRESS}`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-green)] px-8 py-3.5 text-sm font-semibold text-[var(--background)] transition-all duration-200 hover:brightness-110"
