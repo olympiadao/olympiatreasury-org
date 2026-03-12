@@ -1,0 +1,38 @@
+# Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic
+
+## About
+
+The Olympia Treasury (ECIP-1112) is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. It is non-inflationary — no new ETC coins are minted. All funds come from existing transaction fees.
+
+## Key Features
+
+- Protocol-level basefee accumulation (EIP-1559)
+- On-chain governance-controlled disbursement
+- AccessControlDefaultAdminRules security model (OpenZeppelin 5.6)
+- Timelock-protected execution
+- Fully auditable and transparent
+
+## Contract
+
+- Address: 0xd6165F3aF4281037bce810621F62B43077Fb0e37
+- Network: Mordor Testnet (Chain ID 63) + ETC Mainnet
+- Version: Demo v0.1
+
+## Fund Allocation
+
+- Developer Retention
+- Infrastructure Maintenance
+- Emergency Response
+- Public Goods
+
+## Authors
+
+- Cody Burns (github.com/realcodywburns)
+- Chris Mercer (github.com/chris-mercer)
+
+## Links
+
+- Treasury: https://olympiatreasury.org
+- DAO: https://olympiadao.org
+- Core App: https://core.olympiadao.org
+- GitHub: https://github.com/olympiadao
