@@ -1,5 +1,5 @@
 import { formatEther } from "viem";
-import { TREASURY_ADDRESS, MORDOR_API } from "./config";
+import { TREASURY_ADDRESS, MORDOR_API, ERA_LENGTH } from "./config";
 
 // ---------- Types ----------
 
@@ -86,8 +86,6 @@ interface BlockscoutResponse<T> {
 
 const EXECUTOR_ADDRESS = "0x94d4f74dDdE715Ed195B597A3434713690B14e97";
 
-// Mordor era length for ECIP-1017 disinflation (mainnet uses 5,000,000)
-const ERA_LENGTH = 2_000_000;
 
 /** ECIP-1017: 5 ETC base reward, reduced by 4/5 each era */
 function ecip1017Reward(blockNumber: number): bigint {

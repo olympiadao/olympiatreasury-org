@@ -6,6 +6,9 @@ export const TREASURY_ADDRESS =
 export const MORDOR_EXPLORER = "https://etc-mordor.blockscout.com";
 export const MORDOR_API = "https://etc-mordor.blockscout.com/api/v2";
 
+/** ECIP-1017 era length: Mordor = 2,000,000; ETC mainnet = 5,000,000 */
+export const ERA_LENGTH = 2_000_000;
+
 export const mordor = defineChain({
   id: 63,
   name: "Mordor Testnet",

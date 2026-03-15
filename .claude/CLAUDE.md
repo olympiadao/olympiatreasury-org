@@ -41,12 +41,11 @@ components/
     DashboardHero.tsx       # KPI cards (balance, inflows, outflows, tx count)
     BalanceChart.tsx         # Area chart (recharts)
     TransactionsSection.tsx  # Recent inflows/outflows table
-    ContractsSection.tsx     # Mordor contract addresses
-    AboutSection.tsx         # Collapsible: fund flow, invariants, security, stages
+    AboutSection.tsx         # Collapsible: fund flow, invariants, security, stages, contracts
     FooterSection.tsx        # Footer links
 lib/
   config.ts       # Chain config, treasury address, API URLs
-  treasury.ts     # Data fetching (viem RPC + Blockscout API)
+  treasury.ts     # Data fetching (Blockscout API + ECIP-1017 reward calc)
   providers.tsx   # React Query provider
   hooks/
     use-treasury.ts  # React Query hooks
@@ -65,9 +64,9 @@ public/
 
 ## Data Sources
 
-- **Balance:** viem `getBalance` via Mordor RPC (`rpc.mordor.etccooperative.org`)
-- **Transactions:** Blockscout API v2 (`etc-mordor.blockscout.com/api/v2`)
-- **Refresh:** Balance every 30s, transactions every 60s (React Query)
+- **All data:** Blockscout API v2 (`etc-mordor.blockscout.com/api/v2`) — balance, transactions, mined blocks
+- **Block rewards:** Client-side ECIP-1017 computation (`ecip1017Reward()` in `lib/treasury.ts`) — Blockscout reports incorrect Mordor rewards
+- **Refresh:** Balance/stats every 10min, transactions every 5min (React Query: `refetchInterval` / `staleTime`)
 - **Static copy:** Based on `/media/dev/2tb/dev/olympiadao/olympia-framework/README.md`
 
 ## Key Addresses
