@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useTreasuryTransactions } from "@/lib/hooks/use-treasury";
+import { useTreasuryBalanceHistory } from "@/lib/hooks/use-treasury";
 
 interface ChartPoint {
   label: string;
@@ -17,34 +17,24 @@ interface ChartPoint {
 }
 
 export function BalanceChart() {
-  const { data: transactions, isLoading } = useTreasuryTransactions();
+  const { data: events, isLoading } = useTreasuryBalanceHistory();
 
   const chartData = useMemo(() => {
-    if (!transactions || transactions.length === 0) return [];
-
-    // Build cumulative balance from oldest to newest
-    const sorted = [...transactions].sort(
-      (a, b) => a.blockNumber - b.blockNumber
-    );
+    if (!events || events.length === 0) return [];
 
     let running = 0;
     const points: ChartPoint[] = [];
 
-    for (const tx of sorted) {
-      const val = parseFloat(tx.value);
-      if (tx.type === "inflow") {
-        running += val;
-      } else {
-        running -= val;
-      }
+    for (const event of events) {
+      running += event.delta;
       points.push({
-        label: `#${tx.blockNumber}`,
+        label: `#${event.blockNumber}`,
         balance: parseFloat(running.toFixed(6)),
       });
     }
 
     return points;
-  }, [transactions]);
+  }, [events]);
 
   if (isLoading) {
     return (

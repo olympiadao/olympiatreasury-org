@@ -67,8 +67,16 @@ interface BlockscoutInternalTx {
 
 interface BlockscoutBlock {
   height: number;
+  timestamp: string;
   rewards: { reward: string; type: string }[];
   transaction_fees: string;
+}
+
+export interface BalanceEvent {
+  blockNumber: number;
+  timestamp: string;
+  delta: number;
+  source: "mining" | "donation" | "withdrawal";
 }
 
 interface BlockscoutResponse<T> {
@@ -192,6 +200,69 @@ export async function fetchTransactions(): Promise<TreasuryTransaction[]> {
   return Array.from(map.values()).sort(
     (a, b) => b.blockNumber - a.blockNumber
   );
+}
+
+export async function fetchBalanceHistory(): Promise<BalanceEvent[]> {
+  const [transactions, minedBlocksRaw] = await Promise.all([
+    fetchTransactions(),
+    fetchMinedBlocksRaw(),
+  ]);
+
+  const events: BalanceEvent[] = [];
+
+  // Add transaction events
+  for (const tx of transactions) {
+    const val = parseFloat(tx.value);
+    events.push({
+      blockNumber: tx.blockNumber,
+      timestamp: tx.timestamp,
+      delta: tx.type === "inflow" ? val : -val,
+      source: tx.type === "inflow" ? "donation" : "withdrawal",
+    });
+  }
+
+  // Add mined block events
+  for (const block of minedBlocksRaw) {
+    const reward =
+      block.rewards.reduce((sum, r) => sum + parseFloat(formatEther(BigInt(r.reward))), 0) +
+      parseFloat(formatEther(BigInt(block.transaction_fees || "0")));
+    if (reward > 0) {
+      events.push({
+        blockNumber: block.height,
+        timestamp: block.timestamp,
+        delta: reward,
+        source: "mining",
+      });
+    }
+  }
+
+  return events.sort((a, b) => a.blockNumber - b.blockNumber);
+}
+
+/** Raw mined blocks with timestamps for chart timeline */
+async function fetchMinedBlocksRaw(): Promise<BlockscoutBlock[]> {
+  const blocks: BlockscoutBlock[] = [];
+  let url: string | null =
+    `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/blocks-validated`;
+
+  while (url) {
+    const res = await fetch(url);
+    if (!res.ok) break;
+    const data: BlockscoutResponse<BlockscoutBlock> = await res.json();
+    blocks.push(...(data.items ?? []));
+
+    if (data.next_page_params) {
+      const entries = Object.entries(data.next_page_params).map(
+        ([k, v]) => [k, String(v)] as [string, string]
+      );
+      const params = new URLSearchParams(entries);
+      url = `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/blocks-validated?${params}`;
+    } else {
+      url = null;
+    }
+  }
+
+  return blocks;
 }
 
 export async function fetchStats(): Promise<TreasuryStats> {
