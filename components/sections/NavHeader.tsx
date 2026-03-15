@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Transactions", href: "#transactions" },
-  { label: "Contracts", href: "#contracts" },
+  { label: "About", href: "#about" },
   { label: "OlympiaDAO", href: "https://olympiadao.org", external: true },
   {
     label: "GitHub",
