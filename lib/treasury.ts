@@ -86,6 +86,19 @@ interface BlockscoutResponse<T> {
 
 const EXECUTOR_ADDRESS = "0x94d4f74dDdE715Ed195B597A3434713690B14e97";
 
+// Mordor era length for ECIP-1017 disinflation (mainnet uses 5,000,000)
+const ERA_LENGTH = 2_000_000;
+
+/** ECIP-1017: 5 ETC base reward, reduced by 4/5 each era */
+function ecip1017Reward(blockNumber: number): bigint {
+  const era = Math.floor(blockNumber / ERA_LENGTH);
+  let reward = 5_000_000_000_000_000_000n; // 5 ETC in wei
+  for (let i = 0; i < era; i++) {
+    reward = (reward * 4n) / 5n;
+  }
+  return reward;
+}
+
 export async function fetchBalance(): Promise<TreasuryBalance> {
   const res = await fetch(
     `${MORDOR_API}/addresses/${TREASURY_ADDRESS}`
@@ -109,9 +122,8 @@ export async function fetchMinedBlocks(): Promise<MinedBlocksData> {
 
     for (const block of data.items ?? []) {
       blockCount++;
-      for (const r of block.rewards) {
-        blockRewards += BigInt(r.reward);
-      }
+      // Use ECIP-1017 formula — Blockscout rewards field doesn't apply era disinflation
+      blockRewards += ecip1017Reward(block.height);
       if (block.transaction_fees) {
         txFees += BigInt(block.transaction_fees);
       }
@@ -221,10 +233,10 @@ export async function fetchBalanceHistory(): Promise<BalanceEvent[]> {
     });
   }
 
-  // Add mined block events
+  // Add mined block events using ECIP-1017 formula (not Blockscout's incorrect rewards)
   for (const block of minedBlocksRaw) {
     const reward =
-      block.rewards.reduce((sum, r) => sum + parseFloat(formatEther(BigInt(r.reward))), 0) +
+      parseFloat(formatEther(ecip1017Reward(block.height))) +
       parseFloat(formatEther(BigInt(block.transaction_fees || "0")));
     if (reward > 0) {
       events.push({
