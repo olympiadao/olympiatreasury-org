@@ -96,6 +96,7 @@ export async function fetchMinedBlocks(): Promise<MinedBlocksData> {
 
   while (url) {
     const res = await fetch(url);
+    if (!res.ok) break;
     const data: BlockscoutResponse<BlockscoutBlock> = await res.json();
 
     for (const block of data.items ?? []) {
@@ -103,11 +104,16 @@ export async function fetchMinedBlocks(): Promise<MinedBlocksData> {
       for (const r of block.rewards) {
         blockRewards += BigInt(r.reward);
       }
-      txFees += BigInt(block.transaction_fees);
+      if (block.transaction_fees) {
+        txFees += BigInt(block.transaction_fees);
+      }
     }
 
     if (data.next_page_params) {
-      const params = new URLSearchParams(data.next_page_params);
+      const entries = Object.entries(data.next_page_params).map(
+        ([k, v]) => [k, String(v)] as [string, string]
+      );
+      const params = new URLSearchParams(entries);
       url = `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/blocks-validated?${params}`;
     } else {
       url = null;

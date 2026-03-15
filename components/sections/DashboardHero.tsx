@@ -94,9 +94,9 @@ export function DashboardHero() {
             accent="green"
           />
           <KpiCard
-            label="TX Fees"
+            label="BaseFee"
             value={stats ? `${formatMetc(stats.txFees)} METC` : "—"}
-            subtitle="EIP-1559 basefee from mined blocks"
+            subtitle="EIP-1559 · activates with Olympia"
             icon={Flame}
             loading={isLoading}
             error={!!error}
