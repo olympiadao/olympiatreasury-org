@@ -1,11 +1,9 @@
 import { NavHeader } from "@/components/sections/NavHeader";
-import { HeroSection } from "@/components/sections/HeroSection";
-import { OverviewSection } from "@/components/sections/OverviewSection";
-import { FundFlowSection } from "@/components/sections/FundFlowSection";
+import { DashboardHero } from "@/components/sections/DashboardHero";
+import { BalanceChart } from "@/components/sections/BalanceChart";
+import { TransactionsSection } from "@/components/sections/TransactionsSection";
 import { ContractsSection } from "@/components/sections/ContractsSection";
-import { StageSection } from "@/components/sections/StageSection";
-import { InvariantsSection } from "@/components/sections/InvariantsSection";
-import { SecuritySection } from "@/components/sections/SecuritySection";
+import { AboutSection } from "@/components/sections/AboutSection";
 import { FooterSection } from "@/components/sections/FooterSection";
 
 export default function Home() {
@@ -13,13 +11,11 @@ export default function Home() {
     <>
       <NavHeader />
       <main>
-        <HeroSection />
-        <OverviewSection />
-        <FundFlowSection />
+        <DashboardHero />
+        <BalanceChart />
+        <TransactionsSection />
         <ContractsSection />
-        <StageSection />
-        <InvariantsSection />
-        <SecuritySection />
+        <AboutSection />
       </main>
       <FooterSection />
     </>

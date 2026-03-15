@@ -6,9 +6,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: "Overview", href: "#overview" },
-  { label: "Fund Flow", href: "#fund-flow" },
-  { label: "Invariants", href: "#invariants" },
+  { label: "Transactions", href: "#transactions" },
   { label: "Contracts", href: "#contracts" },
   { label: "OlympiaDAO", href: "https://olympiadao.org", external: true },
   {

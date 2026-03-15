@@ -2,7 +2,7 @@
 
 ## Project Context
 
-Landing page for the Olympia Treasury — the protocol-controlled vault at the center of the Olympia upgrade for Ethereum Classic. Displays treasury details, contract addresses, fund flow, governance stages, and security model.
+Live treasury monitoring dashboard for the ECIP-1112 protocol-controlled vault on Ethereum Classic. Displays real-time balance, transaction history, inflow/outflow KPIs, balance chart, contract addresses, and governance context. Read-only, no wallet required.
 
 **URL:** https://olympiatreasury.org
 **Repo:** `olympiadao/olympiatreasury-org`
@@ -13,6 +13,9 @@ Landing page for the Olympia Treasury — the protocol-controlled vault at the c
 - Next.js 16 (App Router, Turbopack)
 - React 19, TypeScript 5 (strict)
 - Tailwind CSS 4 (CSS-first config)
+- viem (RPC client, no wallet)
+- @tanstack/react-query (data fetching + caching)
+- recharts (balance history chart)
 - Lucide React (icons)
 - pnpm 10, Node 24
 
@@ -30,11 +33,23 @@ pnpm typecheck    # TypeScript check
 ```
 app/
   globals.css     # Tailwind + Olympia design tokens
-  layout.tsx      # Root layout, Inter + JetBrains Mono
-  page.tsx        # Main page (imports all sections)
+  layout.tsx      # Root layout, fonts, metadata, Providers
+  page.tsx        # Main page (dashboard sections)
 components/
-  sections/       # Page sections (NavHeader, Hero, etc.)
+  sections/
+    NavHeader.tsx           # Sticky nav
+    DashboardHero.tsx       # KPI cards (balance, inflows, outflows, tx count)
+    BalanceChart.tsx         # Area chart (recharts)
+    TransactionsSection.tsx  # Recent inflows/outflows table
+    ContractsSection.tsx     # Mordor contract addresses
+    AboutSection.tsx         # Collapsible: fund flow, invariants, security, stages
+    FooterSection.tsx        # Footer links
 lib/
+  config.ts       # Chain config, treasury address, API URLs
+  treasury.ts     # Data fetching (viem RPC + Blockscout API)
+  providers.tsx   # React Query provider
+  hooks/
+    use-treasury.ts  # React Query hooks
   utils.ts        # cn() helper
 public/
   logo.svg        # Olympia torch logomark
@@ -48,9 +63,12 @@ public/
 - Font: Inter (UI) + JetBrains Mono (code/addresses)
 - Dark-first design, translucent cards, CSS transitions only
 
-## Content Source
+## Data Sources
 
-All copy from `/media/dev/2tb/dev/olympiadao/olympia-framework/README.md`
+- **Balance:** viem `getBalance` via Mordor RPC (`rpc.mordor.etccooperative.org`)
+- **Transactions:** Blockscout API v2 (`etc-mordor.blockscout.com/api/v2`)
+- **Refresh:** Balance every 30s, transactions every 60s (React Query)
+- **Static copy:** Based on `/media/dev/2tb/dev/olympiadao/olympia-framework/README.md`
 
 ## Key Addresses
 
