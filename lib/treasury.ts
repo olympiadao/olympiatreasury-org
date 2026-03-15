@@ -32,10 +32,10 @@ export interface TreasuryStats {
   totalOutflow: string;
   /** Direct ETC transfers to treasury (donations) */
   totalDonations: string;
-  /** Block rewards from mining to treasury coinbase */
-  blockRewards: string;
-  /** Transaction fees from mined blocks */
-  txFees: string;
+  /** Mined income: block rewards + tx fees from blocks mined to treasury */
+  minedIncome: string;
+  /** EIP-1559 basefee redirected via ECIP-1111 (post-Olympia) */
+  baseFeeIncome: string;
   blockCount: number;
   txCount: number;
 }
@@ -292,8 +292,8 @@ export async function fetchStats(): Promise<TreasuryStats> {
     totalInflow: formatEther(totalInflow),
     totalOutflow: formatEther(totalOutflow),
     totalDonations: formatEther(totalDonations),
-    blockRewards: formatEther(minedBlocks.blockRewards),
-    txFees: formatEther(minedBlocks.txFees),
+    minedIncome: formatEther(minedBlocks.blockRewards + minedBlocks.txFees),
+    baseFeeIncome: "0",
     blockCount: minedBlocks.blockCount,
     txCount: transactions.length,
   };

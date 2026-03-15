@@ -85,9 +85,9 @@ export function DashboardHero() {
             accent="green"
           />
           <KpiCard
-            label="Block Rewards"
-            value={stats ? `${formatMetc(stats.blockRewards)} METC` : "—"}
-            subtitle={`Mining to treasury coinbase${stats ? ` · ${stats.blockCount} blocks` : ""}`}
+            label="Mined Income"
+            value={stats ? `${formatMetc(stats.minedIncome)} METC` : "—"}
+            subtitle={`Block rewards + tx fees${stats ? ` · ${stats.blockCount} blocks` : ""}`}
             icon={Pickaxe}
             loading={isLoading}
             error={!!error}
@@ -95,8 +95,8 @@ export function DashboardHero() {
           />
           <KpiCard
             label="BaseFee"
-            value={stats ? `${formatMetc(stats.txFees)} METC` : "—"}
-            subtitle="EIP-1559 · activates with Olympia"
+            value={stats ? `${formatMetc(stats.baseFeeIncome)} METC` : "—"}
+            subtitle="ECIP-1111 · activates with Olympia"
             icon={Flame}
             loading={isLoading}
             error={!!error}

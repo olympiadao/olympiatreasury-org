@@ -17,6 +17,8 @@ import {
   CircleCheck,
   Clock,
   ArrowRight,
+  Pickaxe,
+  Heart,
 } from "lucide-react";
 
 export function AboutSection() {
@@ -27,6 +29,10 @@ export function AboutSection() {
 
         <CollapsibleCard title="How Funds Flow" defaultOpen>
           <FundFlow />
+        </CollapsibleCard>
+
+        <CollapsibleCard title="Community Funding">
+          <CommunityFunding />
         </CollapsibleCard>
 
         <CollapsibleCard title="Core Invariants">
@@ -82,15 +88,17 @@ function CollapsibleCard({
 
 /* ---- Fund Flow ---- */
 const flowSteps = [
-  { icon: Flame, title: "Basefee Collected", desc: "Miners get rewards + tips. Basefee is separated per ECIP-1111." },
-  { icon: Landmark, title: "Treasury Accumulates", desc: "Basefee redirected to vault by consensus. Balance and history are public." },
-  { icon: FileCheck, title: "Proposals Submitted", desc: "Contributors submit funding proposals specifying recipient, amount, and milestones." },
+  { icon: Flame, title: "BaseFee Collected", desc: "After Olympia activates, EIP-1559 basefee from every block is redirected to the treasury by consensus." },
+  { icon: Pickaxe, title: "Mined Income", desc: "Mining pools and solo miners can direct block rewards and tx fees to the treasury by mining to the contract address." },
+  { icon: Heart, title: "Direct Donations", desc: "Anyone can send ETC directly to the treasury contract to support protocol development transparently." },
+  { icon: Landmark, title: "Treasury Accumulates", desc: "All three income streams grow the vault. Balance and full history are publicly visible on-chain." },
+  { icon: FileCheck, title: "Proposals Submitted", desc: "Contributors submit ECFPs specifying recipient, amount, and milestones for governance review." },
   { icon: Users, title: "Governance Approves", desc: "DAO votes and authorizes eligible proposals. Only governance can trigger fund releases." },
 ];
 
 function FundFlow() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {flowSteps.map((s, i) => (
         <div key={i} className="flex items-start gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
@@ -102,6 +110,49 @@ function FundFlow() {
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ---- Community Funding ---- */
+function CommunityFunding() {
+  return (
+    <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
+      <p>
+        Until a robust EIP-1559 fee market exists on Ethereum Classic, the treasury relies on
+        voluntary community support. There are two ways to contribute:
+      </p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="flex items-start gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
+            <Pickaxe size={16} />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-[var(--text-primary)]">Mine to the Treasury</p>
+            <p className="mt-0.5">
+              Mining pools and solo miners can set the treasury contract as their coinbase address.
+              Block rewards (2 ETC/block) flow directly into the vault, funding ETC development transparently.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
+            <Heart size={16} />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-[var(--text-primary)]">Send a Donation</p>
+            <p className="mt-0.5">
+              Anyone can send ETC directly to the treasury address. Every donation is recorded on-chain
+              and visible in the transactions table above. All withdrawals require governance approval.
+            </p>
+          </div>
+        </div>
+      </div>
+      <p>
+        Once Olympia activates (block 15,800,850), EIP-1559 basefee revenue will provide a sustainable,
+        non-inflationary funding source. Community donations and mining support will remain welcome as
+        supplementary income to accelerate protocol development.
+      </p>
     </div>
   );
 }
