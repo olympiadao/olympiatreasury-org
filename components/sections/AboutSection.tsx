@@ -155,9 +155,9 @@ function CommunityFunding() {
         </div>
       </div>
       <p>
-        Once Olympia activates on the Mordor testnet, EIP-1559 basefee revenue will provide a sustainable,
-        non-inflationary funding source. Community donations and mining support will remain welcome as
-        supplementary income to accelerate protocol development.
+        Once the Olympia upgrade is complete on ETC mainnet, EIP-1559 basefee revenue will provide a
+        sustainable, non-inflationary funding source. Community donations and mining support will remain
+        welcome as supplementary income to accelerate protocol development.
       </p>
     </div>
   );
