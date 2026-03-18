@@ -155,7 +155,7 @@ function CommunityFunding() {
         </div>
       </div>
       <p>
-        Once Olympia activates (block 15,800,850), EIP-1559 basefee revenue will provide a sustainable,
+        Once Olympia activates on the Mordor testnet, EIP-1559 basefee revenue will provide a sustainable,
         non-inflationary funding source. Community donations and mining support will remain welcome as
         supplementary income to accelerate protocol development.
       </p>
