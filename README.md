@@ -51,10 +51,19 @@ pnpm lint         # ESLint
 pnpm typecheck    # TypeScript check
 ```
 
+## Branch Strategy
+
+| Branch | Purpose |
+|--------|---------|
+| `demo_v0.1` | Preserved snapshot — fast-iteration development, not ECIP-aligned |
+| `demo_v0.2` | Active development — spec-compliant, multi-chain, 7 CREATE2 contracts |
+| `main` | Production — deployed after Olympia activates on ETC mainnet |
+
 ## Related Repos
 
 - [olympia-treasury-contract](https://github.com/olympiadao/olympia-treasury-contract) — Treasury vault (pure Solidity, no OZ)
 - [olympia-governance-contracts](https://github.com/olympiadao/olympia-governance-contracts) — Governor, Executor, ECFPRegistry, NFT, Sanctions
 - [olympia-brand](https://github.com/olympiadao/olympia-brand) — Design tokens, logos, favicons
 - [olympiadao-org](https://github.com/olympiadao/olympiadao-org) — Landing page
+- [ethereumclassicdao-org](https://github.com/EthereumClassicDAO/ethereumclassicdao-org) — Institutional website
 - [olympia-app](https://github.com/olympiadao/olympia-app) — Governance UI
