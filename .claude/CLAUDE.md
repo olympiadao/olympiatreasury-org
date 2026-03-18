@@ -64,16 +64,23 @@ public/
 
 ## Data Sources
 
-- **All data:** Blockscout API v2 (`etc-mordor.blockscout.com/api/v2`) — balance, transactions, mined blocks
+- **All data:** Blockscout API v2 — chain-aware (Mordor: `etc-mordor.blockscout.com/api/v2`, ETC: `etc.blockscout.com/api/v2`)
 - **Block rewards:** Client-side ECIP-1017 computation (`ecip1017Reward()` in `lib/treasury.ts`) — Blockscout reports incorrect Mordor rewards
 - **Refresh:** Balance/stats every 10min, transactions every 5min (React Query: `refetchInterval` / `staleTime`)
 - **Static copy:** Based on `/media/dev/2tb/dev/olympiadao/olympia-framework/README.md`
 
-## Key Addresses
+## Key Addresses (Demo v0.2 — Deterministic CREATE2, identical on Chain 61 + 63)
 
-- Treasury: `0xd6165F3aF4281037bce810621F62B43077Fb0e37`
-- Network: Mordor testnet (chain 63)
-- Activation: block 15,800,850 (~March 28, 2026)
+- Treasury: `0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf`
+- Executor: `0x64624f74f77639cba268a6c8bedc2778b707ef9a`
+
+## Supported Chains
+
+- Mordor Testnet (chain 63) — default, eraLength: 2,000,000
+- ETC Mainnet (chain 61) — eraLength: 5,000,000
+
+Chain config in `lib/config.ts`. Chain selector uses URL search params (`?chain=63`).
+Hooks: `lib/hooks/use-chain.ts`, `lib/hooks/use-chain-config.ts`.
 
 ## Boundaries
 

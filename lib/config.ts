@@ -1,13 +1,44 @@
 import { defineChain } from "viem";
 
-export const TREASURY_ADDRESS =
-  "0xd6165F3aF4281037bce810621F62B43077Fb0e37" as const;
+export type SupportedChainId = 61 | 63;
+export const DEFAULT_CHAIN_ID: SupportedChainId = 63;
 
-export const MORDOR_EXPLORER = "https://etc-mordor.blockscout.com";
-export const MORDOR_API = "https://etc-mordor.blockscout.com/api/v2";
+export const CHAIN_CONFIG = {
+  63: {
+    treasury: "0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf" as const,
+    executor: "0x64624f74f77639cba268a6c8bedc2778b707ef9a" as const,
+    explorer: "https://etc-mordor.blockscout.com",
+    api: "https://etc-mordor.blockscout.com/api/v2",
+    eraLength: 2_000_000,
+    name: "Mordor Testnet",
+    symbol: "METC",
+    testnet: true,
+  },
+  61: {
+    treasury: "0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf" as const,
+    executor: "0x64624f74f77639cba268a6c8bedc2778b707ef9a" as const,
+    explorer: "https://etc.blockscout.com",
+    api: "https://etc.blockscout.com/api/v2",
+    eraLength: 5_000_000,
+    name: "Ethereum Classic",
+    symbol: "ETC",
+    testnet: false,
+  },
+} as const;
 
-/** ECIP-1017 era length: Mordor = 2,000,000; ETC mainnet = 5,000,000 */
-export const ERA_LENGTH = 2_000_000;
+export type ChainConfig = (typeof CHAIN_CONFIG)[SupportedChainId];
+
+export function getChainConfig(chainId: number): ChainConfig {
+  const config = CHAIN_CONFIG[chainId as SupportedChainId];
+  if (!config) return CHAIN_CONFIG[DEFAULT_CHAIN_ID];
+  return config;
+}
+
+// Backward compat
+export const TREASURY_ADDRESS = CHAIN_CONFIG[63].treasury;
+export const MORDOR_EXPLORER = CHAIN_CONFIG[63].explorer;
+export const MORDOR_API = CHAIN_CONFIG[63].api;
+export const ERA_LENGTH = CHAIN_CONFIG[63].eraLength;
 
 export const mordor = defineChain({
   id: 63,

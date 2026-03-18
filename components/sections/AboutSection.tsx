@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useChainConfig } from "@/lib/hooks/use-chain-config";
 import {
   ChevronDown,
   Flame,
@@ -48,8 +49,8 @@ export function AboutSection() {
           <Security />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Mordor Contracts · Chain 63">
-          <MordorContracts />
+        <CollapsibleCard title="Contracts">
+          <ContractsSection />
         </CollapsibleCard>
       </div>
     </section>
@@ -249,25 +250,28 @@ function Stages() {
   );
 }
 
-/* ---- Mordor Contracts ---- */
-const MORDOR_EXPLORER = "https://etc-mordor.blockscout.com/address";
+/* ---- Contracts ---- */
 
 const contracts: { name: string; address: string; ecip: string; description: string; pending?: boolean }[] = [
-  { name: "Treasury", address: "0xd6165F3aF4281037bce810621F62B43077Fb0e37", ecip: "ECIP-1112", description: "Protocol-controlled vault for basefee revenue" },
-  { name: "Governor", address: "0xEdbD61F1cE825CF939beBB422F8C914a69826dDA", ecip: "ECIP-1113", description: "On-chain governance and proposal execution" },
-  { name: "Executor", address: "0x94d4f74dDdE715Ed195B597A3434713690B14e97", ecip: "ECIP-1113", description: "Sanctions-checked withdrawal execution" },
-  { name: "Timelock", address: "0x1E0fADee5540a77012f1944fcce58677fC087f6e", ecip: "ECIP-1114", description: "Time-delayed execution of approved proposals" },
-  { name: "ECFP Registry", address: "0xcB532fe70299D53Cc81B5F6365f56A108784d05d", ecip: "ECIP-1114", description: "Proposal categorization and metadata registry" },
-  { name: "Governance NFT", address: "0x720676EBfe45DECfC43c8E9870C64413a2480EE0", ecip: "ECIP-1113", description: "Soulbound voting power token for DAO participation" },
-  { name: "Sanctions Oracle", address: "0xEeeb33c8b7C936bD8e72A859a3e1F9cc8A26f3B4", ecip: "ECIP-1119", description: "OFAC sanctions compliance constraint" },
+  { name: "Treasury", address: "0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf", ecip: "ECIP-1112", description: "Protocol-controlled vault for basefee revenue" },
+  { name: "Executor", address: "0x64624f74f77639cba268a6c8bedc2778b707ef9a", ecip: "ECIP-1113", description: "Sanctions-checked withdrawal execution" },
+  { name: "Governor", address: "0x...", ecip: "ECIP-1113", description: "On-chain governance and proposal execution", pending: true },
+  { name: "Timelock", address: "0x...", ecip: "ECIP-1114", description: "Time-delayed execution of approved proposals", pending: true },
+  { name: "ECFP Registry", address: "0x...", ecip: "ECIP-1114", description: "Proposal categorization and metadata registry", pending: true },
+  { name: "Governance NFT", address: "0x...", ecip: "ECIP-1113", description: "Soulbound voting power token for DAO participation", pending: true },
+  { name: "Sanctions Oracle", address: "0x...", ecip: "ECIP-1119", description: "OFAC sanctions compliance constraint", pending: true },
   { name: "Futarchy Oracle", address: "0x...", ecip: "ECIP-1117", description: "Prediction-market governance module", pending: true },
 ];
 
-function MordorContracts() {
+function ContractsSection() {
+  const config = useChainConfig();
+  const explorerBase = `${config.explorer}/address`;
+
   return (
     <div className="space-y-3">
       <p className="text-xs text-[var(--text-muted)]">
-        Activation block: 15,800,850 (~March 28, 2026). Mainnet deployment follows successful testnet activation.
+        {config.name} · Chain {config.testnet ? "63" : "61"}.
+        {config.testnet && " Mainnet deployment follows successful testnet activation."}
       </p>
       {contracts.map((contract) => (
         <div
@@ -297,7 +301,7 @@ function MordorContracts() {
                 {contract.address.slice(-8)}
               </code>
               <a
-                href={`${MORDOR_EXPLORER}/${contract.address}`}
+                href={`${explorerBase}/${contract.address}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-lg p-1.5 text-[var(--text-muted)] transition-colors hover:bg-[var(--brand-green-subtle)] hover:text-[var(--brand-green)]"

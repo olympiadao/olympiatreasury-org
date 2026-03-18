@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { ChainSelector } from "@/components/chain-selector";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useChainConfig } from "@/lib/hooks/use-chain-config";
 
 const navLinks = [
   { label: "Transactions", href: "#transactions" },
@@ -18,6 +21,9 @@ const navLinks = [
 
 export function NavHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const config = useChainConfig();
+
+  const badgeLabel = config.testnet ? `Demo \u00b7 ${config.name}` : config.name;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border-default)] bg-[var(--bg-overlay)] backdrop-blur-sm">
@@ -27,12 +33,12 @@ export function NavHeader() {
           <span className="text-lg font-bold tracking-tight">TREASURY</span>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-amber-border)] bg-[var(--brand-amber-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--brand-amber)]">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--brand-amber)]" />
-            Demo · Mordor
+            {badgeLabel}
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
             <a
               key={link.label}
@@ -45,6 +51,8 @@ export function NavHeader() {
               {link.label}
             </a>
           ))}
+          <ChainSelector />
+          <ThemeToggle />
           <a
             href="https://app.olympiadao.org"
             target="_blank"
@@ -68,6 +76,10 @@ export function NavHeader() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="border-t border-[var(--border-default)] bg-[var(--background)] px-6 py-4 md:hidden">
+          <div className="mb-4 flex items-center gap-3">
+            <ChainSelector />
+            <ThemeToggle />
+          </div>
           {navLinks.map((link) => (
             <a
               key={link.label}
