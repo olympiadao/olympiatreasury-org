@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ==========================================
    Olympia Treasury Design Tokens
    ========================================== */
 
 :root {
-  /* Brand */
+  /* Brand (shared across themes) */
   --brand-green: #00ffae;
   --brand-green-hover: #14f1b4;
   --brand-green-active: #00cc8a;
@@ -16,7 +18,34 @@
   --brand-amber-subtle: rgba(245, 158, 11, 0.08);
   --brand-amber-border: rgba(245, 158, 11, 0.3);
 
-  /* Backgrounds */
+  /* Light mode defaults */
+  --background: #f8faf9;
+  --foreground: #0a0f10;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f1f5f3;
+  --bg-overlay: rgba(248, 250, 249, 0.85);
+  --bg-card: rgba(255, 255, 255, 0.7);
+
+  --text-primary: #0a0f10;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-subtle: #9ca3af;
+
+  --border-default: #e2e8f0;
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --border-brand: rgba(0, 200, 138, 0.3);
+
+  --color-success: #059669;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #0ea5e9;
+
+  --card-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
+  --card-hover-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+}
+
+.dark {
   --background: #0a0f10;
   --foreground: #ffffff;
   --bg-surface: #0f1614;
@@ -24,25 +53,21 @@
   --bg-overlay: rgba(10, 15, 16, 0.85);
   --bg-card: rgba(0, 0, 0, 0.35);
 
-  /* Text */
   --text-primary: #ffffff;
   --text-secondary: #c3c5cb;
   --text-muted: #9ca3af;
   --text-subtle: #6b7280;
 
-  /* Borders */
   --border-default: #1f292b;
   --border-subtle: rgba(255, 255, 255, 0.04);
   --border-strong: rgba(255, 255, 255, 0.16);
   --border-brand: rgba(0, 255, 174, 0.3);
 
-  /* Semantic */
   --color-success: #00ffae;
   --color-error: #ef4444;
   --color-warning: #F59E0B;
   --color-info: #38bdf8;
 
-  /* Card */
   --card-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
   --card-hover-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
 }
