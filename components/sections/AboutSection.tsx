@@ -137,7 +137,7 @@ function CommunityFunding() {
             <p className="text-xs font-semibold text-[var(--text-primary)]">Mine to the Treasury</p>
             <p className="mt-0.5">
               Mining pools and solo miners can set the treasury contract as their coinbase address.
-              Block rewards (2 ETC/block) flow directly into the vault, funding ETC development transparently.
+              Block rewards flow directly into the vault, funding ETC development transparently.
             </p>
           </div>
         </div>
@@ -190,8 +190,8 @@ function Invariants() {
 
 /* ---- Security ---- */
 const secLayers = [
-  { icon: ShieldCheck, title: "Protocol Consensus", desc: "Client implementations enforce ECIP-1112 rules." },
-  { icon: Lock, title: "Contract Immutability", desc: "No upgradeable proxy, built on OpenZeppelin v5.6." },
+  { icon: ShieldCheck, title: "Protocol Consensus", desc: "Client implementations enforce treasury rules at the protocol level." },
+  { icon: Lock, title: "Contract Immutability", desc: "No upgradeable proxy, no admin methods." },
   { icon: Server, title: "Sanctions Defense", desc: "OFAC screening at proposal level + emergency pause." },
 ];
 
@@ -213,17 +213,17 @@ function Security() {
 
 /* ---- Stages ---- */
 const stages = [
-  { n: 1, title: "Accumulate", status: "active" as const, ecips: "ECIP-1111, 1112" },
-  { n: 2, title: "Govern", status: "next" as const, ecips: "ECIP-1113, 1114" },
-  { n: 3, title: "Fund", status: "planned" as const, ecips: "ECIP-1114, 1115" },
-  { n: 4, title: "Predict", status: "planned" as const, ecips: "ECIP-1117" },
-  { n: 5, title: "Optimize", status: "planned" as const, ecips: "ECIP-1118–1120" },
+  { n: 1, title: "Accumulate", status: "active" as const, desc: "BaseFee + mining + donations" },
+  { n: 2, title: "Govern", status: "next" as const, desc: "On-chain proposals and voting" },
+  { n: 3, title: "Fund", status: "planned" as const, desc: "Treasury disbursements" },
+  { n: 4, title: "Predict", status: "planned" as const, desc: "Futarchy governance" },
+  { n: 5, title: "Optimize", status: "planned" as const, desc: "Protocol improvements" },
 ];
 
 const stageConfig = {
-  active: { icon: CircleCheck, color: "text-[var(--brand-green)]", bg: "bg-[var(--brand-green-subtle)]" },
-  next: { icon: ArrowRight, color: "text-[var(--brand-amber)]", bg: "bg-[var(--brand-amber-subtle)]" },
-  planned: { icon: Clock, color: "text-[var(--text-subtle)]", bg: "bg-transparent" },
+  active: { icon: CircleCheck, color: "text-[var(--brand-green)]" },
+  next: { icon: ArrowRight, color: "text-[var(--text-secondary)]" },
+  planned: { icon: Clock, color: "text-[var(--text-subtle)]" },
 };
 
 function Stages() {
@@ -242,7 +242,7 @@ function Stages() {
             </span>
             <span className="text-xs font-semibold">{s.title}</span>
             <StatusIcon size={12} className={cfg.color} />
-            <span className="text-[10px] text-[var(--text-subtle)]">{s.ecips}</span>
+            <span className="text-[10px] text-[var(--text-subtle)]">{s.desc}</span>
           </div>
         );
       })}
@@ -252,15 +252,14 @@ function Stages() {
 
 /* ---- Contracts ---- */
 
-const contracts: { name: string; address: string; ecip: string; description: string; pending?: boolean }[] = [
-  { name: "Treasury", address: "0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf", ecip: "ECIP-1112", description: "Protocol-controlled vault for basefee revenue" },
-  { name: "Executor", address: "0x64624f74f77639cba268a6c8bedc2778b707ef9a", ecip: "ECIP-1113", description: "Sanctions-checked withdrawal execution" },
-  { name: "Governor", address: "0x...", ecip: "ECIP-1113", description: "On-chain governance and proposal execution", pending: true },
-  { name: "Timelock", address: "0x...", ecip: "ECIP-1114", description: "Time-delayed execution of approved proposals", pending: true },
-  { name: "ECFP Registry", address: "0x...", ecip: "ECIP-1114", description: "Proposal categorization and metadata registry", pending: true },
-  { name: "Governance NFT", address: "0x...", ecip: "ECIP-1113", description: "Soulbound voting power token for DAO participation", pending: true },
-  { name: "Sanctions Oracle", address: "0x...", ecip: "ECIP-1119", description: "OFAC sanctions compliance constraint", pending: true },
-  { name: "Futarchy Oracle", address: "0x...", ecip: "ECIP-1117", description: "Prediction-market governance module", pending: true },
+const contracts: { name: string; address: string; description: string }[] = [
+  { name: "Treasury", address: "0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf", description: "Protocol-controlled vault for basefee revenue" },
+  { name: "Executor", address: "0x64624f74F77639CbA268a6c8bEDC2778B707eF9a", description: "Sanctions-checked withdrawal execution" },
+  { name: "Governor", address: "0xB85dbc899472756470EF4033b9637ff8fa2FD23D", description: "On-chain governance and proposal execution" },
+  { name: "Timelock", address: "0xA5839b3e9445f7eE7AffdBC796DC0601f9b976C2", description: "Time-delayed execution of approved proposals" },
+  { name: "ECFP Registry", address: "0xFB4De5674a6b9a301d16876795a74f3bdacfa722", description: "Proposal categorization and metadata registry" },
+  { name: "Governance NFT", address: "0x73e78d3a3470396325b975FcAFA8105A89A9E672", description: "Soulbound voting power token for DAO participation" },
+  { name: "Sanctions Oracle", address: "0xfF2B8D7937D908D81C72D20AC99302EE6ACc2709", description: "OFAC sanctions compliance constraint" },
 ];
 
 function ContractsSection() {
@@ -270,8 +269,7 @@ function ContractsSection() {
   return (
     <div className="space-y-3">
       <p className="text-xs text-[var(--text-muted)]">
-        {config.name} · Chain {config.testnet ? "63" : "61"}.
-        {config.testnet && " Mainnet deployment follows successful testnet activation."}
+        Deterministic CREATE2 deployment — identical addresses on Mordor (63) and ETC Mainnet (61).
       </p>
       {contracts.map((contract) => (
         <div
@@ -279,38 +277,26 @@ function ContractsSection() {
           className="flex flex-col gap-2 rounded-lg border border-[var(--border-subtle)] p-4 sm:flex-row sm:items-center sm:justify-between"
         >
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold">{contract.name}</span>
-              <span className="rounded-full border border-[var(--border-default)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">
-                {contract.ecip}
-              </span>
-              {contract.pending && (
-                <span className="rounded-full bg-[var(--brand-amber-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--brand-amber)]">
-                  Pending
-                </span>
-              )}
-            </div>
+            <span className="text-sm font-semibold">{contract.name}</span>
             <p className="mt-0.5 text-xs text-[var(--text-muted)]">
               {contract.description}
             </p>
           </div>
-          {!contract.pending && (
-            <div className="flex items-center gap-2">
-              <code className="font-mono text-xs text-[var(--brand-green)]">
-                {contract.address.slice(0, 10)}...
-                {contract.address.slice(-8)}
-              </code>
-              <a
-                href={`${explorerBase}/${contract.address}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg p-1.5 text-[var(--text-muted)] transition-colors hover:bg-[var(--brand-green-subtle)] hover:text-[var(--brand-green)]"
-                aria-label={`View ${contract.name} on explorer`}
-              >
-                <ExternalLink size={14} />
-              </a>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <code className="font-mono text-xs text-[var(--brand-green)]">
+              {contract.address.slice(0, 10)}...
+              {contract.address.slice(-8)}
+            </code>
+            <a
+              href={`${explorerBase}/${contract.address}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg p-1.5 text-[var(--text-muted)] transition-colors hover:bg-[var(--brand-green-subtle)] hover:text-[var(--brand-green)]"
+              aria-label={`View ${contract.name} on explorer`}
+            >
+              <ExternalLink size={14} />
+            </a>
+          </div>
         </div>
       ))}
     </div>

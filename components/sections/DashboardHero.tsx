@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Vault,
   ExternalLink,
   TrendingDown,
   Activity,
@@ -30,10 +29,6 @@ export function DashboardHero() {
         {/* Header row */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--brand-amber-border)] bg-[var(--brand-amber-subtle)] px-4 py-1.5 text-xs font-medium text-[var(--brand-amber)]">
-              <Vault size={14} />
-              ECIP-1112 · Protocol-Controlled Treasury
-            </div>
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
               Olympia{" "}
               <span className="text-[var(--brand-green)]">Treasury</span>
@@ -83,7 +78,7 @@ export function DashboardHero() {
             icon={Wallet}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="Mined Income"
@@ -92,16 +87,16 @@ export function DashboardHero() {
             icon={Pickaxe}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="BaseFee"
             value={stats ? `${formatAmount(stats.baseFeeIncome)} ${config.symbol}` : "\u2014"}
-            subtitle="ECIP-1111 \u00b7 activates with Olympia"
+            subtitle="Activates with Olympia"
             icon={Flame}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="Donations"
@@ -110,7 +105,7 @@ export function DashboardHero() {
             icon={Heart}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="Withdrawals"
@@ -119,7 +114,7 @@ export function DashboardHero() {
             icon={TrendingDown}
             loading={isLoading}
             error={!!error}
-            accent="amber"
+
           />
           <KpiCard
             label="Transactions"
@@ -127,7 +122,7 @@ export function DashboardHero() {
             icon={Activity}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
         </div>
       </div>
@@ -142,7 +137,6 @@ function KpiCard({
   icon: Icon,
   loading,
   error,
-  accent,
 }: {
   label: string;
   value: string;
@@ -150,10 +144,8 @@ function KpiCard({
   icon: React.ComponentType<{ size?: number; className?: string }>;
   loading: boolean;
   error: boolean;
-  accent: "green" | "amber";
 }) {
-  const iconColor =
-    accent === "green" ? "text-[var(--brand-green)]" : "text-[var(--brand-amber)]";
+  const iconColor = "text-[var(--brand-green)]";
 
   return (
     <div

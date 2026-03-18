@@ -7,13 +7,13 @@
    ========================================== */
 
 :root {
-  /* Brand (shared across themes) */
-  --brand-green: #00ffae;
-  --brand-green-hover: #14f1b4;
-  --brand-green-active: #00cc8a;
+  /* Brand — light mode (darker green for readability on white) */
+  --brand-green: #00a872;
+  --brand-green-hover: #009966;
+  --brand-green-active: #008855;
   --brand-green-muted: #007a53;
-  --brand-green-subtle: rgba(0, 255, 174, 0.08);
-  --brand-green-glow: rgba(0, 255, 174, 0.4);
+  --brand-green-subtle: rgba(0, 168, 114, 0.08);
+  --brand-green-glow: rgba(0, 168, 114, 0.3);
   --brand-amber: #F59E0B;
   --brand-amber-subtle: rgba(245, 158, 11, 0.08);
   --brand-amber-border: rgba(245, 158, 11, 0.3);
@@ -34,7 +34,7 @@
   --border-default: #e2e8f0;
   --border-subtle: rgba(0, 0, 0, 0.04);
   --border-strong: rgba(0, 0, 0, 0.16);
-  --border-brand: rgba(0, 200, 138, 0.3);
+  --border-brand: rgba(0, 168, 114, 0.3);
 
   --color-success: #059669;
   --color-error: #ef4444;
@@ -46,6 +46,13 @@
 }
 
 .dark {
+  /* Brand — dark mode (neon green on dark backgrounds) */
+  --brand-green: #00ffae;
+  --brand-green-hover: #14f1b4;
+  --brand-green-active: #00cc8a;
+  --brand-green-subtle: rgba(0, 255, 174, 0.08);
+  --brand-green-glow: rgba(0, 255, 174, 0.4);
+
   --background: #0a0f10;
   --foreground: #ffffff;
   --bg-surface: #0f1614;

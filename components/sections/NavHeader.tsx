@@ -11,28 +11,23 @@ import { useChainConfig } from "@/lib/hooks/use-chain-config";
 const navLinks = [
   { label: "Transactions", href: "#transactions" },
   { label: "About", href: "#about" },
-  { label: "OlympiaDAO", href: "https://olympiadao.org", external: true },
-  {
-    label: "GitHub",
-    href: "https://github.com/olympiadao",
-    external: true,
-  },
+  { label: "Olympia DAO", href: "https://olympiadao.org", external: true },
 ];
 
 export function NavHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const config = useChainConfig();
 
-  const badgeLabel = config.testnet ? `Demo \u00b7 ${config.name}` : config.name;
+  const badgeLabel = `Demo v0.2 \u00b7 ${config.name}`;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border-default)] bg-[var(--bg-overlay)] backdrop-blur-sm">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-3">
           <Image src="/logo.svg" alt="Olympia" width={36} height={36} />
-          <span className="text-lg font-bold tracking-tight">TREASURY</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-amber-border)] bg-[var(--brand-amber-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--brand-amber)]">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--brand-amber)]" />
+          <span className="text-lg font-bold tracking-tight">OLYMPIA</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] px-2.5 py-0.5 text-xs font-medium text-[var(--brand-green)]">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--brand-green)]" />
             {badgeLabel}
           </span>
         </Link>

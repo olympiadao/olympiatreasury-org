@@ -88,13 +88,13 @@ export function TransactionsSection() {
                               Donation
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-[var(--brand-amber)]">
+                            <span className="inline-flex items-center gap-1 text-[var(--text-muted)]">
                               <ArrowUpRight size={14} />
                               Withdrawal
                             </span>
                           )}
                           {tx.governance && (
-                            <span className="inline-flex rounded-full bg-[var(--brand-amber-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--brand-amber)]">
+                            <span className="inline-flex rounded-full border border-[var(--border-default)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">
                               ECFP
                             </span>
                           )}
@@ -122,7 +122,7 @@ export function TransactionsSection() {
                           className={`font-mono text-xs font-medium ${
                             tx.type === "inflow"
                               ? "text-[var(--brand-green)]"
-                              : "text-[var(--brand-amber)]"
+                              : "text-[var(--text-muted)]"
                           }`}
                         >
                           {tx.type === "inflow" ? "+" : "\u2212"}

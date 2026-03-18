@@ -2,21 +2,23 @@
 
 ## About
 
-The Olympia Treasury (ECIP-1112) is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. It is non-inflationary — no new ETC coins are minted. All funds come from existing transaction fees.
+The Olympia Treasury is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. It is non-inflationary — no new ETC coins are minted. All funds come from existing transaction fees.
 
 ## Key Features
 
 - Protocol-level basefee accumulation (EIP-1559)
 - On-chain governance-controlled disbursement
-- AccessControlDefaultAdminRules security model (OpenZeppelin 5.6)
+- Immutable contract — no proxy patterns, no admin methods
 - Timelock-protected execution
+- Sanctions-checked withdrawals
 - Fully auditable and transparent
 
 ## Contract
 
-- Address: 0xd6165F3aF4281037bce810621F62B43077Fb0e37
-- Network: Mordor Testnet (Chain ID 63) + ETC Mainnet
-- Version: Demo v0.1
+- Treasury: 0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf
+- Executor: 0x64624f74f77639cba268a6c8bedc2778b707ef9a
+- Network: Mordor Testnet (Chain ID 63) + ETC Mainnet (Chain ID 61)
+- Version: Demo v0.2
 
 ## Fund Allocation
 
@@ -33,6 +35,6 @@ The Olympia Treasury (ECIP-1112) is an immutable, protocol-controlled vault that
 ## Links
 
 - Treasury: https://olympiatreasury.org
-- DAO: https://olympiadao.org
-- Core App: https://core.olympiadao.org
+- Olympia DAO: https://olympiadao.org
+- Governance App: https://app.olympiadao.org
 - GitHub: https://github.com/olympiadao

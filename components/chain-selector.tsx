@@ -47,7 +47,7 @@ export function ChainSelector() {
         <Image src={current.icon} alt={current.name} width={20} height={20} />
         <span className="hidden sm:inline">{current.shortName}</span>
         {current.isTestnet && (
-          <span className="hidden rounded bg-[var(--brand-amber-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--brand-amber)] sm:inline">
+          <span className="hidden rounded bg-[var(--brand-green-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--brand-green)] sm:inline">
             Testnet
           </span>
         )}
@@ -70,7 +70,7 @@ export function ChainSelector() {
                 <div className="flex items-center gap-2">
                   <span className="font-medium">{chain.name}</span>
                   {chain.isTestnet && (
-                    <span className="rounded bg-[var(--brand-amber-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--brand-amber)]">
+                    <span className="rounded bg-[var(--brand-green-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--brand-green)]">
                       Testnet
                     </span>
                   )}
