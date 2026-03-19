@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Vault,
   ExternalLink,
   TrendingDown,
   Activity,
@@ -11,9 +10,9 @@ import {
   Pickaxe,
 } from "lucide-react";
 import { useTreasuryStats } from "@/lib/hooks/use-treasury";
-import { TREASURY_ADDRESS, MORDOR_EXPLORER } from "@/lib/config";
+import { useChainConfig } from "@/lib/hooks/use-chain-config";
 
-function formatMetc(value: string): string {
+function formatAmount(value: string): string {
   const num = parseFloat(value);
   if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(2)}M`;
   if (num >= 1_000) return `${(num / 1_000).toFixed(2)}K`;
@@ -22,6 +21,7 @@ function formatMetc(value: string): string {
 
 export function DashboardHero() {
   const { data: stats, isLoading, error } = useTreasuryStats();
+  const config = useChainConfig();
 
   return (
     <section className="px-6 pt-28 pb-8">
@@ -29,10 +29,6 @@ export function DashboardHero() {
         {/* Header row */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--brand-amber-border)] bg-[var(--brand-amber-subtle)] px-4 py-1.5 text-xs font-medium text-[var(--brand-amber)]">
-              <Vault size={14} />
-              ECIP-1112 · Protocol-Controlled Treasury
-            </div>
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
               Olympia{" "}
               <span className="text-[var(--brand-green)]">Treasury</span>
@@ -45,7 +41,7 @@ export function DashboardHero() {
 
           <div className="flex items-center gap-3">
             <a
-              href={`${MORDOR_EXPLORER}/address/${TREASURY_ADDRESS}`}
+              href={`${config.explorer}/address/${config.treasury}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-green)] px-5 py-2.5 text-sm font-semibold text-[var(--background)] transition-all duration-200 hover:brightness-110"
@@ -70,7 +66,7 @@ export function DashboardHero() {
             Vault
           </span>
           <code className="font-mono text-sm text-[var(--brand-green)]">
-            {TREASURY_ADDRESS}
+            {config.treasury}
           </code>
         </div>
 
@@ -78,55 +74,55 @@ export function DashboardHero() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <KpiCard
             label="Balance"
-            value={stats ? `${formatMetc(stats.balance.formatted)} METC` : "—"}
+            value={stats ? `${formatAmount(stats.balance.formatted)} ${config.symbol}` : "\u2014"}
             icon={Wallet}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="Mined Income"
-            value={stats ? `${formatMetc(stats.minedIncome)} METC` : "—"}
-            subtitle={`Block rewards + tx fees${stats ? ` · ${stats.blockCount} blocks` : ""}`}
+            value={stats ? `${formatAmount(stats.minedIncome)} ${config.symbol}` : "\u2014"}
+            subtitle={`Block rewards + tx fees${stats ? ` \u00b7 ${stats.blockCount} blocks` : ""}`}
             icon={Pickaxe}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="BaseFee"
-            value={stats ? `${formatMetc(stats.baseFeeIncome)} METC` : "—"}
-            subtitle="ECIP-1111 · activates with Olympia"
+            value={stats ? `${formatAmount(stats.baseFeeIncome)} ${config.symbol}` : "\u2014"}
+            subtitle="Activates with Olympia"
             icon={Flame}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="Donations"
-            value={stats ? `${formatMetc(stats.totalDonations)} METC` : "—"}
+            value={stats ? `${formatAmount(stats.totalDonations)} ${config.symbol}` : "\u2014"}
             subtitle="Direct transfers from wallets"
             icon={Heart}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
           <KpiCard
             label="Withdrawals"
-            value={stats ? `${formatMetc(stats.totalOutflow)} METC` : "—"}
+            value={stats ? `${formatAmount(stats.totalOutflow)} ${config.symbol}` : "\u2014"}
             subtitle="Governance-approved ECFPs"
             icon={TrendingDown}
             loading={isLoading}
             error={!!error}
-            accent="amber"
+
           />
           <KpiCard
             label="Transactions"
-            value={stats ? stats.txCount.toString() : "—"}
+            value={stats ? stats.txCount.toString() : "\u2014"}
             icon={Activity}
             loading={isLoading}
             error={!!error}
-            accent="green"
+
           />
         </div>
       </div>
@@ -141,7 +137,6 @@ function KpiCard({
   icon: Icon,
   loading,
   error,
-  accent,
 }: {
   label: string;
   value: string;
@@ -149,10 +144,8 @@ function KpiCard({
   icon: React.ComponentType<{ size?: number; className?: string }>;
   loading: boolean;
   error: boolean;
-  accent: "green" | "amber";
 }) {
-  const iconColor =
-    accent === "green" ? "text-[var(--brand-green)]" : "text-[var(--brand-amber)]";
+  const iconColor = "text-[var(--brand-green)]";
 
   return (
     <div

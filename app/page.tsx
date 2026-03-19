@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { NavHeader } from "@/components/sections/NavHeader";
 import { DashboardHero } from "@/components/sections/DashboardHero";
 import { BalanceChart } from "@/components/sections/BalanceChart";
@@ -7,7 +8,7 @@ import { FooterSection } from "@/components/sections/FooterSection";
 
 export default function Home() {
   return (
-    <>
+    <Suspense>
       <NavHeader />
       <main>
         <DashboardHero />
@@ -16,6 +17,6 @@ export default function Home() {
         <AboutSection />
       </main>
       <FooterSection />
-    </>
+    </Suspense>
   );
 }

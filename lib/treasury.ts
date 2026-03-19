@@ -1,5 +1,5 @@
 import { formatEther } from "viem";
-import { TREASURY_ADDRESS, MORDOR_API, ERA_LENGTH } from "./config";
+import { getChainConfig } from "./config";
 
 // ---------- Types ----------
 
@@ -84,12 +84,10 @@ interface BlockscoutResponse<T> {
   next_page_params: Record<string, string> | null;
 }
 
-const EXECUTOR_ADDRESS = "0x94d4f74dDdE715Ed195B597A3434713690B14e97";
-
 
 /** ECIP-1017: 5 ETC base reward, reduced by 4/5 each era */
-function ecip1017Reward(blockNumber: number): bigint {
-  const era = Math.floor(blockNumber / ERA_LENGTH);
+function ecip1017Reward(blockNumber: number, eraLength: number): bigint {
+  const era = Math.floor(blockNumber / eraLength);
   let reward = 5_000_000_000_000_000_000n; // 5 ETC in wei
   for (let i = 0; i < era; i++) {
     reward = (reward * 4n) / 5n;
@@ -97,21 +95,23 @@ function ecip1017Reward(blockNumber: number): bigint {
   return reward;
 }
 
-export async function fetchBalance(): Promise<TreasuryBalance> {
+export async function fetchBalance(chainId: number): Promise<TreasuryBalance> {
+  const { api, treasury } = getChainConfig(chainId);
   const res = await fetch(
-    `${MORDOR_API}/addresses/${TREASURY_ADDRESS}`
+    `${api}/addresses/${treasury}`
   );
   const data: BlockscoutAddress = await res.json();
   const wei = BigInt(data.coin_balance);
   return { wei, formatted: formatEther(wei) };
 }
 
-export async function fetchMinedBlocks(): Promise<MinedBlocksData> {
+export async function fetchMinedBlocks(chainId: number): Promise<MinedBlocksData> {
+  const { api, treasury, eraLength } = getChainConfig(chainId);
   let blockRewards = 0n;
   let txFees = 0n;
   let blockCount = 0;
   let url: string | null =
-    `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/blocks-validated`;
+    `${api}/addresses/${treasury}/blocks-validated`;
 
   while (url) {
     const res = await fetch(url);
@@ -121,7 +121,7 @@ export async function fetchMinedBlocks(): Promise<MinedBlocksData> {
     for (const block of data.items ?? []) {
       blockCount++;
       // Use ECIP-1017 formula — Blockscout rewards field doesn't apply era disinflation
-      blockRewards += ecip1017Reward(block.height);
+      blockRewards += ecip1017Reward(block.height, eraLength);
       if (block.transaction_fees) {
         txFees += BigInt(block.transaction_fees);
       }
@@ -132,7 +132,7 @@ export async function fetchMinedBlocks(): Promise<MinedBlocksData> {
         ([k, v]) => [k, String(v)] as [string, string]
       );
       const params = new URLSearchParams(entries);
-      url = `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/blocks-validated?${params}`;
+      url = `${api}/addresses/${treasury}/blocks-validated?${params}`;
     } else {
       url = null;
     }
@@ -141,13 +141,14 @@ export async function fetchMinedBlocks(): Promise<MinedBlocksData> {
   return { blockRewards, txFees, blockCount };
 }
 
-export async function fetchTransactions(): Promise<TreasuryTransaction[]> {
-  const addr = TREASURY_ADDRESS.toLowerCase();
-  const executor = EXECUTOR_ADDRESS.toLowerCase();
+export async function fetchTransactions(chainId: number): Promise<TreasuryTransaction[]> {
+  const { api, treasury, executor } = getChainConfig(chainId);
+  const addr = treasury.toLowerCase();
+  const executorAddr = executor.toLowerCase();
 
   // Fetch normal transactions (no limit/sort — Blockscout v2 doesn't support them)
   const normalRes = await fetch(
-    `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/transactions`
+    `${api}/addresses/${treasury}/transactions`
   );
   const normalData: BlockscoutResponse<BlockscoutTx> = await normalRes.json();
 
@@ -167,7 +168,7 @@ export async function fetchTransactions(): Promise<TreasuryTransaction[]> {
 
   // Fetch internal transactions (withdrawals appear here)
   const internalRes = await fetch(
-    `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/internal-transactions`
+    `${api}/addresses/${treasury}/internal-transactions`
   );
   const internalData: BlockscoutResponse<BlockscoutInternalTx> =
     await internalRes.json();
@@ -179,7 +180,7 @@ export async function fetchTransactions(): Promise<TreasuryTransaction[]> {
       const isOutflow = tx.from.hash.toLowerCase() === addr;
       // Outflows from treasury are governance-linked (via Executor→Treasury→recipient)
       const isGovernance =
-        isOutflow || tx.from.hash.toLowerCase() === executor;
+        isOutflow || tx.from.hash.toLowerCase() === executorAddr;
       return {
         hash: tx.transaction_hash,
         blockNumber: tx.block_number,
@@ -212,12 +213,13 @@ export async function fetchTransactions(): Promise<TreasuryTransaction[]> {
   );
 }
 
-export async function fetchBalanceHistory(): Promise<BalanceEvent[]> {
+export async function fetchBalanceHistory(chainId: number): Promise<BalanceEvent[]> {
   const [transactions, minedBlocksRaw] = await Promise.all([
-    fetchTransactions(),
-    fetchMinedBlocksRaw(),
+    fetchTransactions(chainId),
+    fetchMinedBlocksRaw(chainId),
   ]);
 
+  const { eraLength } = getChainConfig(chainId);
   const events: BalanceEvent[] = [];
 
   // Add transaction events
@@ -234,7 +236,7 @@ export async function fetchBalanceHistory(): Promise<BalanceEvent[]> {
   // Add mined block events using ECIP-1017 formula (not Blockscout's incorrect rewards)
   for (const block of minedBlocksRaw) {
     const reward =
-      parseFloat(formatEther(ecip1017Reward(block.height))) +
+      parseFloat(formatEther(ecip1017Reward(block.height, eraLength))) +
       parseFloat(formatEther(BigInt(block.transaction_fees || "0")));
     if (reward > 0) {
       events.push({
@@ -250,10 +252,11 @@ export async function fetchBalanceHistory(): Promise<BalanceEvent[]> {
 }
 
 /** Raw mined blocks with timestamps for chart timeline */
-async function fetchMinedBlocksRaw(): Promise<BlockscoutBlock[]> {
+async function fetchMinedBlocksRaw(chainId: number): Promise<BlockscoutBlock[]> {
+  const { api, treasury } = getChainConfig(chainId);
   const blocks: BlockscoutBlock[] = [];
   let url: string | null =
-    `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/blocks-validated`;
+    `${api}/addresses/${treasury}/blocks-validated`;
 
   while (url) {
     const res = await fetch(url);
@@ -266,7 +269,7 @@ async function fetchMinedBlocksRaw(): Promise<BlockscoutBlock[]> {
         ([k, v]) => [k, String(v)] as [string, string]
       );
       const params = new URLSearchParams(entries);
-      url = `${MORDOR_API}/addresses/${TREASURY_ADDRESS}/blocks-validated?${params}`;
+      url = `${api}/addresses/${treasury}/blocks-validated?${params}`;
     } else {
       url = null;
     }
@@ -275,11 +278,11 @@ async function fetchMinedBlocksRaw(): Promise<BlockscoutBlock[]> {
   return blocks;
 }
 
-export async function fetchStats(): Promise<TreasuryStats> {
+export async function fetchStats(chainId: number): Promise<TreasuryStats> {
   const [balance, transactions, minedBlocks] = await Promise.all([
-    fetchBalance(),
-    fetchTransactions(),
-    fetchMinedBlocks(),
+    fetchBalance(chainId),
+    fetchTransactions(chainId),
+    fetchMinedBlocks(chainId),
   ]);
 
   let totalOutflow = 0n;

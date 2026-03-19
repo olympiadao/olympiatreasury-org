@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useTheme } from "next-themes";
 import {
   AreaChart,
   Area,
@@ -10,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useTreasuryBalanceHistory } from "@/lib/hooks/use-treasury";
+import { useChainConfig } from "@/lib/hooks/use-chain-config";
 
 interface ChartPoint {
   label: string;
@@ -18,6 +20,15 @@ interface ChartPoint {
 
 export function BalanceChart() {
   const { data: events, isLoading } = useTreasuryBalanceHistory();
+  const config = useChainConfig();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  const tickColor = isDark ? "#6b7280" : "#9ca3af";
+  const axisColor = isDark ? "#1f292b" : "#e2e8f0";
+  const tooltipBg = isDark ? "#0f1614" : "#ffffff";
+  const tooltipBorder = isDark ? "#1f292b" : "#e2e8f0";
+  const tooltipText = isDark ? "#fff" : "#0a0f10";
 
   const chartData = useMemo(() => {
     if (!events || events.length === 0) return [];
@@ -83,13 +94,13 @@ export function BalanceChart() {
               </defs>
               <XAxis
                 dataKey="label"
-                tick={{ fill: "#6b7280", fontSize: 11 }}
-                axisLine={{ stroke: "#1f292b" }}
+                tick={{ fill: tickColor, fontSize: 11 }}
+                axisLine={{ stroke: axisColor }}
                 tickLine={false}
                 interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fill: "#6b7280", fontSize: 11 }}
+                tick={{ fill: tickColor, fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v: number) =>
@@ -99,14 +110,14 @@ export function BalanceChart() {
               />
               <Tooltip
                 contentStyle={{
-                  background: "#0f1614",
-                  border: "1px solid #1f292b",
+                  background: tooltipBg,
+                  border: `1px solid ${tooltipBorder}`,
                   borderRadius: 8,
                   fontSize: 13,
-                  color: "#fff",
+                  color: tooltipText,
                 }}
                 formatter={(value) => [
-                  `${Number(value).toFixed(4)} METC`,
+                  `${Number(value).toFixed(4)} ${config.symbol}`,
                   "Balance",
                 ]}
               />

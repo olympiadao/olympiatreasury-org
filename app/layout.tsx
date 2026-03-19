@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/lib/providers";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -19,19 +20,17 @@ export const metadata: Metadata = {
     template: "%s | Olympia Treasury",
   },
   description:
-    "The Olympia Treasury (ECIP-1112) is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. Non-inflationary, transparent, and auditable.",
+    "The Olympia Treasury is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. Non-inflationary, transparent, and auditable.",
   keywords: [
     "Ethereum Classic",
     "ETC",
     "Olympia",
     "Treasury",
-    "ECIP-1112",
-    "BASEFEE",
     "protocol funding",
     "non-inflationary",
     "smart contract",
     "on-chain governance",
-    "public goods",
+    "Olympia DAO",
   ],
   authors: [
     { name: "Cody Burns", url: "https://github.com/realcodywburns" },
@@ -44,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "Olympia Treasury",
     title: "Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic",
     description:
-      "Immutable, non-inflationary vault for ETC protocol revenue. ECIP-1112.",
+      "Immutable, non-inflationary vault for Ethereum Classic protocol revenue. Governed by Olympia DAO on Ethereum Classic.",
     images: [
       {
         url: "https://olympiatreasury.org/og-image.png",
@@ -58,8 +57,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic",
     description:
-      "Immutable, non-inflationary vault for ETC protocol revenue. ECIP-1112.",
+      "Immutable, non-inflationary vault for Ethereum Classic protocol revenue. Governed by Olympia DAO on Ethereum Classic.",
     images: ["https://olympiatreasury.org/og-image.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
   robots: {
     index: true,
@@ -74,11 +77,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <ThemeProvider>
+          <Providers>{children}</Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

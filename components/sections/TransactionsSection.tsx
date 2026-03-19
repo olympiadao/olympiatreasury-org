@@ -2,14 +2,14 @@
 
 import { ArrowDownLeft, ArrowUpRight, ExternalLink } from "lucide-react";
 import { useTreasuryTransactions } from "@/lib/hooks/use-treasury";
-import { MORDOR_EXPLORER } from "@/lib/config";
+import { useChainConfig } from "@/lib/hooks/use-chain-config";
 
 function truncateHash(hash: string): string {
-  return `${hash.slice(0, 10)}…${hash.slice(-6)}`;
+  return `${hash.slice(0, 10)}\u2026${hash.slice(-6)}`;
 }
 
 function truncateAddress(addr: string): string {
-  return `${addr.slice(0, 8)}…${addr.slice(-6)}`;
+  return `${addr.slice(0, 8)}\u2026${addr.slice(-6)}`;
 }
 
 function formatTimestamp(ts: string): string {
@@ -24,6 +24,7 @@ function formatTimestamp(ts: string): string {
 
 export function TransactionsSection() {
   const { data: transactions, isLoading } = useTreasuryTransactions();
+  const config = useChainConfig();
 
   return (
     <section id="transactions" className="px-6 py-8">
@@ -31,7 +32,7 @@ export function TransactionsSection() {
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Recent Transactions</h2>
           <a
-            href={`${MORDOR_EXPLORER}/address/0xd6165F3aF4281037bce810621F62B43077Fb0e37?tab=txs`}
+            href={`${config.explorer}/address/${config.treasury}?tab=txs`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
@@ -87,13 +88,13 @@ export function TransactionsSection() {
                               Donation
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-[var(--brand-amber)]">
+                            <span className="inline-flex items-center gap-1 text-[var(--text-muted)]">
                               <ArrowUpRight size={14} />
                               Withdrawal
                             </span>
                           )}
                           {tx.governance && (
-                            <span className="inline-flex rounded-full bg-[var(--brand-amber-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--brand-amber)]">
+                            <span className="inline-flex rounded-full border border-[var(--border-default)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">
                               ECFP
                             </span>
                           )}
@@ -101,7 +102,7 @@ export function TransactionsSection() {
                       </td>
                       <td className="px-5 py-3">
                         <a
-                          href={`${MORDOR_EXPLORER}/tx/${tx.hash}`}
+                          href={`${config.explorer}/tx/${tx.hash}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-mono text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
@@ -121,11 +122,11 @@ export function TransactionsSection() {
                           className={`font-mono text-xs font-medium ${
                             tx.type === "inflow"
                               ? "text-[var(--brand-green)]"
-                              : "text-[var(--brand-amber)]"
+                              : "text-[var(--text-muted)]"
                           }`}
                         >
-                          {tx.type === "inflow" ? "+" : "−"}
-                          {parseFloat(tx.value).toFixed(4)} METC
+                          {tx.type === "inflow" ? "+" : "\u2212"}
+                          {parseFloat(tx.value).toFixed(4)} {config.symbol}
                         </span>
                       </td>
                       <td className="px-5 py-3">
