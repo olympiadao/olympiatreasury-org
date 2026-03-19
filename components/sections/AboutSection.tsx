@@ -154,7 +154,7 @@ function CommunityFunding() {
         </div>
       </div>
       <p>
-        Once Olympia activates (block 15,800,850), EIP-1559 basefee revenue will provide a sustainable,
+        Once Olympia activates, EIP-1559 basefee revenue will provide a sustainable,
         non-inflationary funding source. Community donations and mining support will remain welcome as
         supplementary income to accelerate protocol development.
       </p>
@@ -267,7 +267,7 @@ function MordorContracts() {
   return (
     <div className="space-y-3">
       <p className="text-xs text-[var(--text-muted)]">
-        Activation block: 15,800,850 (~March 28, 2026). Mainnet deployment follows successful testnet activation.
+        Live on Mordor testnet. Mainnet deployment follows successful testnet validation.
       </p>
       {contracts.map((contract) => (
         <div
