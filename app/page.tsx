@@ -8,15 +8,19 @@ import { FooterSection } from "@/components/sections/FooterSection";
 
 export default function Home() {
   return (
-    <Suspense>
-      <NavHeader />
+    <>
+      <Suspense>
+        <NavHeader />
+      </Suspense>
       <main>
-        <DashboardHero />
-        <BalanceChart />
-        <TransactionsSection />
-        <AboutSection />
+        <Suspense>
+          <DashboardHero />
+          <BalanceChart />
+          <TransactionsSection />
+          <AboutSection />
+        </Suspense>
       </main>
       <FooterSection />
-    </Suspense>
+    </>
   );
 }

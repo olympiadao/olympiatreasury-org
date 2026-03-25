@@ -1,42 +1,76 @@
 # Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic
 
-## About
+> The Olympia Treasury is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. Non-inflationary, transparent, and auditable.
 
-The Olympia Treasury is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. It is non-inflationary — no new ETC coins are minted. All funds come from existing transaction fees.
+## What is the Olympia Treasury?
 
-## Key Features
+The Olympia Treasury (ECIP-1112) receives basefee revenue from every transaction on Ethereum Classic via EIP-1559, voluntary donations, and mining rewards directed to the treasury address. No new ETC coins are minted — all funds come from existing transaction fees. All withdrawals require on-chain governance approval.
 
-- Protocol-level basefee accumulation (EIP-1559)
-- On-chain governance-controlled disbursement
-- Immutable contract — no proxy patterns, no admin methods
-- Timelock-protected execution
-- Sanctions-checked withdrawals
-- Fully auditable and transparent
+## How Funds Flow
 
-## Contracts (Demo v0.3)
+1. **BaseFee Collected** — After Olympia activates, EIP-1559 basefee from every block is redirected to the treasury by consensus.
+2. **Mined Income** — Mining pools and solo miners can direct block rewards and tx fees to the treasury by mining to the contract address.
+3. **Direct Donations** — Anyone can send ETC directly to the treasury contract to support protocol development transparently.
+4. **Treasury Accumulates** — All three income streams grow the vault. Balance and full history are publicly visible on-chain.
+5. **Proposals Submitted** — Contributors submit ECFPs specifying recipient, amount, and milestones for governance review.
+6. **Governance Approves** — DAO votes and authorizes eligible proposals. Only governance can trigger fund releases.
 
-Nine contracts deployed via deterministic CREATE2 (salt: OLYMPIA_DEMO_V0_3) — identical addresses on Mordor Testnet (63) and ETC Mainnet (61). See lib/contracts.json for full address list.
+## Core Invariants
 
-- Treasury: 0x60d0A7394f9Cd5C469f9F5Ec4F9C803F5294d79b
-- Executor: 0x292eBe07d11850Dfc94Cbf9c72C3A054d23cAB54
-- Network: Mordor Testnet (Chain ID 63) + ETC Mainnet (Chain ID 61)
-- Version: Demo v0.3
+- No Minting — Cannot mint ETC, only holds received inflows
+- Immutable Code — No proxy patterns, no admin methods
+- Protocol-Controlled — Owned by protocol rules, not a multisig
+- Minimal Interface — Accepts deposits, executes on governance signal
+- Fully Transparent — All inflows and outflows visible on-chain
 
-## Fund Allocation
+## Security Model
+
+- Protocol Consensus — Client implementations enforce treasury rules at the protocol level
+- Contract Immutability — No upgradeable proxy, no admin methods
+- Sanctions Defense — OFAC screening at proposal level + emergency pause
+
+## Governance Stages
+
+1. Accumulate — BaseFee + mining + donations (active)
+2. Govern — On-chain proposals and voting
+3. Fund — Treasury disbursements
+4. Predict — Futarchy governance
+5. Optimize — Protocol improvements
+
+## Fund Allocation Categories
 
 - Developer Retention
 - Infrastructure Maintenance
 - Emergency Response
 - Public Goods
 
+## Deployed Contracts (Demo v0.3)
+
+Nine contracts deployed via deterministic CREATE2 (salt: OLYMPIA_DEMO_V0_3) — identical addresses on Mordor Testnet (chain 63) and ETC Mainnet (chain 61):
+
+- OlympiaTreasury — Protocol-controlled vault
+- OlympiaGovernor — On-chain governance
+- OlympiaExecutor — Proposal execution
+- TimelockController — Security timelock
+- ECFPRegistry — Proposal registry
+- OlympiaMemberNFT — Soulbound membership
+- SanctionsOracle — Compliance screening
+- OlympiaMemberRenderer — On-chain SVG membership cards
+- MembershipVerifier — Sybil resistance
+
+## Web Properties
+
+- olympiatreasury.org — This site (treasury dashboard)
+- olympiadao.org — Governance landing page
+- app.olympiadao.org — Proposal submission, voting, and execution
+- ethereumclassicdao.org — Institutional (Ethereum Classic DAO LLC)
+- github.com/olympiadao — Open-source repositories
+
 ## Authors
 
 - Cody Burns (github.com/realcodywburns)
 - Chris Mercer (github.com/chris-mercer)
 
-## Links
+## Parent Organization
 
-- Treasury: https://olympiatreasury.org
-- Olympia DAO: https://olympiadao.org
-- Governance App: https://app.olympiadao.org
-- GitHub: https://github.com/olympiadao
+Ethereum Classic DAO LLC — Wyoming DAO LLC (Filing ID 2025-001671865)
