@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useChainConfig } from "@/lib/hooks/use-chain-config";
 import {
   ChevronDown,
@@ -66,29 +65,23 @@ function CollapsibleCard({
   defaultOpen?: boolean;
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
-
   return (
-    <div
-      className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)]"
+    <details
+      open={defaultOpen || undefined}
+      className="group rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)]"
       style={{ boxShadow: "var(--card-shadow)" }}
     >
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between px-5 py-4 text-left"
-      >
+      <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 text-left [&::-webkit-details-marker]:hidden">
         <span className="text-sm font-semibold">{title}</span>
         <ChevronDown
           size={16}
-          className={`text-[var(--text-subtle)] transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className="text-[var(--text-subtle)] transition-transform duration-200 group-open:rotate-180"
         />
-      </button>
-      {open && (
-        <div className="border-t border-[var(--border-subtle)] px-5 py-5">
-          {children}
-        </div>
-      )}
-    </div>
+      </summary>
+      <div className="border-t border-[var(--border-subtle)] px-5 py-5">
+        {children}
+      </div>
+    </details>
   );
 }
 
