@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useTreasuryStats } from "@/lib/hooks/use-treasury";
 import { useChainConfig } from "@/lib/hooks/use-chain-config";
+import { CountdownBanner } from "@/components/ui/CountdownBanner";
 
 function formatAmount(value: string): string {
   const num = parseFloat(value);
@@ -59,6 +60,9 @@ export function DashboardHero() {
             </a>
           </div>
         </div>
+
+        {/* Olympia Countdown */}
+        <CountdownBanner />
 
         {/* Contract address */}
         <div className="mb-8 rounded-lg border border-[var(--border-default)] bg-[var(--bg-card)] px-5 py-3">
