@@ -34,7 +34,7 @@ export interface TreasuryStats {
   totalDonations: string;
   /** Mined income: block rewards + tx fees from blocks mined to treasury */
   minedIncome: string;
-  /** EIP-1559 basefee redirected via ECIP-1111 (post-Olympia) */
+  /** EIP-1559 basefee redirected via ECIP-1112 (post-Olympia) */
   baseFeeIncome: string;
   blockCount: number;
   txCount: number;

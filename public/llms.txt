@@ -53,7 +53,7 @@ Nine contracts deployed via deterministic CREATE2 (salt: OLYMPIA_DEMO_V0_3) — 
 - OlympiaExecutor — Proposal execution
 - TimelockController — Security timelock
 - ECFPRegistry — Proposal registry
-- OlympiaMemberNFT — Soulbound membership
+- OlympiaMemberNFT — Non-transferable membership NFT
 - SanctionsOracle — Compliance screening
 - OlympiaMemberRenderer — On-chain SVG membership cards
 - MembershipVerifier — Sybil resistance

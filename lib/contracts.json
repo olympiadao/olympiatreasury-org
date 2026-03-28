@@ -31,7 +31,7 @@
     "memberNFT": {
       "name": "OlympiaMemberNFT",
       "address": "0xb4D45A498994C89553A9c923c6b85F7623C0843e",
-      "role": "Soulbound governance NFT (1 = 1 vote)"
+      "role": "Non-transferable membership NFT (1 = 1 vote)"
     },
     "renderer": {
       "name": "OlympiaMemberRenderer",
