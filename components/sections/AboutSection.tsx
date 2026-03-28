@@ -251,7 +251,7 @@ const contracts: { name: string; address: string; description: string }[] = [
   { name: "Governor", address: "0xB85dbc899472756470EF4033b9637ff8fa2FD23D", description: "On-chain governance and proposal execution" },
   { name: "Timelock", address: "0xA5839b3e9445f7eE7AffdBC796DC0601f9b976C2", description: "Time-delayed execution of approved proposals" },
   { name: "ECFP Registry", address: "0xFB4De5674a6b9a301d16876795a74f3bdacfa722", description: "Proposal categorization and metadata registry" },
-  { name: "Governance NFT", address: "0x73e78d3a3470396325b975FcAFA8105A89A9E672", description: "Soulbound voting power token for DAO participation" },
+  { name: "Governance NFT", address: "0x73e78d3a3470396325b975FcAFA8105A89A9E672", description: "Non-transferable membership NFT granting voting power in DAO governance" },
   { name: "Sanctions Oracle", address: "0xfF2B8D7937D908D81C72D20AC99302EE6ACc2709", description: "OFAC sanctions compliance constraint" },
 ];
 
