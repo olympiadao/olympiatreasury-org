@@ -60,6 +60,14 @@ Contracts include:
 - OlympiaMemberRenderer — On-chain SVG membership cards
 - MembershipVerifier — Sybil resistance
 
+## Olympia Client ECIPs
+
+The Olympia upgrade includes three client-facing ECIPs requiring node operator upgrades:
+
+- ECIP-1111 — EIP-1559 fee market and protocol upgrades (basefee redirect to treasury)
+- ECIP-1112 — Olympia Treasury Contract (this vault)
+- ECIP-1121 — EVM alignment with Ethereum's Fusaka execution layer (full Fusaka EVM parity for ETC)
+
 ## Web Properties
 
 - olympiatreasury.org — This site (treasury dashboard)
