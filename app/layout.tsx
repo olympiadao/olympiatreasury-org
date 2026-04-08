@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     "smart contract",
     "on-chain governance",
     "Olympia DAO",
+    "basefee",
+    "miner rewards untouched",
+    "block rewards",
+    "EIP-1559",
+    "ECIP-1112",
   ],
   authors: [
     { name: "Cody Burns", url: "https://github.com/realcodywburns" },

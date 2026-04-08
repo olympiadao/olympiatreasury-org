@@ -62,17 +62,17 @@ export function CountdownBanner() {
 
   if (status === "tbd") {
     return (
-      <div className="mb-8 flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-card)] px-4 py-3">
-        <Clock size={16} className="text-[#F59E0B]" />
+      <div className="mb-8 flex items-center gap-3 rounded-lg border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] px-4 py-3">
+        <Clock size={16} className="text-[var(--brand-green)]" />
         <span className="text-sm text-[var(--text-muted)]">
-          Olympia Activation: Block TBD &mdash;{" "}
+          The Mordor Testnet and Ethereum Classic Mainnet activation blocks will be announced on the Olympia Upgrade core developers call.{" "}
           <a
             href="https://olympiadao.org"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#F59E0B] transition hover:opacity-80"
+            className="text-[var(--brand-green)] transition hover:opacity-80"
           >
-            see olympiadao.org for details
+            Learn more →
           </a>
         </span>
       </div>
