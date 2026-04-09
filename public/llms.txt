@@ -4,16 +4,29 @@
 
 ## What is the Olympia Treasury?
 
-The Olympia Treasury (ECIP-1112) receives basefee revenue from every transaction on Ethereum Classic via EIP-1559, voluntary donations, and mining rewards directed to the treasury address. No new ETC coins are minted — all funds come from existing transaction fees. All withdrawals require on-chain governance approval.
+The Olympia Treasury (ECIP-1112) is the protocol-controlled vault funded by EIP-1559 basefee revenue from every transaction on Ethereum Classic, voluntary donations, and mining rewards directed to the treasury address. No new ETC coins are minted — all funds come from existing transaction fees that were previously set to be destroyed. All withdrawals require on-chain governance approval.
+
+## Olympia Protocol Upgrade
+
+Olympia is Ethereum Classic's most significant protocol upgrade — delivering the EVM ecosystem's most widely adopted fee market, a protocol-controlled treasury, and full Fusaka EVM alignment to the only Proof-of-Work smart contract platform in the world.
+
+**ECIP-1111 — EIP-1559 Fee Market:** The most widely adopted transaction format and fee market in the EVM ecosystem, now on Ethereum Classic. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive — legacy transactions remain valid indefinitely. Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury. Miner block rewards and tips remain completely untouched.
+
+**ECIP-1112 — Protocol Treasury:** A protocol-controlled vault funded by basefee revenue and voluntary contributions. For the first time, institutions, developers, and network stakeholders can directly fund Ethereum Classic's core development and critical infrastructure without fielding their own team. No admin keys, no multisig — only on-chain governance can release funds.
+
+**ECIP-1121 — Fusaka EVM Alignment:** Olympia ends Ethereum Classic's longest period of EVM stagnation, advancing the execution layer through London, Dencun, Pectra, and Fusaka in a single upgrade. Exchanges and wallets gain modern RPC compatibility and standard transaction support. Developers gain full access to every current Ethereum tool, library, and framework — one codebase, every EVM chain.
+
+## Activation Status
+
+Olympia is in final testing on the Mordor Testnet. The activation block will be announced after the Olympia Upgrade core developers call. All client implementations will release Olympia-compatible versions well before activation.
 
 ## How Funds Flow
 
 1. **BaseFee Collected** — After Olympia activates, EIP-1559 basefee from every block is redirected to the treasury by consensus.
-2. **Mined Income** — Mining pools and solo miners can direct block rewards and tx fees to the treasury by mining to the contract address.
-3. **Direct Donations** — Anyone can send ETC directly to the treasury contract to support protocol development transparently.
-4. **Treasury Accumulates** — All three income streams grow the vault. Balance and full history are publicly visible on-chain.
-5. **Proposals Submitted** — Contributors submit ECFPs specifying recipient, amount, and milestones for governance review.
-6. **Governance Approves** — DAO votes and authorizes eligible proposals. Only governance can trigger fund releases.
+2. **Direct Donations** — Anyone can send ETC directly to the treasury contract to support protocol development transparently.
+3. **Treasury Accumulates** — All income streams grow the vault. Balance and full history are publicly visible on-chain.
+4. **Proposals Submitted** — Contributors submit ECFPs specifying recipient, amount, and milestones for governance review.
+5. **Governance Approves** — DAO votes and authorizes eligible proposals. Only governance can trigger fund releases.
 
 ## Core Invariants
 
@@ -29,26 +42,19 @@ The Olympia Treasury (ECIP-1112) receives basefee revenue from every transaction
 - Contract Immutability — No upgradeable proxy, no admin methods
 - Sanctions Defense — OFAC screening at proposal level + emergency pause
 
-## Governance Stages
+## Olympia Roadmap
 
-1. Accumulate — BaseFee + mining + donations (active)
-2. Govern — On-chain proposals and voting
-3. Fund — Treasury disbursements
-4. Predict — Futarchy governance
-5. Optimize — Protocol improvements
+Five stages from consensus upgrades to permanent protocol integration:
 
-## Fund Allocation Categories
+1. **Consensus Upgrades** (Complete) — EIP-1559 fee market, dynamic gas limits, basefee redirect to treasury, miner rewards untouched. Three independent client implementations complete.
+2. **Core Governance** (Active) — Governance and treasury contracts deployed. Open, transparent funding proposals with competitive bidding. Removes organizational overhead from the funding pipeline.
+3. **Prediction Markets** (Research) — Futarchy-assisted governance using prediction markets to inform treasury allocation. Requires ECIP-1121 Fusaka EVM alignment.
+4. **Treasury Distribution** (Future) — Optional governance-controlled smoothing of basefee revenue back to miners via ECIP-1115 L-curve mechanism. Supplements long-term miner security budget through ECIP-1017 emission reduction events.
+5. **Protocol Integration** (Future) — Permanent consensus integration of proven governance mechanisms.
 
-- Developer Retention
-- Infrastructure Maintenance
-- Emergency Response
-- Public Goods
+## Deployed Contracts (Demo v0.3)
 
-## Deployed Contracts
-
-Contract addresses TBD — production deployment after Olympia activates on ETC mainnet.
-
-Contracts include:
+Nine contracts deployed via deterministic CREATE2 — identical addresses on Mordor Testnet (chain 63) and ETC Mainnet (chain 61):
 
 - OlympiaTreasury — Protocol-controlled vault
 - OlympiaGovernor — On-chain governance
@@ -60,17 +66,25 @@ Contracts include:
 - OlympiaMemberRenderer — On-chain SVG membership cards
 - MembershipVerifier — Sybil resistance
 
-## Olympia Client ECIPs
+## Client Implementations
 
-The Olympia upgrade includes three client-facing ECIPs requiring node operator upgrades:
+Three independent implementations ensure zero single points of failure:
 
-- ECIP-1111 — EIP-1559 fee market and protocol upgrades (basefee redirect to treasury)
-- ECIP-1112 — Olympia Treasury Contract (this vault)
-- ECIP-1121 — EVM alignment with Ethereum's Fusaka execution layer (full Fusaka EVM parity for ETC)
+- **Fukuii** (Scala, JDK 21+) — Primary client post-Olympia. 143 RPC methods, 2,706 tests, full SNAP sync.
+- **Core-Geth** (Go 1.24+) — Battle-tested ETC client, transitioning to maintenance role.
+- **Hyperledger Besu** (Java 21+) — Enterprise-grade reference client, Hyperledger Foundation.
+
+Node operators must upgrade before the activation block. Block rewards and tips remain completely untouched — the Olympia upgrade only redirects EIP-1559 basefee to the treasury.
+
+## Network
+
+- Mordor Testnet: Chain ID 63
+- ETC Mainnet: Chain ID 61
+- Activation Block: TBD — announced after the Olympia Upgrade core developers call
 
 ## Web Properties
 
-- olympiatreasury.org — This site (treasury dashboard)
+- olympiatreasury.org — This site (treasury monitoring dashboard)
 - olympiadao.org — Governance landing page
 - app.olympiadao.org — Proposal submission, voting, and execution
 - ethereumclassicdao.org — Institutional (Ethereum Classic DAO LLC)

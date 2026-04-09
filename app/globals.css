@@ -118,6 +118,106 @@ body {
   color: white;
 }
 
+/* ==========================================
+   Section Backgrounds
+   ========================================== */
+
+.hero-gradient {
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -30%, rgba(0, 168, 114, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 40% at 20% 20%, rgba(0, 168, 114, 0.03) 0%, transparent 50%),
+    linear-gradient(180deg, var(--background) 0%, var(--bg-elevated) 40%, var(--background) 100%);
+}
+
+.dark .hero-gradient {
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -30%, rgba(0, 255, 174, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 40% at 20% 20%, rgba(0, 255, 174, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0f10 0%, #0d1214 40%, #0a0f10 100%);
+}
+
+.section-alt {
+  background: var(--bg-elevated);
+}
+
+.section-gradient {
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 100%, rgba(0, 168, 114, 0.03) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-elevated) 0%, var(--background) 50%, var(--bg-elevated) 100%);
+}
+
+.dark .section-gradient {
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 100%, rgba(0, 255, 174, 0.03) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg-elevated) 0%, #0c1110 50%, var(--bg-elevated) 100%);
+}
+
+/* ==========================================
+   Section Dividers
+   ========================================== */
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-brand) 30%, var(--border-brand) 70%, transparent 100%);
+}
+
+.section-divider-strong {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-brand) 20%, var(--brand-green) 50%, var(--border-brand) 80%, transparent 100%);
+}
+
+/* ==========================================
+   Badges — Roadmap status labels
+   ========================================== */
+
+.badge-complete {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: var(--brand-green-subtle);
+  color: var(--brand-green);
+}
+
+.badge-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--color-info);
+}
+
+.badge-research {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+}
+
+.badge-future {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-subtle);
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }

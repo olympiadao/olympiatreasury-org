@@ -62,19 +62,22 @@ export function CountdownBanner() {
 
   if (status === "tbd") {
     return (
-      <div className="mb-8 flex items-center gap-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-card)] px-4 py-3">
-        <Clock size={16} className="text-[#F59E0B]" />
-        <span className="text-sm text-[var(--text-muted)]">
-          Olympia Activation: Block TBD &mdash;{" "}
-          <a
-            href="https://olympiadao.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#F59E0B] transition hover:opacity-80"
-          >
-            see olympiadao.org for details
-          </a>
-        </span>
+      <div className="mb-8 flex items-start gap-3 rounded-lg border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] px-4 py-3">
+        <Clock size={16} className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
+        <div>
+          <p className="text-sm text-[var(--text-muted)]">
+            Olympia is in final testing on the Mordor Testnet — Activation Block: TBD.{" "}
+            <a
+              href="/upgrade"
+              className="text-[var(--brand-green)] transition hover:opacity-80"
+            >
+              Upgrade guide →
+            </a>
+          </p>
+          <p className="mt-1 text-xs text-[var(--text-muted)] opacity-75">
+            The exact block number will be announced after the Olympia Upgrade core developers call. Upgrade your node as soon as a compatible release is available.
+          </p>
+        </div>
       </div>
     );
   }
