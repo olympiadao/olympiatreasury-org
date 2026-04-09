@@ -9,8 +9,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useChainConfig } from "@/lib/hooks/use-chain-config";
 
 const navLinks = [
-  { label: "Transactions", href: "#transactions" },
   { label: "About", href: "#about" },
+  { label: "Upgrade", href: "/upgrade", page: true },
   { label: "Olympia DAO", href: "https://olympiadao.org", external: true },
 ];
 
@@ -34,18 +34,28 @@ export function NavHeader() {
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-6 md:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-sm font-medium text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--brand-green)]"
-              {...(link.external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.page ? (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-sm font-medium text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--brand-green)]"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-sm font-medium text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--brand-green)]"
+                {...(link.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+              >
+                {link.label}
+              </a>
+            )
+          )}
           <ChainSelector />
           <ThemeToggle />
           <a
@@ -75,19 +85,30 @@ export function NavHeader() {
             <ChainSelector />
             <ThemeToggle />
           </div>
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="block py-3 text-sm font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
-              onClick={() => setMobileOpen(false)}
-              {...(link.external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.page ? (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="block py-3 text-sm font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                className="block py-3 text-sm font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+                onClick={() => setMobileOpen(false)}
+                {...(link.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+              >
+                {link.label}
+              </a>
+            )
+          )}
         </div>
       )}
     </header>
