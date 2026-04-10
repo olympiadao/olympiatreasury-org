@@ -49,6 +49,11 @@ export const metadata: Metadata = {
     "Japan crypto-asset",
     "CLARITY Act",
     "GENIUS Act",
+    "Dencun",
+    "Pectra",
+    "Solidity compatibility",
+    "EIP-3198",
+    "BASEFEE opcode",
   ],
   authors: [
     { name: "Cody Burns", url: "https://github.com/realcodywburns" },
