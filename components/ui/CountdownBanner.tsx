@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Clock } from "lucide-react";
 import {
   OLYMPIA_ACTIVATION_BLOCK,
   AVG_BLOCK_TIME_SECONDS,
@@ -93,45 +92,37 @@ export function CountdownBanner() {
     const tbdSecs = tbdSecondsLeft % 60;
 
     return (
-      <div className="mb-8">
-        <div className="mb-4 flex flex-col items-center gap-2">
-          <div className="flex gap-3">
-            <DigitBox value={tbdDays} label="Days" />
-            <DigitBox value={tbdHours} label="Hrs" />
-            <DigitBox value={tbdMinutes} label="Min" />
-            <DigitBox value={tbdSecs} label="Sec" />
-          </div>
-          <p className="text-center text-[10px] italic text-[var(--text-muted)] opacity-60">
-            * Countdown is set to January 1, 2027 until the ETC mainnet activation block is set
-          </p>
+      <div className="rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-6 text-center">
+        <div className="mb-4 flex justify-center gap-4">
+          <DigitBox value={tbdDays} label="Days" />
+          <DigitBox value={tbdHours} label="Hours" />
+          <DigitBox value={tbdMinutes} label="Minutes" />
+          <DigitBox value={tbdSecs} label="Seconds" />
         </div>
-        <div className="flex items-start gap-3 rounded-lg border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] px-4 py-3">
-          <Clock size={16} className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
-          <div>
-            <p className="text-sm text-[var(--text-muted)]">
-              Olympia is in final testing on the Mordor Testnet — Activation Block: TBD.{" "}
-              <a
-                href="/upgrade"
-                className="text-[var(--brand-green)] transition hover:opacity-80"
-              >
-                Upgrade guide →
-              </a>
-            </p>
-            <p className="mt-1 text-xs text-[var(--text-muted)] opacity-75">
-              The exact block number will be announced after the Olympia Upgrade core developers call. Upgrade your node as soon as a compatible release is available.
-            </p>
-          </div>
+        <p className="mb-4 text-[10px] italic text-[var(--text-muted)] opacity-60">
+          * Countdown is set to January 1, 2027 until the ETC mainnet activation block is set
+        </p>
+        <div className="mb-2 flex items-center justify-center gap-2">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--brand-green)]" />
+          <span className="text-sm font-medium text-[var(--brand-green)]">Activation Block Pending</span>
         </div>
+        <p className="text-sm text-[var(--text-muted)]">
+          Olympia is in final testing on the Mordor Testnet — Activation Block: TBD
+        </p>
+        <p className="mt-1 text-xs text-[var(--text-muted)] opacity-75">
+          The exact block number will be announced after the Olympia Upgrade core developers call.
+        </p>
       </div>
     );
   }
 
   if (status === "activated") {
     return (
-      <div className="mb-8 flex items-center gap-3 rounded-lg border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] px-4 py-3">
-        <span className="text-sm font-medium text-[var(--brand-green)]">
-          Olympia is Live — BaseFee revenue is now flowing to the treasury.
-        </span>
+      <div className="rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-6 text-center">
+        <p className="text-lg font-bold text-[var(--brand-green)]">Olympia is Live</p>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">
+          BaseFee revenue is now flowing to the treasury.
+        </p>
       </div>
     );
   }
@@ -144,21 +135,19 @@ export function CountdownBanner() {
   const seconds = remaining % 60;
 
   return (
-    <div className="mb-8 flex flex-wrap items-center gap-4 rounded-lg border border-[#F59E0B]/30 bg-[#F59E0B]/5 px-4 py-3">
-      <Clock size={16} className="text-[#F59E0B]" />
-      <span className="text-sm font-medium text-[#F59E0B]">Olympia in</span>
-      <span className="font-mono text-sm text-[#F59E0B]">
-        {days}d {String(hours).padStart(2, "0")}h {String(minutes).padStart(2, "0")}m{" "}
-        {String(seconds).padStart(2, "0")}s
-      </span>
-      <a
-        href="https://olympiadao.org/upgrade"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="ml-auto text-xs text-[#F59E0B] transition hover:opacity-80"
-      >
-        Upgrade guide →
-      </a>
+    <div className="rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-8 text-center">
+      <p className="mb-4 text-sm font-medium text-[var(--brand-green)]">Olympia Activation</p>
+      <div className="flex justify-center gap-4">
+        <DigitBox value={days} label="Days" />
+        <DigitBox value={hours} label="Hours" />
+        <DigitBox value={minutes} label="Minutes" />
+        <DigitBox value={seconds} label="Seconds" />
+      </div>
+      {OLYMPIA_ACTIVATION_BLOCK !== null && currentBlock !== null && (
+        <p className="mt-4 text-xs text-[var(--text-muted)]">
+          {(OLYMPIA_ACTIVATION_BLOCK - currentBlock).toLocaleString()} blocks remaining
+        </p>
+      )}
     </div>
   );
 }
