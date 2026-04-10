@@ -6,65 +6,54 @@ const stages = [
     title: "Consensus Upgrades",
     status: "complete" as const,
     description:
-      "Adds the most widely adopted transaction type to Ethereum Classic, ensuring continued network support by exchanges, wallets, and modern development tooling. Independent client implementations complete.",
+      "EIP-1559 fee market, protocol treasury funded by basefee revenue, and full Fusaka EVM parity in a single upgrade. Every Ethereum tool and framework works on ETC without modification.",
     deliverables: [
-      "EIP-1559 fee market with predictable gas pricing",
-      "Dynamic gas limits",
-      "Basefee introduced — previously set to be destroyed, now funds the treasury",
-      "Miner tips and block rewards untouched",
-      "Core development and infrastructure funded without new issuance",
+      "EIP-1559 fee market (ECIP-1111)",
+      "Protocol treasury funded by basefee (ECIP-1112)",
+      "Fusaka EVM parity: Dencun, Pectra, Fusaka EIPs (ECIP-1121)",
     ],
   },
   {
     title: "Core Governance",
     status: "active" as const,
     description:
-      "Governance and treasury contracts deployed. Membership-based voting. Full proposal lifecycle: submit, vote, queue, execute. Moves core development, critical infrastructure, and long-term network security from private balance sheets to an open, transparent, and permissionless framework — bringing stability to the most critical and historically unstable aspects of Ethereum Classic since the Ethereum Foundation forked to its own chain in 2016.",
+      "On-chain governance with membership-based voting and a full proposal lifecycle: submit, vote, queue, execute. Core development funding moves to an open, transparent, on-chain process.",
     deliverables: [
-      "Governance and treasury contracts",
-      "Membership-based voting system",
-      "Sanctions compliance layer",
-      "Open, transparent funding proposals with competitive bidding",
-      "Free market pricing for network maintenance",
-      "Removes organizational overhead from the funding pipeline",
-      "Open to qualified professionals across the EVM ecosystem",
-      "Donation pipeline for stakeholders without fielding a team",
+      "Governance and treasury contracts with timelock execution",
+      "Membership-based voting with sanctions compliance",
+      "Open proposal process with competitive bidding",
     ],
   },
   {
     title: "Prediction Markets",
     status: "research" as const,
     description:
-      "Futarchy-assisted governance uses prediction markets to inform treasury allocation. In a futarchy market, participants stake on the expected outcome of a proposal — if funded, does the network benefit? Market prices aggregate public opinion into a measurable signal that governance can act on. This opens protocol-level decision making to broad public participation beyond NFT holders, replacing opaque insider consensus with transparent, financially-backed forecasting. This stage requires the Fusaka EVM alignment delivered by Olympia (ECIP-1121). Research phase exploring conditional token frameworks.",
+      "Futarchy-assisted governance uses prediction markets to inform treasury allocation, providing financially-backed public signals alongside on-chain member votes.",
     deliverables: [
       "Conditional outcome tokens",
       "Market-informed proposal ranking",
-      "User acquisition and on-chain transaction flywheel",
-      "Financially incentivized public interest in protocol development",
-      "Additive market sentiment to complement siloed GitHub discussion threads",
+      "Open participation for any stakeholder",
     ],
   },
   {
     title: "Treasury Distribution",
     status: "future" as const,
     description:
-      "As Ethereum Classic's fixed-emission schedule reduces block subsidies over time, basefee revenue held in the treasury can optionally be redistributed back to miners to supplement long-term network security. ECIP-1115 defines a governance-layer smoothing mechanism — an L-curve that spreads these optional payouts across a configurable future window, reducing per-block volatility and providing a more predictable revenue profile. Critically, this is entirely optional and governance-controlled: no miner entitlement is created, consensus-layer rewards and tips remain untouched, and parameters can be adjusted or disabled without a hard fork.",
+      "Governance-controlled smoothing curve (ECIP-1115) optionally supplements miner security budgets as fixed-emission block subsidies decline, without touching consensus-layer rewards.",
     deliverables: [
-      "Treasury smoothing algorithm",
-      "Smoothing allocation amount experiments",
-      "Multi-algorithm modeling for stable miner security budget through ECIP-1017 emission reduction events",
-      "Miner impact analysis",
+      "Treasury smoothing algorithm (ECIP-1115)",
+      "Modeling through ECIP-1017 emission events",
+      "Parameters adjustable without a hard fork",
     ],
   },
   {
     title: "Protocol Integration",
     status: "future" as const,
     description:
-      "Permanent consensus integration of proven governance mechanisms. Moving governance from contract layer to protocol layer.",
+      "Proven governance mechanisms elevated from the contract layer to consensus, making treasury rules immutable at the protocol level.",
     deliverables: [
-      "Consensus-level governance",
+      "Consensus-level governance encoding",
       "Immutable treasury rules",
-      "Long-term sustainability",
     ],
   },
 ];
