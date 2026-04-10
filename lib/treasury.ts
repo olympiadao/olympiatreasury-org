@@ -27,7 +27,7 @@ export interface MinedBlocksData {
 }
 
 export interface TreasuryStats {
-  balance: TreasuryBalance;
+  balance: { formatted: string };
   totalInflow: string;
   totalOutflow: string;
   /** Direct ETC transfers to treasury (donations) */
@@ -301,7 +301,7 @@ export async function fetchStats(chainId: number): Promise<TreasuryStats> {
   const totalInflow = balance.wei + totalOutflow;
 
   return {
-    balance,
+    balance: { formatted: balance.formatted },
     totalInflow: formatEther(totalInflow),
     totalOutflow: formatEther(totalOutflow),
     totalDonations: formatEther(totalDonations),
