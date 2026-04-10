@@ -69,13 +69,9 @@ public/
 - **Refresh:** Balance/stats every 10min, transactions every 5min (React Query: `refetchInterval` / `staleTime`)
 - **Static copy:** Based on `/media/dev/2tb/dev/olympiadao/olympia-framework/README.md`
 
-## Key Addresses
+## Key Addresses (Demo v0.3)
 
-Production addresses TBD — deploy after Olympia activation.
-
-Demo v0.2 (deterministic CREATE2, identical on Chain 61 + 63):
-- Treasury: `0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf`
-- Executor: `0x64624f74f77639cba268a6c8bedc2778b707ef9a`
+All addresses in `lib/contracts.json` (single source of truth). Deterministic CREATE2 (salt: `OLYMPIA_DEMO_V0_3`), identical on Chain 61 + 63.
 
 ## Supported Chains
 

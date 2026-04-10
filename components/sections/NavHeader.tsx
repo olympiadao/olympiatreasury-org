@@ -18,7 +18,7 @@ export function NavHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const config = useChainConfig();
 
-  const badgeLabel = `Demo v0.2 \u00b7 ${config.name}`;
+  const badgeLabel = `Demo v0.3 \u00b7 ${config.name}`;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border-default)] bg-[var(--bg-overlay)] backdrop-blur-sm">

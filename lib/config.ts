@@ -1,12 +1,13 @@
 import { defineChain } from "viem";
+import deployment from "./contracts.json";
 
 export type SupportedChainId = 61 | 63;
 export const DEFAULT_CHAIN_ID: SupportedChainId = 63;
 
 export const CHAIN_CONFIG = {
   63: {
-    treasury: "0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf" as const,
-    executor: "0x64624f74f77639cba268a6c8bedc2778b707ef9a" as const,
+    treasury: deployment.contracts.treasury.address as `0x${string}`,
+    executor: deployment.contracts.executor.address as `0x${string}`,
     explorer: "https://etc-mordor.blockscout.com",
     api: "https://etc-mordor.blockscout.com/api/v2",
     eraLength: 2_000_000,
@@ -15,8 +16,8 @@ export const CHAIN_CONFIG = {
     testnet: true,
   },
   61: {
-    treasury: "0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf" as const,
-    executor: "0x64624f74f77639cba268a6c8bedc2778b707ef9a" as const,
+    treasury: deployment.contracts.treasury.address as `0x${string}`,
+    executor: deployment.contracts.executor.address as `0x${string}`,
     explorer: "https://etc.blockscout.com",
     api: "https://etc.blockscout.com/api/v2",
     eraLength: 5_000_000,

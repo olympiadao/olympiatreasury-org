@@ -1,7 +1,5 @@
 # OlympiaTreasury.org
 
-> **Production** — Olympia ECIP spec compliant. Prepared for future production deployment.
-
 Live treasury monitoring dashboard for the Olympia protocol-controlled vault on Ethereum Classic. Read-only — no wallet required.
 
 **URL:** [olympiatreasury.org](https://olympiatreasury.org)
@@ -29,19 +27,11 @@ Live treasury monitoring dashboard for the Olympia protocol-controlled vault on 
 | Icons | Lucide React |
 | Package Manager | pnpm 10 |
 
-## Deployed Contracts (Demo v0.2)
+## Deployed Contracts (Demo v0.3)
 
-All governance contracts deployed via **CREATE2** (deterministic deployer factory). Treasury deployed via **CREATE**. Identical addresses on Mordor Testnet (63) + ETC Mainnet (61). All source verified on Blockscout.
+Nine contracts deployed via deterministic **CREATE2** (salt: `OLYMPIA_DEMO_V0_3`) + Treasury via **CREATE**. Identical addresses on Mordor Testnet (63) + ETC Mainnet (61). All source verified on Blockscout.
 
-| Contract | Address |
-|----------|---------|
-| Treasury | [`0x035b2e3c189B772e52F4C3DA6c45c84A3bB871bf`](https://etc.blockscout.com/address/0x035b2e3c189b772e52f4c3da6c45c84a3bb871bf) |
-| Executor | [`0x64624f74F77639CbA268a6c8bEDC2778B707eF9a`](https://etc.blockscout.com/address/0x64624f74f77639cba268a6c8bedc2778b707ef9a) |
-| Governor | [`0xB85dbc899472756470EF4033b9637ff8fa2FD23D`](https://etc.blockscout.com/address/0xb85dbc899472756470ef4033b9637ff8fa2fd23d) |
-| Timelock | [`0xA5839b3e9445f7eE7AffdBC796DC0601f9b976C2`](https://etc.blockscout.com/address/0xa5839b3e9445f7ee7affdbc796dc0601f9b976c2) |
-| ECFP Registry | [`0xFB4De5674a6b9a301d16876795a74f3bdacfa722`](https://etc.blockscout.com/address/0xfb4de5674a6b9a301d16876795a74f3bdacfa722) |
-| Governance NFT | [`0x73e78d3a3470396325b975FcAFA8105A89A9E672`](https://etc.blockscout.com/address/0x73e78d3a3470396325b975fcafa8105a89a9e672) |
-| Sanctions Oracle | [`0xfF2B8D7937D908D81C72D20AC99302EE6ACc2709`](https://etc.blockscout.com/address/0xff2b8d7937d908d81c72d20ac99302ee6acc2709) |
+All addresses in [`lib/contracts.json`](lib/contracts.json) — single source of truth.
 
 ## Quick Start
 
@@ -57,9 +47,10 @@ pnpm typecheck    # TypeScript check
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Production target — prepared for deployment after Olympia activates on ETC mainnet |
-| `demo_v0.2` | Active development — spec-compliant, live testing on Mordor + ETC (pre-Olympia) |
-| `demo_v0.1` | Archived — initial scaffolding, not spec compliant |
+| `main` | Production — deployed after Olympia activates on ETC mainnet |
+| `demo_v0.3` | Active development — 9 contracts, on-chain SVG, sybil resistance |
+| `demo_v0.2` | Preserved — spec-compliant, multi-chain, 7 CREATE2 contracts |
+| `demo_v0.1` | Preserved snapshot — fast-iteration development, not ECIP-aligned |
 
 ## Related Repos
 

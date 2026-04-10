@@ -4,15 +4,15 @@
 
 ## What is the Olympia Treasury?
 
-The Olympia Treasury (ECIP-1112) is the protocol-controlled vault funded by EIP-1559 basefee revenue from every transaction on Ethereum Classic, voluntary donations, and mining rewards directed to the treasury address. No new ETC coins are minted — all funds come from existing transaction fees that were previously set to be destroyed. All withdrawals require on-chain governance approval.
+The Olympia Treasury (ECIP-1112) is the protocol-controlled vault funded by EIP-1559 basefee revenue from every transaction on Ethereum Classic, voluntary donations, and mining rewards directed to the treasury address. No new ETC coins are minted. All withdrawals require on-chain governance approval.
 
 ## Olympia Protocol Upgrade
 
-Olympia is Ethereum Classic's most significant protocol upgrade — delivering the EVM ecosystem's most widely adopted fee market, a protocol-controlled treasury, and full Fusaka EVM alignment to the only Proof-of-Work smart contract platform in the world.
+Olympia is Ethereum Classic's most significant protocol upgrade: delivering the EVM ecosystem's most widely adopted fee market, a protocol-controlled treasury, and full Fusaka EVM alignment to the only Proof-of-Work smart contract platform in the world.
 
-**ECIP-1111 — EIP-1559 Fee Market:** The most widely adopted transaction format and fee market in the EVM ecosystem, now on Ethereum Classic. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive — legacy transactions remain valid indefinitely. Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury. Miner block rewards and tips remain completely untouched.
+**ECIP-1111 — EIP-1559 Fee Market:** The most widely adopted transaction format and fee market in the EVM ecosystem, now on Ethereum Classic. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive: legacy transactions remain valid indefinitely. Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury. Miner block rewards and tips remain completely untouched.
 
-**ECIP-1112 — Protocol Treasury:** A protocol-controlled vault funded by basefee revenue and voluntary contributions. For the first time, institutions, developers, and network stakeholders can directly fund Ethereum Classic's core development and critical infrastructure without fielding their own team. No admin keys, no multisig — only on-chain governance can release funds.
+**ECIP-1112 — Protocol Treasury:** A protocol-controlled vault funded by basefee revenue and voluntary contributions. For the first time, institutions, developers, and network stakeholders can directly fund Ethereum Classic's core development and critical infrastructure without fielding their own team. No admin keys, no multisig. Only on-chain governance can release funds.
 
 **ECIP-1121 — EVM Compatibility:** Advances the ETC execution layer through Dencun (Cancun-Deneb), Pectra (Prague-Electra), and Fusaka (Fulu-Osaka). ETC implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deferring the EIP-1559 fee market for independent governance design. ECIP-1111 delivers those deferred London fee market EIPs (EIP-1559 + EIP-3198). ECIP-1121 delivers the remaining execution-layer EIPs from Dencun, Pectra, and Fusaka that are independent of Proof-of-Stake and blob data availability.
 
@@ -22,7 +22,7 @@ Included EIP categories:
 - Cryptographic Precompiles: EIP-2537 (BLS12-381 for ZK-friendly proofs), EIP-7951 (P256VERIFY for WebAuthn / passkeys)
 - Execution Context: EIP-5656 (MCOPY memory copy), EIP-2935 (historical block hashes in state), EIP-1153 (transient storage TSTORE/TLOAD)
 
-Explicitly excluded: all blob-dependent EIPs (EIP-4844, EIP-7516, EIP-7691). Ethereum Classic is a pure Layer 1 execution chain with no data availability requirement — blobs are L2 scaffolding ETC does not need.
+Explicitly excluded: all blob-dependent EIPs (EIP-4844, EIP-7516, EIP-7691). Ethereum Classic is a pure Layer 1 execution chain with no data availability requirement. Blobs are L2 scaffolding ETC does not need.
 
 Developer impact: Solidity 0.8.x+, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification or ETC-specific forks after Olympia.
 
@@ -32,67 +32,69 @@ Olympia is in final testing on the Mordor Testnet. The activation block will be 
 
 ## How Funds Flow
 
-1. **BaseFee Collected** — After Olympia activates, EIP-1559 basefee from every block is redirected to the treasury by consensus.
-2. **Direct Donations** — Anyone can send ETC directly to the treasury contract to support protocol development transparently.
-3. **Treasury Accumulates** — All income streams grow the vault. Balance and full history are publicly visible on-chain.
-4. **Proposals Submitted** — Contributors submit ECFPs specifying recipient, amount, and milestones for governance review.
-5. **Governance Approves** — DAO votes and authorizes eligible proposals. Only governance can trigger fund releases.
+1. **BaseFee Collected:** After Olympia activates, EIP-1559 basefee from every block is redirected to the treasury by consensus.
+2. **Direct Donations:** Anyone can send ETC directly to the treasury contract to support protocol development transparently.
+3. **Treasury Accumulates:** All income streams grow the vault. Balance and full history are publicly visible on-chain.
+4. **Proposals Submitted:** Contributors submit ECFPs specifying recipient, amount, and milestones for governance review.
+5. **Governance Approves:** DAO votes and authorizes eligible proposals. Only governance can trigger fund releases.
 
 ## Core Invariants
 
-- No Minting — Cannot mint ETC, only holds received inflows
-- Immutable Code — No proxy patterns, no admin methods
-- Protocol-Controlled — Owned by protocol rules, not a multisig
-- Minimal Interface — Accepts deposits, executes on governance signal
-- Fully Transparent — All inflows and outflows visible on-chain
+- No Minting: Cannot mint ETC, only holds received inflows
+- Immutable Code: No proxy patterns, no admin methods
+- Protocol-Controlled: Owned by protocol rules, not a multisig
+- Minimal Interface: Accepts deposits, executes on governance signal
+- Fully Transparent: All inflows and outflows visible on-chain
 
 ## Security Model
 
-- Protocol Consensus — Client implementations enforce treasury rules at the protocol level
-- Contract Immutability — No upgradeable proxy, no admin methods
-- Sanctions Defense — OFAC screening at proposal level + emergency pause
+- Protocol Consensus: Client implementations enforce treasury rules at the protocol level
+- Contract Immutability: No upgradeable proxy, no admin methods
+- Sanctions Defense: OFAC screening at proposal level + emergency pause
 
 ## Olympia Roadmap
 
 Five stages from consensus upgrades to permanent protocol integration:
 
-1. **Consensus Upgrades** (Complete) — EIP-1559 fee market, dynamic gas limits, basefee redirect to treasury, miner rewards untouched. Three independent client implementations complete.
-2. **Core Governance** (Active) — Governance and treasury contracts deployed. Open, transparent funding proposals with competitive bidding. Removes organizational overhead from the funding pipeline.
-3. **Prediction Markets** (Research) — Futarchy-assisted governance using prediction markets to inform treasury allocation. Requires ECIP-1121 Fusaka EVM alignment.
-4. **Treasury Distribution** (Future) — Optional governance-controlled smoothing of basefee revenue back to miners via ECIP-1115 L-curve mechanism. Supplements long-term miner security budget through ECIP-1017 emission reduction events.
-5. **Protocol Integration** (Future) — Permanent consensus integration of proven governance mechanisms.
+1. **Consensus Upgrades** (Complete): EIP-1559 fee market, protocol treasury funded by basefee revenue, and full Fusaka EVM parity. Three independent client implementations complete.
+2. **Core Governance** (Active): Governance and treasury contracts deployed. Open, transparent funding proposals with competitive bidding. Removes organizational overhead from the funding pipeline.
+3. **Prediction Markets** (Research): Futarchy-assisted governance using prediction markets to inform treasury allocation. Requires ECIP-1121 Fusaka EVM alignment.
+4. **Treasury Distribution** (Future): Optional governance-controlled smoothing of basefee revenue back to miners via ECIP-1115. Supplements long-term miner security budget through ECIP-1017 emission reduction events.
+5. **Protocol Integration** (Future): Permanent consensus integration of proven governance mechanisms.
 
 ## Deployed Contracts (Demo v0.3)
 
-Nine contracts deployed via deterministic CREATE2 — identical addresses on Mordor Testnet (chain 63) and ETC Mainnet (chain 61):
+Nine contracts deployed via deterministic CREATE2. Identical addresses on Mordor Testnet (chain 63) and ETC Mainnet (chain 61):
 
-- OlympiaTreasury — Protocol-controlled vault
-- OlympiaGovernor — On-chain governance
-- OlympiaExecutor — Proposal execution
-- TimelockController — Security timelock
-- ECFPRegistry — Proposal registry
-- OlympiaMemberNFT — Non-transferable membership NFT
-- SanctionsOracle — Compliance screening
-- OlympiaMemberRenderer — On-chain SVG membership cards
-- MembershipVerifier — Sybil resistance
+- OlympiaTreasury: Protocol-controlled vault
+- OlympiaGovernor: On-chain governance
+- OlympiaExecutor: Proposal execution
+- TimelockController: Security timelock
+- ECFPRegistry: Proposal registry
+- OlympiaMemberNFT: Non-transferable membership NFT
+- SanctionsOracle: Compliance screening
+- OlympiaMemberRenderer: On-chain SVG membership cards
+- MembershipVerifier: Sybil resistance
 
 ## Client Implementations
 
 Three independent implementations ensure zero single points of failure:
 
-- **Fukuii** (Scala, JDK 21+) — Primary client post-Olympia. 143 RPC methods, 2,706 tests, full SNAP sync.
-- **Core-Geth** (Go 1.24+) — Battle-tested ETC client, transitioning to maintenance role.
-- **Hyperledger Besu** (Java 21+) — Enterprise-grade reference client, Hyperledger Foundation.
+- **Fukuii** (Scala, JDK 21+): Primary client post-Olympia. 143 RPC methods, 2,706 tests, full SNAP sync.
+- **Core-Geth** (Go 1.24+): Battle-tested ETC client, transitioning to maintenance role.
+- **Hyperledger Besu** (Java 21+): Enterprise-grade reference client, Hyperledger Foundation.
 
-Node operators must upgrade before the activation block. Block rewards and tips remain completely untouched — the Olympia upgrade only redirects EIP-1559 basefee to the treasury.
+Node operators must upgrade before the activation block. Block rewards and tips remain completely untouched. The Olympia upgrade only redirects EIP-1559 basefee to the treasury.
 
 ## Network
 
 - Mordor Testnet: Chain ID 63
 - ETC Mainnet: Chain ID 61
-- Activation Block: TBD — announced after the Olympia Upgrade core developers call
+- Activation Block: TBD, announced after the Olympia Upgrade core developers call
 
 ## Regulatory Positioning
+
+ETC's regulatory surface spans two distinct trajectories: the commodity classification path that Proof-of-Work networks established, and the programmable finance frameworks being built around smart contract platforms.
 
 - United States: digital commodity classification under the CLARITY Act (CFTC jurisdiction)
 - United States: Proof-of-Work EVM platform for regulated stablecoin deployment under the GENIUS Act
@@ -101,11 +103,11 @@ Node operators must upgrade before the activation block. Block rewards and tips 
 
 ## Web Properties
 
-- olympiatreasury.org — This site (treasury monitoring dashboard)
-- olympiadao.org — Governance landing page
-- app.olympiadao.org — Proposal submission, voting, and execution
-- ethereumclassicdao.org — Institutional (Ethereum Classic DAO LLC)
-- github.com/olympiadao — Open-source repositories
+- olympiatreasury.org: This site (treasury monitoring dashboard)
+- olympiadao.org: Governance landing page
+- app.olympiadao.org: Proposal submission, voting, and execution
+- ethereumclassicdao.org: Institutional (Ethereum Classic DAO LLC)
+- github.com/olympiadao: Open-source repositories
 
 ## Authors
 
