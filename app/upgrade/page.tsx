@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu } from "lucide-react";
+import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu, Layers, Code2, ShieldCheck } from "lucide-react";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { CountdownBanner } from "@/components/ui/CountdownBanner";
@@ -11,7 +11,7 @@ import { FooterSection } from "@/components/sections/FooterSection";
 export const metadata: Metadata = {
   title: "Olympia Upgrade — EIP-1559, Protocol Treasury, and Fusaka EVM Alignment for Ethereum Classic",
   description:
-    "Olympia is Ethereum Classic's most significant protocol upgrade. Adds EIP-1559 fee market, a protocol-controlled treasury for open-source core development, and full Fusaka EVM alignment — positioning ETC as the Proof-of-Work infrastructure layer for institutional and sovereign adoption. Node upgrade guides for Fukuii and Core-Geth.",
+    "Olympia is Ethereum Classic's most significant protocol upgrade. Adds EIP-1559 fee market, a protocol-controlled treasury for open-source core development, and full Fusaka EVM alignment including Dencun, Pectra, and Fusaka — positioning ETC as the Proof-of-Work infrastructure layer for institutional and sovereign adoption. Node upgrade guides for Fukuii and Core-Geth.",
   keywords: [
     "Olympia upgrade",
     "Ethereum Classic upgrade",
@@ -27,6 +27,20 @@ export const metadata: Metadata = {
     "Core-Geth",
     "hard fork",
     "ETC upgrade",
+    "Dencun",
+    "Pectra",
+    "Prague",
+    "Cancun",
+    "EVM upgrade",
+    "Solidity compatibility",
+    "EIP-7702",
+    "EIP-2537",
+    "BLS12-381",
+    "transient storage",
+    "EIP-1153",
+    "MCOPY",
+    "EIP-5656",
+    "London hard fork ETC",
   ],
 };
 
@@ -50,7 +64,7 @@ const ecips = [
     title: "Fusaka EVM Alignment",
     icon: Cpu,
     description:
-      "Olympia ends Ethereum Classic's longest period of EVM stagnation, advancing the execution layer through London, Dencun, Pectra, and Fusaka in a single upgrade. Exchanges and wallets gain modern RPC compatibility and standard transaction support. Developers gain full access to every current Ethereum tool, library, and framework — one codebase, every EVM chain.",
+      "Building on Mystique and Spiral, Olympia delivers the remaining EVM execution-layer improvements from Dencun, Pectra, and Fusaka — every improvement that is independent of Proof-of-Stake and blob data availability. Exchanges and wallets gain modern RPC compatibility and standard transaction support. Developers gain full access to every current Ethereum tool, library, and framework — one codebase, every EVM chain.",
   },
 ];
 
@@ -113,6 +127,61 @@ const faqItems = [
     question: "Can I roll back if something goes wrong?",
     answer:
       "Olympia is backward compatible, but nodes must remain on current client versions to follow the canonical chain. In the unlikely event of an issue, emergency releases would be published promptly. All clients have been thoroughly tested by the same team that has delivered every Ethereum Classic network upgrade since 2016. Core-Geth is actively maintained through the Olympia upgrade, and Fukuii carries broader test coverage than any previous ETC client. Olympia also marks a fundamental shift from reactive maintenance to active development — so the network's core teams are responsive, engaged, and building forward.",
+  },
+];
+
+const forkTimeline = [
+  { name: "Dencun", fullName: "Cancun-Deneb", year: "2024", eips: ["EIP-1153", "EIP-5656", "EIP-2935"] },
+  { name: "Pectra", fullName: "Prague-Electra", year: "2025", eips: ["EIP-7702", "EIP-2537", "EIP-6780"] },
+  { name: "Fusaka", fullName: "Fulu-Osaka", year: "2025", eips: ["EIP-7623", "EIP-7951", "EIP-7825"] },
+];
+
+const evmCategories = [
+  {
+    title: "Gas & State Access",
+    icon: Layers,
+    eips: ["EIP-7702", "EIP-7623", "EIP-7825", "EIP-7883", "EIP-7935"],
+    description:
+      "Account delegation, cheaper calldata, gas limit enforcement, opcode repricing, and jumpdest removal. Reduces transaction costs and enables smart account patterns without protocol changes.",
+  },
+  {
+    title: "EVM Safety",
+    icon: ShieldCheck,
+    eips: ["EIP-6780", "EIP-7934", "EIP-7910"],
+    description:
+      "SELFDESTRUCT restricted to deployment context, stack size enforcement, and call target constraints. Makes contract behavior more predictable and reduces attack surface.",
+  },
+  {
+    title: "Cryptographic Precompiles",
+    icon: Cpu,
+    eips: ["EIP-2537", "EIP-7951"],
+    description:
+      "BLS12-381 pairing operations for ZK-friendly proof verification, P256VERIFY for WebAuthn and passkey authentication. Native cryptographic primitives for privacy and identity.",
+  },
+  {
+    title: "Execution Context",
+    icon: Code2,
+    eips: ["EIP-5656", "EIP-2935", "EIP-1153"],
+    description:
+      "MCOPY for efficient memory operations, historical block hashes in state, transient storage TSTORE/TLOAD. Unlocks reentrancy guards, flash loans, and cross-contract patterns without persistent storage.",
+  },
+];
+
+const devTools = [
+  {
+    name: "Solidity 0.8.x+",
+    description:
+      "All recent compiler versions produce compatible bytecode for ETC without modification.",
+  },
+  {
+    name: "Foundry / Hardhat",
+    description:
+      "Standard EVM testing and deployment toolchains work on ETC without ETC-specific forks or patches.",
+  },
+  {
+    name: "wagmi / viem / ethers.js",
+    description:
+      "Standard wallet libraries and RPC types work on ETC without patching or overrides — one codebase, every EVM chain.",
   },
 ];
 
@@ -204,6 +273,112 @@ export default function UpgradePage() {
                 );
               })}
             </div>
+          </div>
+        </section>
+
+        <SectionDivider />
+
+        {/* ECIP-1121 EVM Deep Dive */}
+        <section className="py-16 px-6">
+          <div className="mx-auto max-w-5xl">
+            <FadeIn>
+              <p className="font-mono text-xs text-[var(--brand-green)] mb-1">ECIP-1121</p>
+              <h2 className="mb-2 text-2xl font-bold tracking-tight">
+                EVM Compatibility in Detail
+              </h2>
+              <p className="mb-8 text-sm text-[var(--text-muted)] max-w-2xl">
+                Three Ethereum upgrade cycles delivered to ETC in a single fork — every execution-layer improvement that is independent of Proof-of-Stake and blob data availability.
+              </p>
+            </FadeIn>
+
+            {/* Fork Timeline */}
+            <FadeIn delay={80}>
+              <div className="mb-8 relative">
+                {/* Desktop horizontal line */}
+                <div className="hidden md:block absolute top-[22px] left-[calc(16.67%-1px)] right-[calc(16.67%-1px)] h-px bg-[var(--border-brand)]" />
+                <div className="flex flex-col md:flex-row gap-6 md:gap-0 md:justify-between">
+                  {forkTimeline.map((fork, i) => (
+                    <div key={fork.name} className="relative flex md:flex-col md:items-center md:w-1/3 gap-4 md:gap-0">
+                      {/* Mobile vertical line */}
+                      {i < forkTimeline.length - 1 && (
+                        <div className="md:hidden absolute left-[17px] top-[38px] bottom-[-22px] w-px bg-[var(--border-brand)]" />
+                      )}
+                      <div className="shrink-0 flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] font-mono text-xs font-bold text-[var(--brand-green)] relative z-10">
+                        {String(i + 1).padStart(2, "0")}
+                      </div>
+                      <div className="md:mt-4 md:text-center">
+                        <p className="font-semibold text-sm">{fork.name}</p>
+                        <p className="text-xs text-[var(--text-muted)]">{fork.fullName} · {fork.year}</p>
+                        <div className="mt-2 flex flex-wrap gap-1 md:justify-center">
+                          {fork.eips.map((eip) => (
+                            <span key={eip} className="rounded-sm border border-[var(--border-default)] bg-[var(--bg-elevated)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)]">
+                              {eip}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* Divergence callout */}
+            <FadeIn delay={120}>
+              <div className="mb-8 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-5 text-sm text-[var(--text-muted)]">
+                <span className="font-semibold text-[var(--text-primary)]">ETC context: </span>
+                Ethereum Classic implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deliberately deferring the EIP-1559 fee market for independent governance design.
+                ECIP-1111 now delivers those deferred London EIPs. ECIP-1121 advances the execution layer through Dencun, Pectra, and Fusaka — every EVM improvement that is independent of Proof-of-Stake and blob data availability.
+                Together, Olympia brings ETC to full Fusaka execution-layer parity.
+              </div>
+            </FadeIn>
+
+            {/* EIP Categories */}
+            <div className="mb-8 grid gap-4 sm:grid-cols-2">
+              {evmCategories.map((cat, i) => {
+                const Icon = cat.icon;
+                return (
+                  <FadeIn key={cat.title} delay={i * 60}>
+                    <div className="rounded-xl border border-[var(--border-default)] bg-[var(--background)] p-5">
+                      <div className="mb-3 flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)]">
+                          <Icon size={16} className="text-[var(--brand-green)]" />
+                        </div>
+                        <h3 className="text-sm font-semibold">{cat.title}</h3>
+                      </div>
+                      <div className="mb-2 flex flex-wrap gap-1">
+                        {cat.eips.map((eip) => (
+                          <span key={eip} className="rounded-sm border border-[var(--border-default)] bg-[var(--bg-elevated)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)]">
+                            {eip}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="text-xs leading-relaxed text-[var(--text-muted)]">{cat.description}</p>
+                    </div>
+                  </FadeIn>
+                );
+              })}
+            </div>
+
+            {/* Blobs excluded note */}
+            <FadeIn delay={160}>
+              <p className="mb-8 text-xs text-[var(--text-muted)] italic">
+                Explicitly excluded: all blob-dependent EIPs (EIP-4844, EIP-7516, EIP-7691). Ethereum Classic is a pure Layer 1 execution chain with no data availability requirement — blobs are L2 scaffolding ETC does not need.
+              </p>
+            </FadeIn>
+
+            {/* Developer tooling */}
+            <FadeIn delay={200}>
+              <h3 className="mb-4 text-base font-semibold">Developer Tooling — Works Without Modification</h3>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {devTools.map((tool) => (
+                  <div key={tool.name} className="rounded-xl border border-[var(--border-default)] bg-[var(--background)] p-4">
+                    <p className="mb-1 text-sm font-semibold">{tool.name}</p>
+                    <p className="text-xs leading-relaxed text-[var(--text-muted)]">{tool.description}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
           </div>
         </section>
 
