@@ -82,6 +82,13 @@ Node operators must upgrade before the activation block. Block rewards and tips 
 - ETC Mainnet: Chain ID 61
 - Activation Block: TBD — announced after the Olympia Upgrade core developers call
 
+## Regulatory Positioning
+
+- United States: digital commodity classification under the CLARITY Act (CFTC jurisdiction)
+- United States: Proof-of-Work EVM platform for regulated stablecoin deployment under the GENIUS Act
+- European Union: decentralized asset under MiCA (Markets in Crypto-Assets Regulation), exempt from issuer obligations as a fully decentralized protocol
+- Japan: recognized crypto-asset on the FSA Green List (JVCEA), fast-track listing across all Japanese regulated exchanges
+
 ## Web Properties
 
 - olympiatreasury.org — This site (treasury monitoring dashboard)
