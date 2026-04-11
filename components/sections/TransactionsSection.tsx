@@ -27,10 +27,10 @@ export function TransactionsSection() {
   const config = useChainConfig();
 
   return (
-    <section id="transactions" className="px-6 py-8">
+    <section id="transactions" aria-labelledby="transactions-heading" className="px-6 py-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Recent Transactions</h2>
+          <h2 id="transactions-heading" className="text-lg font-semibold">Recent Transactions</h2>
           <a
             href={`${config.explorer}/address/${config.treasury}?tab=txs`}
             target="_blank"

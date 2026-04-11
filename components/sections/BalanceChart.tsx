@@ -49,9 +49,9 @@ export function BalanceChart() {
 
   if (isLoading) {
     return (
-      <section className="px-6 py-8">
+      <section aria-labelledby="balance-history-heading" className="px-6 py-8">
         <div className="mx-auto max-w-6xl">
-          <h2 className="mb-6 text-lg font-semibold">Balance History</h2>
+          <h2 id="balance-history-heading" className="mb-6 text-lg font-semibold">Balance History</h2>
           <div className="h-64 animate-pulse rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)]" />
         </div>
       </section>
@@ -60,9 +60,9 @@ export function BalanceChart() {
 
   if (chartData.length === 0) {
     return (
-      <section className="px-6 py-8">
+      <section aria-labelledby="balance-history-heading" className="px-6 py-8">
         <div className="mx-auto max-w-6xl">
-          <h2 className="mb-6 text-lg font-semibold">Balance History</h2>
+          <h2 id="balance-history-heading" className="mb-6 text-lg font-semibold">Balance History</h2>
           <div className="flex h-48 items-center justify-center rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)]">
             <p className="text-sm text-[var(--text-muted)]">
               No transaction data yet
@@ -74,9 +74,9 @@ export function BalanceChart() {
   }
 
   return (
-    <section className="px-6 py-8">
+    <section aria-labelledby="balance-history-heading" className="px-6 py-8">
       <div className="mx-auto max-w-6xl">
-        <h2 className="mb-6 text-lg font-semibold">Balance History</h2>
+        <h2 id="balance-history-heading" className="mb-6 text-lg font-semibold">Balance History</h2>
         <div
           className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-card)] p-4"
           style={{ boxShadow: "var(--card-shadow)" }}
