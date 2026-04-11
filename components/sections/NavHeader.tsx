@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useChainConfig } from "@/lib/hooks/use-chain-config";
 
 const navLinks = [
-  { label: "About", href: "#about" },
+  { label: "About", href: "/#about" },
   { label: "Upgrade", href: "/upgrade", page: true },
   { label: "Olympia DAO", href: "https://olympiadao.org", external: true },
 ];
