@@ -15,6 +15,37 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Olympia Treasury",
+  alternateName: "OlympiaTreasury",
+  url: "https://olympiatreasury.org",
+  logo: "https://olympiatreasury.org/logo.svg",
+  description:
+    "The Olympia Treasury is a protocol-controlled vault for Ethereum Classic funded by EIP-1559 basefee revenue. Governed on-chain by the Olympia DAO.",
+  foundingDate: "2025",
+  sameAs: [
+    "https://olympiadao.org",
+    "https://app.olympiadao.org",
+    "https://github.com/olympiadao",
+  ],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Olympia Treasury",
+  url: "https://olympiatreasury.org",
+  description:
+    "Real-time dashboard for the Olympia Treasury — the protocol-controlled vault for Ethereum Classic funded by EIP-1559 basefee revenue.",
+  publisher: {
+    "@type": "Organization",
+    name: "Olympia Treasury",
+    url: "https://olympiatreasury.org",
+  },
+};
+
 export const metadata: Metadata = {
   title: {
     default: "Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic",
@@ -101,11 +132,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ThemeProvider>
-          <Providers>{children}</Providers>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-[var(--brand-green)] focus:px-4 focus:py-2 focus:text-[var(--background)] focus:outline-none"
+          >
+            Skip to main content
+          </a>
+          <Providers>
+            <div id="main-content">{children}</div>
+          </Providers>
         </ThemeProvider>
         <Script
           src="https://static.cloudflareinsights.com/beacon.min.js"
