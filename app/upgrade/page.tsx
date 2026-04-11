@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu, Layers, Code2, ShieldCheck } from "lucide-react";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionDivider } from "@/components/ui/SectionDivider";
+import { Accordion } from "@/components/ui/Accordion";
 import { CountdownBanner } from "@/components/ui/CountdownBanner";
 import { RoadmapSection } from "@/components/sections/RoadmapSection";
 import { NavHeader } from "@/components/sections/NavHeader";
@@ -109,24 +110,59 @@ const clients = [
 
 const faqItems = [
   {
-    question: "What happens if I don't upgrade?",
+    question: "Who is coordinating the Olympia upgrade?",
     answer:
-      "If you do not upgrade before the Olympia activation block, your node will stop following the canonical chain. You will need to upgrade and resync from the fork point. Exchanges, wallets, and services running outdated clients will be unable to process transactions on the post-Olympia chain.",
+      "Olympia is coordinated by the same developers, organizations, and community stewards who have delivered every Ethereum Classic network upgrade since 2016: Gotham, Die Hard, Defuse Difficulty Bomb, Thanos, and the full EVM compatibility series spanning Gas Reprice, Atlantis, Agharta, Phoenix, Magneto, Mystique, and Spiral. The ETC Cooperative, a US 501(c)(3) non-profit, funds Ethereum Classic's client development teams and has managed the hard fork coordination process throughout that history. Stakeholder outreach, client release sequencing, and cross-client testing are all established practice. Olympia is a significant upgrade carried forward by a team with a clean delivery record across a decade of ETC network upgrades.",
+  },
+  {
+    question: "What role has the ETC Cooperative played, and what changes with Olympia?",
+    answer:
+      "The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by the Olympia DAO and executed by the Wyoming DAO LLC, replaces institutional dependency with a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can now contribute directly on-chain without fielding a team or managing a non-profit to do it.",
+  },
+  {
+    question: "What is Grayscale's role in Ethereum Classic's development?",
+    answer:
+      "Grayscale launched the Grayscale Ethereum Classic Trust (ETCG) in 2018, years before Bitcoin ETFs existed as a product category, and became a major institutional donor to the ETC Cooperative, indirectly funding the network's core client development at a time when no other investment product issuer was doing anything comparable. What Grayscale was practicing on Ethereum Classic in 2018 is now a recognized trend: ETF issuers funding protocol development, corporate treasury strategies reinvesting in network ecosystems. Taking that model on-chain is only possible on Ethereum Classic because ETC is the only Proof-of-Work blockchain with native smart contracts. Olympia DAO makes it permissionless, opening a direct on-chain contribution path to every holder, whether through ETCG, a direct wallet, or any future investment product.",
+  },
+  {
+    question: "What does EVM alignment to Fusaka actually mean for builders?",
+    answer:
+      "ECIP-1121 closes years of EVM divergence in a single upgrade, delivering every execution-layer improvement from Dencun, Pectra, and Fusaka that is independent of Proof-of-Stake and blob data availability. Before Olympia, ETC lagged behind on these EIPs, creating real friction for developers deploying across EVM chains. After Olympia, Solidity 0.8.x, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim full tooling compatibility before Olympia. After Olympia, it can.",
+  },
+  {
+    question: "How does the protocol treasury work?",
+    answer:
+      "The Olympia Treasury is funded by EIP-1559 basefee revenue, voluntary on-chain donations, and mining rewards directed to the treasury address. Block rewards and tips remain completely untouched and go entirely to miners. Futarchy prediction market activity generates additional transaction volume that flows back into the treasury as basefee revenue. Any stakeholder, whether exchanges, custodians, miners, investment product issuers, or institutions holding ETC on behalf of fund shareholders, can contribute directly on-chain with no overhead. Stakeholders who prefer a traditional giving model can contribute through the ETC Cooperative, a US 501(c)(3) non-profit that accepts tax-deductible donations.",
+  },
+  {
+    question: "How was Olympia tested before mainnet?",
+    answer:
+      "Olympia activates on the Mordor testnet first. Mordor is Ethereum Classic's Proof-of-Work testnet and mirrors mainnet conditions closely. All three client implementations, Fukuii, Core-Geth, and Besu, run the Mordor fork before any mainnet activation is scheduled. Cross-client validation using the Hive integration testing framework confirms consensus compatibility across implementations. The mainnet activation block is not set until Mordor has run cleanly and major network stakeholders, including exchanges, custodians, and mining pools, have confirmed readiness.",
+  },
+  {
+    question: "When is the mainnet activation block?",
+    answer:
+      "Olympia activates on Mordor testnet first. The mainnet activation block is announced after a successful Mordor run and a coordinated stakeholder readiness check with exchanges, mining pools, node operators, and infrastructure providers. All client implementations publish Olympia-compatible releases well before activation. The process follows the same sequence used for every previous ETC hard fork.",
   },
   {
     question: "Will my miner rewards change?",
     answer:
-      "No. Block rewards and tips remain completely untouched. The Olympia upgrade redirects the EIP-1559 basefee to the protocol treasury. This is entirely separate from miner rewards.",
+      "No. Block rewards and tips remain completely untouched. Olympia redirects the EIP-1559 basefee to the protocol treasury. The basefee is a value that would otherwise be destroyed and has never been part of miner compensation. Miner revenue is unchanged.",
   },
   {
-    question: "When is the activation block?",
+    question: "What happens if I don't upgrade my node?",
     answer:
-      "The exact activation block will be announced after the Olympia Upgrade core developers call. All client implementations will release Olympia-compatible versions well before activation. Outreach will occur with all major network stakeholders to assure a smooth upgrade.",
+      "Nodes that are not upgraded before the activation block will stop following the canonical chain. You will need to upgrade your client and resync from the fork point. Exchanges, wallets, RPC providers, and services running outdated clients will be unable to process transactions on the post-Olympia chain. Client release announcements are published well in advance to give operators time to upgrade.",
+  },
+  {
+    question: "Is Ethereum Classic a security or commodity after Olympia?",
+    answer:
+      "Olympia strengthens ETC's regulatory profile. As a Proof-of-Work blockchain with no pre-mine, no ICO, no foundation controlling the protocol, and now a community-governed on-chain treasury, ETC is positioned for classification as a digital commodity under the CLARITY Act. In the EU, ETC qualifies as a decentralized asset under MiCA, exempt from per-asset issuer requirements. The addition of on-chain governance through the Olympia DAO does not create a central issuer or controlling party: the network remains decentralized, and governance is open to any qualified participant worldwide.",
   },
   {
     question: "Can I roll back if something goes wrong?",
     answer:
-      "Olympia is backward compatible, but nodes must remain on current client versions to follow the canonical chain. In the unlikely event of an issue, emergency releases would be published promptly. All clients have been thoroughly tested by the same team that has delivered every Ethereum Classic network upgrade since 2016. Core-Geth is actively maintained through the Olympia upgrade, and Fukuii carries broader test coverage than any previous ETC client. Olympia also marks a fundamental shift from reactive maintenance to active development, so the network's core teams are responsive, engaged, and building forward.",
+      "In the unlikely event of a critical issue after activation, the same client teams that have managed every ETC emergency response since 2016 would coordinate a patch release promptly. The established stakeholder communication channels, including the ETC Cooperative, client maintainers, and major exchange contacts, are the same ones used for every previous upgrade. Olympia has broader test coverage across more independent client implementations than any previous ETC hard fork, and the Mordor testnet run provides a real network validation environment before mainnet activation.",
   },
 ];
 
@@ -486,19 +522,11 @@ export default function UpgradePage() {
                 Frequently Asked Questions
               </h2>
             </FadeIn>
-
-            <div className="space-y-4">
-              {faqItems.map((item, i) => (
-                <FadeIn key={i} delay={i * 60}>
-                  <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-elevated)] p-5">
-                    <h3 className="font-semibold">{item.question}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-                      {item.answer}
-                    </p>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
+            <FadeIn delay={60}>
+              <div className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-elevated)] px-6">
+                <Accordion items={faqItems} defaultAllOpen />
+              </div>
+            </FadeIn>
           </div>
         </section>
       </main>
