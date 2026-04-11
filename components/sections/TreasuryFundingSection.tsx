@@ -20,10 +20,10 @@ export function TreasuryFundingSection() {
   return (
     <>
       <SectionDivider />
-      <section className="section-gradient relative py-28 px-6">
+      <section aria-labelledby="treasury-funding-heading" className="section-gradient relative py-28 px-6">
         <div className="relative z-10 mx-auto max-w-4xl">
           <FadeIn>
-            <h2 className="text-3xl font-bold tracking-tight">
+            <h2 id="treasury-funding-heading" className="text-3xl font-bold tracking-tight">
               Treasury Funding
             </h2>
             <p className="mt-3 max-w-xl text-base text-[var(--text-muted)]">

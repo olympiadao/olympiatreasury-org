@@ -21,9 +21,9 @@ import { AboutContractsClient } from "./AboutContractsClient";
 
 export function AboutSection() {
   return (
-    <section id="about" className="px-6 py-8">
+    <section id="about" aria-labelledby="about-heading" className="px-6 py-8">
       <div className="mx-auto max-w-6xl space-y-4">
-        <h2 className="text-lg font-semibold">About the Treasury</h2>
+        <h2 id="about-heading" className="text-lg font-semibold">About the Treasury</h2>
 
         <CollapsibleCard title="How Funds Flow" defaultOpen>
           <FundFlow />
@@ -72,6 +72,7 @@ function CollapsibleCard({
         <span className="text-sm font-semibold">{title}</span>
         <ChevronDown
           size={16}
+          aria-hidden="true"
           className="text-[var(--text-subtle)] transition-transform duration-200 group-open:rotate-180"
         />
       </summary>
@@ -98,7 +99,7 @@ function FundFlow() {
       {flowSteps.map((s, i) => (
         <div key={i} className="flex items-start gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
-            <s.icon size={16} />
+            <s.icon size={16} aria-hidden="true" />
           </div>
           <div>
             <p className="text-xs font-semibold">{s.title}</p>
@@ -121,7 +122,7 @@ function CommunityFunding() {
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="flex items-start gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
-            <Pickaxe size={16} />
+            <Pickaxe size={16} aria-hidden="true" />
           </div>
           <div>
             <p className="text-xs font-semibold text-[var(--text-primary)]">Mine to the Treasury</p>
@@ -133,7 +134,7 @@ function CommunityFunding() {
         </div>
         <div className="flex items-start gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
-            <Heart size={16} />
+            <Heart size={16} aria-hidden="true" />
           </div>
           <div>
             <p className="text-xs font-semibold text-[var(--text-primary)]">Send a Donation</p>
@@ -167,7 +168,7 @@ function Invariants() {
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
       {invariants.map((inv, i) => (
         <div key={i} className="flex items-start gap-2">
-          <inv.icon size={16} className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
+          <inv.icon size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
           <div>
             <p className="text-xs font-semibold">{inv.title}</p>
             <p className="mt-0.5 text-xs text-[var(--text-muted)]">{inv.desc}</p>
@@ -190,7 +191,7 @@ function Security() {
     <div className="grid gap-3 sm:grid-cols-3">
       {secLayers.map((l, i) => (
         <div key={i} className="flex items-start gap-2">
-          <l.icon size={16} className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
+          <l.icon size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
           <div>
             <p className="text-xs font-semibold">{l.title}</p>
             <p className="mt-0.5 text-xs text-[var(--text-muted)]">{l.desc}</p>
@@ -231,7 +232,7 @@ function Stages() {
               {s.n}
             </span>
             <span className="text-xs font-semibold">{s.title}</span>
-            <StatusIcon size={12} className={cfg.color} />
+            <StatusIcon size={12} aria-hidden="true" className={cfg.color} />
             <span className="text-[10px] text-[var(--text-subtle)]">{s.desc}</span>
           </div>
         );

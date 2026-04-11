@@ -45,7 +45,7 @@ export function FooterSection() {
               className="text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
               aria-label="GitHub"
             >
-              <Github size={20} />
+              <Github size={20} aria-hidden="true" />
             </a>
           </div>
         </div>
