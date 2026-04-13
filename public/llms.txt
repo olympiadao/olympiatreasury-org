@@ -78,11 +78,12 @@ Nine contracts deployed via deterministic CREATE2. Identical addresses on Mordor
 
 ## Client Implementations
 
-Three independent implementations ensure zero single points of failure:
+Two active clients at Olympia launch:
 
-- **Fukuii** (Scala, JDK 21+): Primary client post-Olympia. 143 RPC methods, 2,706 tests, full SNAP sync.
-- **Core-Geth** (Go 1.24+): Battle-tested ETC client, transitioning to maintenance role.
-- **Hyperledger Besu** (Java 21+): Enterprise-grade reference client, Hyperledger Foundation.
+- **Fukuii** — Primary client for the Olympia era. Purpose-built for Ethereum Classic and designed for long-term protocol stewardship.
+- **Core-Geth** — Legacy ETC client, actively maintained and carried forward through Olympia for network continuity. Scheduled to phase out as Fukuii assumes the primary role.
+
+ETC plugins for Besu, Erigon, Go-Ethereum, and Nethermind are planned for future release — compatibility layers that bring ETC support to major upstream clients without maintaining full forks.
 
 Node operators must upgrade before the activation block. Block rewards and tips remain completely untouched. The Olympia upgrade only redirects EIP-1559 basefee to the treasury.
 
