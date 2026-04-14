@@ -10,7 +10,7 @@ The Olympia Treasury (ECIP-1112) is the protocol-controlled vault funded by EIP-
 
 Olympia is Ethereum Classic's most significant protocol upgrade: delivering the EVM ecosystem's most widely adopted fee market, a protocol-controlled treasury, and full Fusaka EVM alignment to the only Proof-of-Work smart contract platform in the world.
 
-**ECIP-1111 — EIP-1559 Fee Market:** The most widely adopted transaction format and fee market in the EVM ecosystem, now on Ethereum Classic. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive: legacy transactions remain valid indefinitely. Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury. Miner block rewards and tips remain completely untouched.
+**ECIP-1111 — EIP-1559 Fee Market:** Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury — the mechanism that funds open-source core development without any foundation or donor dependency. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive: legacy transactions remain valid indefinitely. Miner block rewards and tips remain completely untouched.
 
 **ECIP-1112 — Protocol Treasury:** A protocol-controlled vault funded by basefee revenue and voluntary contributions. For the first time, institutions, developers, and network stakeholders can directly fund Ethereum Classic's core development and critical infrastructure without fielding their own team. No admin keys, no multisig. Only on-chain governance can release funds.
 
@@ -56,7 +56,7 @@ Olympia is in final testing on the Mordor Testnet. The activation block will be 
 
 Five stages from consensus upgrades to permanent protocol integration:
 
-1. **Consensus Upgrades** (Complete): EIP-1559 fee market, protocol treasury funded by basefee revenue, and full Fusaka EVM parity. Three independent client implementations complete.
+1. **Consensus Upgrades** (Complete): EIP-1559 fee market, protocol treasury funded by basefee revenue, and full Fusaka EVM parity. Multiple independent client implementations complete.
 2. **Core Governance** (Active): Governance and treasury contracts deployed. Open, transparent funding proposals with competitive bidding. Removes organizational overhead from the funding pipeline.
 3. **Prediction Markets** (Research): Futarchy-assisted governance using prediction markets to inform treasury allocation. Requires ECIP-1121 Fusaka EVM alignment.
 4. **Treasury Distribution** (Future): Optional governance-controlled smoothing of basefee revenue back to miners via ECIP-1115. Supplements long-term miner security budget through ECIP-1017 emission reduction events.
@@ -78,7 +78,7 @@ Nine contracts deployed via deterministic CREATE2. Identical addresses on Mordor
 
 ## Client Implementations
 
-Two active clients at Olympia launch:
+Multiple independent client implementations at Olympia launch:
 
 - **Fukuii** — Primary client for the Olympia era. Purpose-built for Ethereum Classic and designed for long-term protocol stewardship.
 - **Core-Geth** — Legacy ETC client, actively maintained and carried forward through Olympia for network continuity. Scheduled to phase out as Fukuii assumes the primary role.

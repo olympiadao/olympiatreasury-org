@@ -51,7 +51,7 @@ const ecips = [
     title: "EIP-1559 Fee Market",
     icon: Flame,
     description:
-      "The most widely adopted transaction format and fee market in the EVM ecosystem, now on Ethereum Classic. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive: legacy transactions remain valid indefinitely. Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury. Miner block rewards and tips remain completely untouched.",
+      "Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury — the mechanism that funds open-source core development without any foundation or donor dependency. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive: legacy transactions remain valid indefinitely. Miner block rewards and tips remain completely untouched.",
   },
   {
     ecip: "ECIP-1112",
@@ -65,7 +65,7 @@ const ecips = [
     title: "Fusaka EVM Alignment",
     icon: Cpu,
     description:
-      "Building on Mystique and Spiral, Olympia delivers the remaining EVM execution-layer improvements from Dencun, Pectra, and Fusaka. Every improvement is independent of Proof-of-Stake and blob data availability. Exchanges and wallets gain modern RPC compatibility and standard transaction support. Developers gain full access to every current Ethereum tool, library, and framework: one codebase, every EVM chain.",
+      "Building on Mystique and Spiral, Olympia delivers the remaining EVM execution-layer improvements from Dencun, Pectra, and Fusaka, covering every improvement that is independent of Proof-of-Stake and blob data availability. Exchanges and wallets gain modern RPC compatibility and standard transaction support. Developers gain full access to every current Ethereum tool, library, and framework: one codebase, every EVM chain.",
   },
 ];
 
@@ -117,7 +117,7 @@ const faqItems = [
   {
     question: "What role has the ETC Cooperative played, and what changes with Olympia?",
     answer:
-      "The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by the Olympia DAO and executed by the Wyoming DAO LLC, replaces institutional dependency with a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can now contribute directly on-chain without fielding a team or managing a non-profit to do it.",
+      "The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by the Olympia DAO and executed by the Wyoming DAO LLC, extends beyond institutional dependency to a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can now contribute directly on-chain without fielding a team or managing a non-profit to do it.",
   },
   {
     question: "What is Grayscale's role in Ethereum Classic's development?",
@@ -137,12 +137,12 @@ const faqItems = [
   {
     question: "How was Olympia tested before mainnet?",
     answer:
-      "Olympia activates on the Mordor testnet first. Mordor is Ethereum Classic's Proof-of-Work testnet and mirrors mainnet conditions closely. All three client implementations, Fukuii, Core-Geth, and Besu, run the Mordor fork before any mainnet activation is scheduled. Cross-client validation using the Hive integration testing framework confirms consensus compatibility across implementations. The mainnet activation block is not set until Mordor has run cleanly and major network stakeholders, including exchanges, custodians, and mining pools, have confirmed readiness.",
+      "Olympia activates on the Mordor testnet first. Mordor is Ethereum Classic's Proof-of-Work testnet and mirrors mainnet conditions closely. Multiple independent client implementations run the Mordor fork before any mainnet activation is scheduled. Cross-client validation using the Hive integration testing framework confirms consensus compatibility across implementations. The mainnet activation block is not set until Mordor has run cleanly and major network stakeholders, including exchanges, custodians, and mining pools, have confirmed readiness.",
   },
   {
     question: "When is the mainnet activation block?",
     answer:
-      "Olympia activates on Mordor testnet first. The mainnet activation block is announced after a successful Mordor run and a coordinated stakeholder readiness check with exchanges, mining pools, node operators, and infrastructure providers. All client implementations publish Olympia-compatible releases well before activation. The process follows the same sequence used for every previous ETC hard fork.",
+      "Olympia is targeted for mainnet activation before 2027. The testnet activation block on Mordor is announced first. The mainnet activation block follows after a successful Mordor run and a coordinated stakeholder readiness check with exchanges, mining pools, node operators, and infrastructure providers. All client implementations publish Olympia-compatible releases well before activation. The process follows the same sequence used for every previous ETC hard fork.",
   },
   {
     question: "Will my miner rewards change?",
@@ -157,7 +157,7 @@ const faqItems = [
   {
     question: "Is Ethereum Classic a security or commodity after Olympia?",
     answer:
-      "Olympia strengthens ETC's regulatory profile. As a Proof-of-Work blockchain with no pre-mine, no ICO, no foundation controlling the protocol, and now a community-governed on-chain treasury, ETC is positioned for classification as a digital commodity under the CLARITY Act. In the EU, ETC qualifies as a decentralized asset under MiCA, exempt from per-asset issuer requirements. The addition of on-chain governance through the Olympia DAO does not create a central issuer or controlling party: the network remains decentralized, and governance is open to any qualified participant worldwide.",
+      "Olympia strengthens ETC's regulatory profile. As a Proof-of-Work blockchain with no pre-mine, no ICO, no foundation controlling the protocol, and now a community-governed on-chain treasury, ETC is positioned for classification as a digital commodity under the CLARITY Act. In the EU, ETC qualifies as a decentralized asset under MiCA, exempt from per-asset issuer requirements. Japan's FSA lists ETC among approved digital assets. UK and UAE regulatory frameworks treat Proof-of-Work assets with distinct treatment from staking-based networks. The three-layer governance structure — protocol clients, Wyoming DAO LLC, and on-chain Olympia DAO — maintains clear decentralization while satisfying compliance requirements at the legal entity layer. The network remains decentralized, and governance is open to any qualified participant worldwide.",
   },
   {
     question: "Can I roll back if something goes wrong?",
@@ -244,7 +244,7 @@ export default function UpgradePage() {
               <ul className="mx-auto mt-6 max-w-2xl space-y-3 text-left text-sm text-[var(--text-muted)]">
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
-                  <span><span className="font-semibold text-[var(--foreground)]">EIP-1559 fee market:</span> the most widely adopted transaction type in the EVM ecosystem, bringing predictable gas pricing and modern tooling compatibility</span>
+                  <span><span className="font-semibold text-[var(--foreground)]">EIP-1559 fee market:</span> unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury — funding open-source core development without any foundation or donor dependency. Predictable gas pricing, modern tooling compatibility, legacy transactions remain valid indefinitely.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
@@ -256,7 +256,7 @@ export default function UpgradePage() {
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
-                  <span><span className="font-semibold text-[var(--foreground)]">Institutional infrastructure:</span> the PoW commodity classification path (CLARITY Act) combined with the programmable finance frameworks being built around smart contract platforms (GENIUS Act, MiCA)</span>
+                  <span><span className="font-semibold text-[var(--foreground)]">Institutional infrastructure:</span> the Proof-of-Work foundation for regulated stablecoin issuance (Classic USD, MiCA and GENIUS Act-compliant), digital commodity classification under the CLARITY Act, and the broadest cross-jurisdictional institutional access profile of any Proof-of-Work smart contract network</span>
                 </li>
               </ul>
             </FadeIn>
@@ -284,7 +284,7 @@ export default function UpgradePage() {
                 What Olympia Brings to Ethereum Classic
               </h2>
               <p className="mb-8 text-sm text-[var(--text-muted)]">
-                A modern fee market, a protocol-controlled treasury, and full Fusaka EVM compatibility: delivered to the only Proof-of-Work smart contract platform in the world.
+                Three protocol upgrades in a single activation: a fee market that funds a protocol-controlled treasury, Fusaka EVM alignment that closes years of tooling divergence so every Ethereum library and framework works on ETC without modification, and the institutional access profile that follows. Delivered to the only Proof-of-Work smart contract platform in the world.
               </p>
             </FadeIn>
 
