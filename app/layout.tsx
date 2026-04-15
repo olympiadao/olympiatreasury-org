@@ -83,8 +83,11 @@ export const metadata: Metadata = {
     "Dencun",
     "Pectra",
     "Solidity compatibility",
-    "EIP-3198",
-    "BASEFEE opcode",
+    "Fusaka EVM alignment",
+    "Foundry ETC",
+    "Hardhat ETC",
+    "wagmi ETC",
+    "EVM tooling",
   ],
   authors: [
     { name: "Cody Burns", url: "https://github.com/realcodywburns" },

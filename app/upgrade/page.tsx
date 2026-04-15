@@ -228,31 +228,33 @@ export default function UpgradePage() {
       <main>
         {/* Hero */}
         <section className="hero-gradient relative pt-36 pb-16">
-          <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+          <div className="relative z-10 mx-auto max-w-5xl px-6">
             <FadeIn>
+              <p className="text-sm font-mono uppercase tracking-widest text-[var(--brand-green)]">Olympia</p>
               <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
-                Olympia{" "}
-                <span className="text-[var(--brand-green)]">Upgrade</span>
+                The{" "}
+                <span className="text-[var(--brand-green)]">Olympia</span>{" "}
+                Upgrade
               </h1>
             </FadeIn>
             <FadeIn delay={100}>
-              <p className="mx-auto max-w-2xl text-lg text-[var(--text-muted)]">
+              <p className="text-lg text-[var(--text-muted)]">
                 The Olympia era marks a shift from reactive maintenance to active
                 development on the longest-running EVM and the only Proof-of-Work
                 smart contract platform in the world.
               </p>
-              <ul className="mx-auto mt-6 max-w-2xl space-y-3 text-left text-sm text-[var(--text-muted)]">
+              <ul className="mt-6 space-y-3 text-sm text-[var(--text-muted)]">
+                <li className="flex gap-3">
+                  <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
+                  <span><span className="font-semibold text-[var(--foreground)]">Fusaka EVM alignment:</span> closes years of divergence in a single upgrade; every current Ethereum tool, library, and framework works on ETC without modification. Solidity, Foundry, Hardhat, wagmi, viem — one codebase, every EVM chain.</span>
+                </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
                   <span><span className="font-semibold text-[var(--foreground)]">EIP-1559 fee market:</span> unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury — funding open-source core development without any foundation or donor dependency. Predictable gas pricing, modern tooling compatibility, legacy transactions remain valid indefinitely.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
-                  <span><span className="font-semibold text-[var(--foreground)]">Protocol treasury:</span> basefee revenue redirected to a protocol-managed treasury, funding open-source core development, infrastructure, and long-term network security</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
-                  <span><span className="font-semibold text-[var(--foreground)]">Fusaka EVM alignment:</span> closes years of divergence in a single upgrade; every current Ethereum tool, library, and framework works on ETC without modification</span>
+                  <span><span className="font-semibold text-[var(--foreground)]">Protocol treasury:</span> basefee revenue — value set to be destroyed under EIP-1559 — redirected to a protocol-managed treasury, funding open-source core development, infrastructure, and long-term network security. Block rewards and tips remain completely untouched.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
@@ -292,16 +294,21 @@ export default function UpgradePage() {
               {ecips.map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <FadeIn key={item.ecip} delay={i * 80}>
-                    <div className="rounded-xl border border-[var(--border-default)] bg-[var(--background)] p-6">
+                  <FadeIn key={item.ecip} delay={i * 80} className="h-full">
+                    <div className="flex h-full flex-col rounded-xl border border-[var(--border-default)] bg-[var(--background)] p-6">
                       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)]">
                         <Icon size={20} className="text-[var(--brand-green)]" />
                       </div>
-                      <p className="font-mono text-xs text-[var(--brand-green)]">
+                      <a
+                        href={`https://ecips.ethereumclassic.org/ECIPs/ecip-${item.ecip.toLowerCase().replace("ecip-", "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-xs text-[var(--brand-green)] transition hover:opacity-70"
+                      >
                         {item.ecip}
-                      </p>
+                      </a>
                       <h3 className="mt-1 text-base font-semibold">{item.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--text-muted)]">
                         {item.description}
                       </p>
                     </div>
@@ -347,9 +354,15 @@ export default function UpgradePage() {
                         <p className="text-xs text-[var(--text-muted)]">{fork.fullName} · {fork.year}</p>
                         <div className="mt-2 flex flex-wrap gap-1 md:justify-center">
                           {fork.eips.map((eip) => (
-                            <span key={eip} className="rounded-sm border border-[var(--border-default)] bg-[var(--bg-elevated)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)]">
+                            <a
+                              key={eip}
+                              href={`https://eips.ethereum.org/EIPS/eip-${eip.toLowerCase().replace("eip-", "")}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="rounded-sm border border-[#8b5cf630] bg-[#8b5cf615] px-1.5 py-0.5 font-mono text-[10px] text-[#a78bfa] transition hover:opacity-70"
+                            >
                               {eip}
-                            </span>
+                            </a>
                           ))}
                         </div>
                       </div>
@@ -384,9 +397,15 @@ export default function UpgradePage() {
                       </div>
                       <div className="mb-2 flex flex-wrap gap-1">
                         {cat.eips.map((eip) => (
-                          <span key={eip} className="rounded-sm border border-[var(--border-default)] bg-[var(--bg-elevated)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)]">
+                          <a
+                            key={eip}
+                            href={`https://eips.ethereum.org/EIPS/eip-${eip.toLowerCase().replace("eip-", "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-sm border border-[#8b5cf630] bg-[#8b5cf615] px-1.5 py-0.5 font-mono text-[10px] text-[#a78bfa] transition hover:opacity-70"
+                          >
                             {eip}
-                          </span>
+                          </a>
                         ))}
                       </div>
                       <p className="text-xs leading-relaxed text-[var(--text-muted)]">{cat.description}</p>
@@ -516,7 +535,7 @@ export default function UpgradePage() {
 
         {/* FAQ */}
         <section className="py-16 px-6">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-5xl">
             <FadeIn>
               <h2 className="mb-8 text-2xl font-bold tracking-tight">
                 Frequently Asked Questions
@@ -529,6 +548,21 @@ export default function UpgradePage() {
             </FadeIn>
           </div>
         </section>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: { "@type": "Answer", text: item.answer },
+              })),
+            }),
+          }}
+        />
       </main>
       <FooterSection />
     </>
