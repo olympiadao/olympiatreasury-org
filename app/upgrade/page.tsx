@@ -1,27 +1,33 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu, Layers, Code2, ShieldCheck } from "lucide-react";
+import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu, Layers, Code2, ShieldCheck, LayoutDashboard, Github, Vote } from "lucide-react";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Accordion } from "@/components/ui/Accordion";
 import { CountdownBanner } from "@/components/ui/CountdownBanner";
+import { PropertyCard } from "@/components/ui/PropertyCard";
 import { RoadmapSection } from "@/components/sections/RoadmapSection";
 import { NavHeader } from "@/components/sections/NavHeader";
 import { FooterSection } from "@/components/sections/FooterSection";
 
 export const metadata: Metadata = {
-  title: "Olympia Upgrade: EIP-1559, Protocol Treasury, and Fusaka EVM Alignment for Ethereum Classic",
+  title: "Olympia Upgrade: Fusaka EVM Alignment, EIP-1559 Fee Market, and Protocol Treasury for Ethereum Classic",
   description:
-    "Olympia is Ethereum Classic's most significant protocol upgrade. Adds EIP-1559 fee market, a protocol-controlled treasury for open-source core development, and full Fusaka EVM alignment including Dencun, Pectra, and Fusaka. Node upgrade guides for Fukuii and Core-Geth.",
+    "Olympia is Ethereum Classic's most significant protocol upgrade. Full Fusaka EVM parity closes years of execution-layer divergence — every Ethereum tool works on ETC without modification. EIP-1559 fee market redirects the basefee to a protocol-managed treasury. Upgrade guides for Fukuii and Core-Geth.",
   keywords: [
+    "Fusaka EVM alignment",
     "Olympia upgrade",
     "Ethereum Classic upgrade",
+    "EVM alignment",
+    "Foundry ETC",
+    "Hardhat ETC",
+    "wagmi ETC",
+    "viem ETC",
     "EIP-1559",
     "ECIP-1111",
     "ECIP-1112",
     "ECIP-1121",
     "Fusaka EVM",
-    "EVM alignment",
     "protocol treasury",
     "Ethereum Classic node upgrade",
     "Fukuii",
@@ -325,12 +331,15 @@ export default function UpgradePage() {
         <section className="py-16 px-6">
           <div className="mx-auto max-w-5xl">
             <FadeIn>
-              <p className="font-mono text-xs text-[var(--brand-green)] mb-1">ECIP-1121</p>
-              <h2 className="mb-2 text-2xl font-bold tracking-tight">
-                EVM Compatibility in Detail
-              </h2>
-              <p className="mb-8 text-sm text-[var(--text-muted)] max-w-2xl">
-                Three Ethereum upgrade cycles delivered to ETC in a single fork. Every execution-layer improvement is independent of Proof-of-Stake and blob data availability.
+              <a
+                href="https://ecips.ethereumclassic.org/ECIPs/ecip-1121"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mb-1 block font-mono text-xs text-[var(--brand-green)] transition hover:opacity-70"
+              >ECIP-1121</a>
+              <h2 className="mb-2 text-2xl font-bold tracking-tight">EVM Compatibility</h2>
+              <p className="mb-8 text-sm text-[var(--text-muted)]">
+                Building on Mystique and Spiral, Olympia delivers the EVM execution-layer improvements from Dencun, Pectra, and Fusaka. Every EIP is compatible with Proof-of-Work and independent of blob data availability.
               </p>
             </FadeIn>
 
@@ -374,11 +383,10 @@ export default function UpgradePage() {
 
             {/* Divergence callout */}
             <FadeIn delay={120}>
-              <div className="mb-8 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-5 text-sm text-[var(--text-muted)]">
-                <span className="font-semibold text-[var(--text-primary)]">ETC context: </span>
-                Ethereum Classic implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deliberately deferring the EIP-1559 fee market for independent governance design.
-                ECIP-1111 now delivers those deferred London EIPs. ECIP-1121 advances the execution layer through Dencun, Pectra, and Fusaka: every EVM improvement that is independent of Proof-of-Stake and blob data availability.
-                Together, Olympia brings ETC to full Fusaka execution-layer parity.
+              <div className="mb-8 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-5">
+                <p className="text-sm leading-relaxed text-[var(--text-primary)]">
+                  Ethereum Classic implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deliberately deferring the EIP-1559 fee market for independent governance design. ECIP-1111 now delivers those deferred London EIPs. ECIP-1121 advances the execution layer through Dencun, Pectra, and Fusaka: every EVM improvement that is independent of Proof-of-Stake and blob data availability. Together, Olympia brings ETC to full Fusaka execution-layer parity.
+                </p>
               </div>
             </FadeIn>
 
@@ -415,25 +423,95 @@ export default function UpgradePage() {
               })}
             </div>
 
-            {/* Blobs excluded note */}
+            {/* Blobs excluded */}
             <FadeIn delay={160}>
-              <p className="mb-8 text-xs text-[var(--text-muted)] italic">
-                Explicitly excluded: all blob-dependent EIPs (EIP-4844, EIP-7516, EIP-7691). Ethereum Classic is a pure Layer 1 execution chain with no data availability requirement. Blobs are L2 scaffolding ETC does not need.
-              </p>
+              <div className="mb-8 rounded-xl border border-[var(--border-default)] bg-[var(--bg-elevated)] p-5">
+                <p className="text-xs leading-relaxed text-[var(--text-muted)]">
+                  <span className="font-semibold text-[var(--text-primary)]">Blobs excluded by design.</span>{" "}
+                  EIPs dependent on blob data availability (EIP-4844, EIP-7516, EIP-7691) are intentionally excluded. Ethereum introduced blobs to support L2 data availability, a concern Ethereum Classic as a pure Layer 1 execution chain does not have. ETC gains every execution-layer improvement without inheriting any L2 scaffolding.
+                </p>
+              </div>
             </FadeIn>
 
             {/* Developer tooling */}
             <FadeIn delay={200}>
-              <h3 className="mb-4 text-base font-semibold">Developer Tooling: Works Without Modification</h3>
-              <div className="grid gap-4 sm:grid-cols-3">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                Developer Tooling: Works Without Modification
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
                 {devTools.map((tool) => (
-                  <div key={tool.name} className="rounded-xl border border-[var(--border-default)] bg-[var(--background)] p-4">
+                  <div key={tool.name} className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-elevated)] p-4">
                     <p className="mb-1 text-sm font-semibold">{tool.name}</p>
                     <p className="text-xs leading-relaxed text-[var(--text-muted)]">{tool.description}</p>
                   </div>
                 ))}
               </div>
             </FadeIn>
+          </div>
+        </section>
+
+        {/* Olympia Upgrade Callout */}
+        <SectionDivider />
+        <section className="section-alt py-20">
+          <div className="mx-auto max-w-5xl px-6">
+            <FadeIn>
+              <h2 className="text-3xl font-bold tracking-tight">The Olympia Upgrade</h2>
+              <div className="mt-4 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-8 space-y-4 text-base leading-relaxed text-[var(--text-secondary)]">
+                <p>Olympia is Ethereum Classic&rsquo;s most significant protocol upgrade. Three changes arrive in a single activation: Fusaka EVM alignment, EIP-1559 fee market, and a protocol-managed treasury.</p>
+                <p>The headline change is full Fusaka EVM parity &mdash; closing years of execution-layer divergence from Ethereum in a single fork. Every Solidity compiler version, every deployment tool (Foundry, Hardhat), and every major library (wagmi, viem, ethers.js) works on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim this before Olympia. After Olympia, it can.</p>
+                <p>The EIP-1559 fee market redirects the basefee &mdash; value that would otherwise be destroyed &mdash; to a protocol-managed treasury. Block rewards and tips remain completely untouched and go entirely to miners. Anyone can submit proposals on-chain. Members vote on resource allocation and execute decisions. Every step is transparent and verifiable on-chain.</p>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* Governance Framework */}
+        <SectionDivider />
+        <section className="py-20">
+          <div className="mx-auto max-w-5xl px-6">
+            <FadeIn>
+              <h2 className="text-3xl font-bold tracking-tight">Olympia Governance Framework</h2>
+              <p className="mt-3 text-base text-[var(--text-muted)]">
+                Operational infrastructure for core developers, protocol contributors, and network security stakeholders. Governance tooling, treasury monitoring, and open-source repositories for those coordinating on critical infrastructure and emergency response.
+              </p>
+            </FadeIn>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {[
+                {
+                  icon: Vote,
+                  name: "Governance App",
+                  description: "Proposal submission, on-chain voting, and execution tooling for network contributors",
+                  href: "https://app.olympiadao.org",
+                },
+                {
+                  icon: LayoutDashboard,
+                  name: "OlympiaDAO.org",
+                  description: "Governance landing page — upgrade details, ECIP specs, and three-tier governance architecture",
+                  href: "https://olympiadao.org",
+                },
+                {
+                  icon: Landmark,
+                  name: "Ethereum Classic DAO",
+                  description: "Institutional site for the Wyoming DAO LLC — the legal entity behind Olympia governance",
+                  href: "https://ethereumclassicdao.org",
+                },
+                {
+                  icon: Github,
+                  name: "GitHub",
+                  description: "Client implementations, governance contracts, and protocol infrastructure — all open-source",
+                  href: "https://github.com/olympiadao",
+                },
+              ].map((p, i) => (
+                <FadeIn key={p.name} delay={i * 80}>
+                  <PropertyCard
+                    icon={p.icon}
+                    name={p.name}
+                    description={p.description}
+                    href={p.href}
+                  />
+                </FadeIn>
+              ))}
+            </div>
           </div>
         </section>
 
