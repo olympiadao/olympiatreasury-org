@@ -29,23 +29,23 @@ export function AboutSection() {
           <FundFlow />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Community Funding">
+        <CollapsibleCard title="Community Funding" defaultOpen>
           <CommunityFunding />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Governance Stages">
+        <CollapsibleCard title="Governance Stages" defaultOpen>
           <Stages />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Core Invariants">
+        <CollapsibleCard title="Core Invariants" defaultOpen>
           <Invariants />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Security Model">
+        <CollapsibleCard title="Security Model" defaultOpen>
           <Security />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Contracts">
+        <CollapsibleCard title="Contracts" defaultOpen>
           <AboutContractsClient />
         </CollapsibleCard>
       </div>
