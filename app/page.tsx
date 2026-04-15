@@ -69,7 +69,9 @@ export default async function Home() {
           }>
             <TransactionsSection />
           </Suspense>
-          <AboutSection />
+          <Suspense>
+            <AboutSection />
+          </Suspense>
         </main>
       </HydrationBoundary>
       <FooterSection />

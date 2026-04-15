@@ -73,12 +73,13 @@ export function CountdownBanner() {
   }, [status, tick]);
 
   // Fallback date-based countdown for TBD state
-  const [tbdSecondsLeft, setTbdSecondsLeft] = useState<number>(() =>
-    Math.max(0, Math.floor((FALLBACK_TARGET_MS - Date.now()) / 1000))
-  );
+  // Initialize to 0 on server to avoid SSR/CSR hydration mismatch — real value set in effect
+  const [tbdSecondsLeft, setTbdSecondsLeft] = useState<number>(0);
 
   useEffect(() => {
     if (status !== "tbd") return;
+    // Set initial value on client only (Date.now() differs between server and client renders)
+    setTbdSecondsLeft(Math.max(0, Math.floor((FALLBACK_TARGET_MS - Date.now()) / 1000)));
     const id = setInterval(() => {
       setTbdSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
