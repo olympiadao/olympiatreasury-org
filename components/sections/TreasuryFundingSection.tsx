@@ -116,6 +116,12 @@ export function TreasuryFundingSection() {
                 Submit a Proposal
                 <ArrowRight size={14} />
               </a>
+              <p className="mt-2 max-w-sm text-xs leading-relaxed text-[var(--text-muted)]">
+                Funding proposals require a 1 ETC quality bond held by the
+                registry. Bonds are returned in full when a proposal is
+                activated for a governance vote, or forfeited to the treasury
+                if rejected as spam or low quality.
+              </p>
             </div>
           </FadeIn>
         </div>
