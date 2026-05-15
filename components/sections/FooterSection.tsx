@@ -15,6 +15,14 @@ export function FooterSection() {
 
           <div className="flex items-center gap-6">
             <a
+              href="https://ethereumclassic.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+            >
+              Ethereum Classic
+            </a>
+            <a
               href="https://ethereumclassicdao.org"
               target="_blank"
               rel="noopener noreferrer"
