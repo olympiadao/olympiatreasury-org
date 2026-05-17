@@ -80,7 +80,7 @@ Nine contracts deployed via deterministic CREATE2. Identical addresses on Mordor
 
 Multiple independent client implementations at Olympia launch:
 
-- **Fukuii** — Primary client for the Olympia era. Purpose-built for Ethereum Classic and designed for long-term protocol stewardship.
+- **Fukuii** (fukuii.com) — Ethereum execution layer client in Scala 3. Native PoW for ETC mainnet and Mordor; Engine API V1–V4 for Sepolia and ETH mainnet. Pairs with Lighthouse, Prysm, Teku, Lodestar, or Nimbus. The primary ETC client for the Olympia era. By Chippr Robotics LLC.
 - **Core-Geth** — Legacy ETC client, actively maintained and carried forward through Olympia for network continuity. Scheduled to phase out as Fukuii assumes the primary role.
 
 ETC plugins for Besu, Erigon, Go-Ethereum, and Nethermind are planned for future release — compatibility layers that bring ETC support to major upstream clients without maintaining full forks.
