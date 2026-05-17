@@ -82,7 +82,7 @@ const clients = [
     languageColor: "#DC322F",
     role: "Primary Client · Enterprise Grade",
     version: "TBD",
-    runtime: "JDK 21+",
+    runtime: "JDK 25+",
     disk: "500 GB+ (SNAP sync)",
     ram: "8 GB minimum",
     steps: [
