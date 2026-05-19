@@ -2,61 +2,45 @@
 
 Live treasury monitoring dashboard for the Olympia protocol-controlled vault on Ethereum Classic. Read-only — no wallet required.
 
-**URL:** [olympiatreasury.org](https://olympiatreasury.org)
+OlympiaDAO funds core development, critical infrastructure, and network security for Ethereum Classic through on-chain governance — smart contract-powered voting, a protocol treasury funded by basefee revenue, and verifiable membership. No multisigs. No trusted intermediaries.
 
-## Features
+## Website
 
-- Real-time treasury balance and KPI cards (Balance, Mined Income, BaseFee, Donations, Withdrawals, Transactions)
-- Balance history chart with light/dark theme support
-- Transaction table (inflows/outflows) with Blockscout links
-- Multi-chain support: ETC Mainnet (61) + Mordor Testnet (63) via URL-based chain selector
-- About section: fund flow, invariants, security layers, roadmap stages, deployed contracts
-- ECIP-1017 era disinflation reward calculation (client-side)
-- Light/dark theme toggle
-- Responsive, mobile-first
+[olympiatreasury.org](https://olympiatreasury.org)
 
-## Tech Stack
+## Built With
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Next.js 16 (App Router, Turbopack) |
-| UI | React 19, TypeScript 5 (strict) |
-| Styling | Tailwind CSS 4, CSS custom properties |
-| Data | Blockscout API v2, @tanstack/react-query |
-| Charts | Recharts |
-| Icons | Lucide React |
-| Package Manager | pnpm 10 |
+- [Next.js 16](https://nextjs.org) (App Router)
+- [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org) (strict)
+- [Tailwind CSS 4](https://tailwindcss.com)
+- [viem](https://viem.sh)
+- [Recharts](https://recharts.org)
+- [@tanstack/react-query](https://tanstack.com/query)
 
-## Deployed Contracts (Demo v0.3)
-
-Nine contracts deployed via deterministic **CREATE2** (salt: `OLYMPIA_DEMO_V0_3`) + Treasury via **CREATE**. Identical addresses on Mordor Testnet (63) + ETC Mainnet (61). All source verified on Blockscout.
-
-All addresses in [`lib/contracts.json`](lib/contracts.json) — single source of truth.
-
-## Quick Start
+## Development
 
 ```bash
 pnpm install
-pnpm dev          # Dev server (Turbopack)
-pnpm build        # Production build
-pnpm lint         # ESLint
-pnpm typecheck    # TypeScript check
+pnpm dev        # Dev server
+pnpm build      # Production build
+pnpm lint       # Lint
+pnpm typecheck  # Type check
 ```
 
-## Branch Strategy
+## Related
 
-| Branch | Purpose |
-|--------|---------|
-| `main` | Production — deployed after Olympia activates on ETC mainnet |
-| `demo_v0.3` | Active development — 9 contracts, on-chain SVG, sybil resistance |
-| `demo_v0.2` | Preserved — spec-compliant, multi-chain, 7 CREATE2 contracts |
-| `demo_v0.1` | Preserved snapshot — fast-iteration development, not ECIP-aligned |
-
-## Related Repos
-
-- [olympia-treasury-contract](https://github.com/olympiadao/olympia-treasury-contract) — Treasury vault (pure Solidity, no OZ)
-- [olympia-governance-contracts](https://github.com/olympiadao/olympia-governance-contracts) — Governor, Executor, ECFPRegistry, NFT, Sanctions
+- [olympia-treasury-contract](https://github.com/olympiadao/olympia-treasury-contract) — Treasury vault
+- [olympia-governance-contracts](https://github.com/olympiadao/olympia-governance-contracts) — Governor, Executor, Registry
 - [olympia-brand](https://github.com/olympiadao/olympia-brand) — Design tokens, logos, favicons
 - [olympiadao-org](https://github.com/olympiadao/olympiadao-org) — Landing page
-- [ethereumclassicdao-org](https://github.com/EthereumClassicDAO/ethereumclassicdao-org) — Institutional website
 - [olympia-app](https://github.com/olympiadao/olympia-app) — Governance UI
+- [ethereumclassicdao-org](https://github.com/EthereumClassicDAO/ethereumclassicdao-org) — Institutional website
+
+## Ethereum Classic Core Developers
+
+- [Cody Burns](https://github.com/realcodywburns)
+- [Chris Mercer](https://github.com/chris-mercer)
+
+## License
+
+[Apache 2.0](LICENSE)
