@@ -175,23 +175,23 @@ const faqItems = [
 const forkTimeline = [
   { name: "Dencun", fullName: "Cancun-Deneb", year: "2024", eips: ["EIP-1153", "EIP-5656", "EIP-2935"] },
   { name: "Pectra", fullName: "Prague-Electra", year: "2025", eips: ["EIP-7702", "EIP-2537", "EIP-6780"] },
-  { name: "Fusaka", fullName: "Fulu-Osaka", year: "2025", eips: ["EIP-7623", "EIP-7951", "EIP-7825"] },
+  { name: "Fusaka", fullName: "Fulu-Osaka", year: "2025", eips: ["EIP-7623", "EIP-7642", "EIP-7823", "EIP-7825", "EIP-7939", "EIP-7951"] },
 ];
 
 const evmCategories = [
   {
     title: "Gas & State Access",
     icon: Layers,
-    eips: ["EIP-7702", "EIP-7623", "EIP-7825", "EIP-7883", "EIP-7935"],
+    eips: ["EIP-7623", "EIP-7702", "EIP-7823", "EIP-7825", "EIP-7883", "EIP-7935"],
     description:
-      "Account delegation, cheaper calldata, gas limit enforcement, opcode repricing, and jumpdest removal. Reduces transaction costs and enables smart account patterns without protocol changes.",
+      "Account delegation, cheaper calldata, gas limit enforcement, MODEXP input bounds, opcode repricing, and jumpdest removal. Reduces transaction costs and enables smart account patterns without protocol changes.",
   },
   {
     title: "EVM Safety",
     icon: ShieldCheck,
-    eips: ["EIP-6780", "EIP-7934", "EIP-7910"],
+    eips: ["EIP-6780", "EIP-7642", "EIP-7910", "EIP-7934"],
     description:
-      "SELFDESTRUCT restricted to deployment context, stack size enforcement, and call target constraints. Makes contract behavior more predictable and reduces attack surface.",
+      "SELFDESTRUCT restricted to deployment context, eth/69 wire protocol with simplified receipts, stack size enforcement, and call target constraints. Makes contract behavior more predictable and reduces attack surface.",
   },
   {
     title: "Cryptographic Precompiles",
@@ -203,9 +203,9 @@ const evmCategories = [
   {
     title: "Execution Context",
     icon: Code2,
-    eips: ["EIP-5656", "EIP-2935", "EIP-1153"],
+    eips: ["EIP-1153", "EIP-2935", "EIP-5656", "EIP-7939"],
     description:
-      "MCOPY for efficient memory operations, historical block hashes in state, transient storage TSTORE/TLOAD. Unlocks reentrancy guards, flash loans, and cross-contract patterns without persistent storage.",
+      "MCOPY for efficient memory operations, CLZ opcode for leading-zero counting, historical block hashes in state, transient storage TSTORE/TLOAD. Unlocks reentrancy guards, flash loans, and cross-contract patterns without persistent storage.",
   },
 ];
 
@@ -368,7 +368,7 @@ export default function UpgradePage() {
                               href={`https://eips.ethereum.org/EIPS/eip-${eip.toLowerCase().replace("eip-", "")}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="rounded-sm border border-[#8b5cf630] bg-[#8b5cf615] px-1.5 py-0.5 font-mono text-[10px] text-[#a78bfa] transition hover:opacity-70"
+                              className="rounded-sm border border-[var(--color-violet)]/20 bg-[var(--color-violet-bg)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--color-violet)] transition hover:opacity-70"
                             >
                               {eip}
                             </a>
@@ -410,7 +410,7 @@ export default function UpgradePage() {
                             href={`https://eips.ethereum.org/EIPS/eip-${eip.toLowerCase().replace("eip-", "")}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="rounded-sm border border-[#8b5cf630] bg-[#8b5cf615] px-1.5 py-0.5 font-mono text-[10px] text-[#a78bfa] transition hover:opacity-70"
+                            className="rounded-sm border border-[var(--color-violet)]/20 bg-[var(--color-violet-bg)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--color-violet)] transition hover:opacity-70"
                           >
                             {eip}
                           </a>
