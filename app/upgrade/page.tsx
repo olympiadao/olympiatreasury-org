@@ -100,7 +100,7 @@ const clients = [
     languageColor: "#00ADD8",
     role: "Legacy Client · Maintenance Mode",
     version: "TBD",
-    runtime: "Go 1.24+",
+    runtime: "Go 1.26+",
     disk: "500 GB+ (full sync)",
     ram: "8 GB minimum",
     steps: [
