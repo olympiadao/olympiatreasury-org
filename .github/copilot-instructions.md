@@ -1,97 +1,135 @@
-# GitHub Copilot Instructions: OlympiaTreasury.org
+# GitHub Copilot Instructions — olympiatreasury-org
 
-> **Important:** GitHub Copilot only reads this file and your project code. It does NOT have access to global settings. All LTS rules must be included here.
+This file is self-contained. Copilot reads `AGENTS.md` on some surfaces and not others,
+so everything needed to work in this repo is repeated here. When the two disagree,
+`AGENTS.md` at the repo root is the one to correct, and this file follows it.
 
 ## Project
 
-Landing page for the Olympia Treasury — protocol-controlled vault for Ethereum Classic basefee revenue. Dark-first design (#0a0f10) with green primary (#00ffae) and amber secondary (#F59E0B).
+Live monitoring dashboard for the **Olympia Treasury** (ECIP-1112), the immutable,
+protocol-controlled vault that receives Ethereum Classic's EIP-1559 basefee revenue. It
+displays balance, transaction history, inflow/outflow KPIs, a balance chart, deployed
+contract addresses, and governance context. Read-only: no wallet is connected and none
+should be added.
 
-## LTS Enforcement (CRITICAL)
-
-**ALWAYS use current stable LTS versions.**
-
-| Technology | Version |
-|------------|---------|
-| Node.js | 24.x |
-| Next.js | 16.x |
-| React | 19.x |
-| TypeScript | 5.x |
-| Tailwind CSS | 4.x |
-| pnpm | 10.x |
-
-**Never suggest:** Node 22, Next.js 14/15, React 18.
-
-## Tech Stack
-
-- Next.js 16.x (App Router, Turbopack)
-- React 19.x, TypeScript 5.x (strict)
-- Tailwind CSS 4.x (CSS-first `@theme inline`)
-- Lucide React (icons)
-- Inter (UI) + JetBrains Mono (code/addresses)
+Deployed to Vercel at olympiatreasury.org.
 
 ## Commands
 
 ```bash
-pnpm dev          # Dev server (Turbopack)
-pnpm build        # Production build
-pnpm lint         # ESLint
-pnpm typecheck    # tsc --noEmit
+pnpm install       # install dependencies
+pnpm dev           # dev server (Turbopack)
+pnpm build         # production build
+pnpm start         # production server
+pnpm lint          # ESLint
+pnpm typecheck     # tsc --noEmit
 ```
 
-## Key Rules
+**Before every commit:** `pnpm lint && pnpm typecheck && pnpm build`.
 
-1. Use TypeScript strict mode
-2. Use CSS custom properties from `app/globals.css` for brand colors
-3. Use `cn()` from `@/lib/utils` for class merging
-4. Use Lucide React for icons — no Font Awesome
-5. Use JetBrains Mono (`font-mono`) for contract addresses
-6. CSS transitions only — no GSAP, R3F, or Lenis
-7. Contract addresses must match olympia-framework README
-8. Treasury address: `0xd6165F3aF4281037bce810621F62B43077Fb0e37`
+There is **no `test` script** and no test runner configured. Do not assume one exists or
+invent a call to one.
 
-## Protected Files
+## Stack
 
-Do not modify without explicit request:
-- `app/globals.css` — design tokens
-- `app/layout.tsx` — root layout
-- `public/logo.svg` — brand logomark
-- `tsconfig.json`, `next.config.ts`
+Read from `package.json`; these are the major series in use.
 
-## Code Style
+| Layer | Technology | Version |
+|-------|------------|---------|
+| Runtime | Node.js | 24.x (`engines.node: >=24`) |
+| Framework | Next.js | 16.x (App Router, Turbopack) |
+| UI | React | 19.x |
+| Language | TypeScript | 5.x, strict |
+| Styling | Tailwind CSS | 4.x (CSS-first, `@theme inline`) |
+| Data fetching | @tanstack/react-query | 5.x |
+| Chain client | viem | 2.x (RPC only — no wallet connector) |
+| Charts | Recharts | 3.x |
+| Theming | next-themes | 0.4.x |
+| Icons | Lucide React | latest |
+| Package manager | pnpm | 10.x |
 
-- 2-space indentation
-- Double quotes for strings
-- Semicolons
-- Trailing commas in multiline
+Do not suggest Node 22, Next.js 14/15, or React 18.
 
 ## Structure
 
 ```
-app/              # Pages, layout, globals, SEO files
+app/          → routes, layout, globals.css, sitemap/manifest/robots
 components/
-  sections/       # Page sections
-lib/              # Utilities (cn helper)
-public/           # Static assets (logo, OG image)
+  sections/   → page sections (NavHeader, DashboardHero, BalanceChart, …)
+  ui/         → FadeIn, SectionDivider, PropertyCard, Accordion, CountdownBanner
+lib/          → config.ts (chains), contracts.json (addresses), treasury.ts
+                (Blockscout fetchers + ECIP-1017 rewards), hooks/, providers.tsx, utils.ts
+public/       → llms.txt, logo.svg, og-image.png, chain icons
 ```
 
-## Validation
+A page imports section components. Do not inline sections into a page file.
 
-Before committing:
+## Data
 
-```bash
-pnpm lint && pnpm typecheck && pnpm build
-```
+- **One upstream: Blockscout API v2**, chain-aware via `lib/config.ts` — Mordor
+  (chain 63) and ETC mainnet (chain 61).
+- **Block rewards are computed client-side** by `ecip1017Reward()` in `lib/treasury.ts`,
+  because Blockscout reports Mordor rewards incorrectly. Era length is per-chain and
+  lives in `lib/config.ts`.
+- **Contract addresses come from `lib/contracts.json` only.** It is the single source of
+  truth and mirrors what is deployed on-chain. Never hardcode an address in a component,
+  and never copy one into an instruction file — a stale copy will be wrong.
+- Chain selection is a URL search param (`?chain=63`).
 
-## Don't
+## Code style
 
-- Commit .env files or secrets
-- Use `any` type
-- Skip type errors with `@ts-ignore`
-- Use deprecated versions
-- Add animation libraries
+- 2-space indentation, double quotes, semicolons, trailing commas in multiline
+- Use CSS custom properties from `app/globals.css` for every color
+- Use `cn()` from `@/lib/utils` for conditional classes
+- Use JetBrains Mono (`font-mono`) for contract addresses and numeric figures
+- Use Lucide React for icons — no Font Awesome
+- CSS transitions only — no GSAP, R3F, or Lenis
 
-## Response Style
+## Theming and contrast
 
-- Code first, explanations only if asked
-- Concise bullet points over paragraphs
-- Get straight to the answer
+Light and dark tokens are both defined in `globals.css`, and brand green **inverts**
+between them (`#00a872` light, `#00ffae` dark).
+
+- Never hardcode `text-white`, `text-black`, or a brand hex in a component. Use
+  `var(--text-primary)`, `var(--brand-green)`, and friends.
+- Recharts needs literal values, so `BalanceChart` resolves colors from `resolvedTheme`
+  in JS. Every color there must switch on `isDark`; none may be a bare hex.
+- Amber (`--brand-amber`) is this site's correct secondary accent — it is the treasury
+  accent across the suite. Keep it.
+- Maintain WCAG AA in **both** themes. Compute the ratio before changing a color.
+
+## Content rules
+
+- The Treasury validates nothing: `withdraw(recipient, amount)` checks only that the
+  caller is the Executor. Proposal integrity comes from OpenZeppelin Governor 5.x.
+- Governance stack: Governor 5.x → TimelockController → Executor → Treasury. Membership
+  is non-transferable NFTs; there is no governance token.
+- Funding proposals are **OFPs** (Olympia Funding Proposals, ECIP-1114), submitted
+  through the `OFPRegistry`. Never "ECFP" — that spelling predates the spec.
+- Futarchy (ECIP-1117/1118) is a signal layer and a Child-DAO. It never binds, never
+  executes itself, and receives no basefee directly.
+- Olympia advances the execution layer through Dencun, Pectra and Fusaka, and carries
+  that work into Glamsterdam. Do not write "full Glamsterdam parity".
+- Activation is targeted for **2027**, never "before 2027". The activation block is TBD.
+- Fukuii is ETC's first native client; Core-Geth is a go-ethereum derivative; Besu,
+  Erigon, Ethrex, Go-Ethereum, Nethermind and Reth are ETC **plugins**, never "overlays".
+- Write "Ethereum Classic's Olympia DAO", never "OlympiaDAO" as one word.
+- Write timeless copy. No "coming soon" or "future work"; put mutable status in a badge
+  or status field.
+
+## Protected files
+
+Do not modify without an explicit request:
+
+- `app/globals.css` — design tokens
+- `app/layout.tsx` — root layout, fonts, metadata, JSON-LD
+- `lib/contracts.json` — deployed addresses
+- `public/logo.svg`, `public/og-image.png`, `app/icon.svg`, `app/favicon.ico`
+- `tsconfig.json`, `next.config.ts`
+
+## Never
+
+- Commit `.env` files, credentials, or anything under `.local/`
+- Add a wallet connector — this dashboard is read-only by design
+- Use `any` without justification, or silence a type error with `@ts-ignore`
+- Use a color outside the Olympia palette
