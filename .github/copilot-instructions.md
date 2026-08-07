@@ -106,6 +106,11 @@ between them (`#00a872` light, `#00ffae` dark).
   is non-transferable NFTs; there is no governance token.
 - Funding proposals are **OFPs** (Olympia Funding Proposals, ECIP-1114), submitted
   through the `OFPRegistry`. Never "ECFP" — that spelling predates the spec.
+- OFP submission is **permissionless and carries no bond**. ECIP-1114 gates it on the
+  Governor's `proposalThreshold()` alone and states the Registry implements no bonding,
+  cooldown, or review period. OpenZeppelin Governor 5.x has no bond primitive either.
+  Never write "bond", "slash", or "intake review" — the last implies a gatekeeper the
+  spec forbids.
 - Futarchy (ECIP-1117/1118) is a signal layer and a Child-DAO. It never binds, never
   executes itself, and receives no basefee directly.
 - Olympia advances the execution layer through Dencun, Pectra and Fusaka, and carries

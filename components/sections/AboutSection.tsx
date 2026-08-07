@@ -90,7 +90,7 @@ const flowSteps = [
   { icon: Pickaxe, title: "Mined Income", desc: "Mining pools and solo miners can direct block rewards and tx fees to the treasury by mining to the contract address." },
   { icon: Heart, title: "Direct Donations", desc: "Anyone can send ETC directly to the treasury contract to support protocol development transparently." },
   { icon: Landmark, title: "Treasury Accumulates", desc: "All three income streams grow the vault. Balance and full history are publicly visible on-chain." },
-  { icon: FileCheck, title: "Proposals Submitted", desc: "Contributors submit OFPs with a 1 ETC quality bond. The bond is returned in full when activated for a vote, or slashed to the treasury if the proposal fails intake review." },
+  { icon: FileCheck, title: "Proposals Submitted", desc: "Any address can submit an OFP naming recipient, amount, and metadata. Submission is permissionless, gated only by the Governor's proposal threshold." },
   { icon: Users, title: "Governance Approves", desc: "DAO votes and authorizes eligible proposals. Only governance can trigger fund releases." },
 ];
 

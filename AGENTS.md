@@ -139,6 +139,15 @@ than rendering it as live.
 - **Funding proposals are OFPs** — Olympia Funding Proposals, per ECIP-1114, submitted
   through the `OFPRegistry`. Not "ECFP": that spelling predates the spec and is being
   retired from the contracts as they are redeployed.
+- **OFP submission is permissionless and carries no bond.** ECIP-1114 is explicit:
+  submission is *"permissionless subject only to the Governor's own `proposalThreshold()`
+  — no separate Registry-level bond, cooldown, or draft period"*, and the Registry
+  *"implements no separate bonding, cooldown, or review-period mechanism."* OpenZeppelin
+  Governor 5.x has no bond primitive either — `proposalThreshold` is a voting-power
+  floor, not an escrowed deposit. Never describe a bond, a slash, or an "intake review":
+  the last also implies the off-chain gatekeeper ECIP-1114 forbids. The DAO *may* later
+  adopt a **refundable** deposit as an optional, opt-in mitigation; that is a future
+  governance decision, not current behavior, and it is refundable rather than slashable.
 - **Sanctions (ECIP-1119):** exactly two checkpoints — proposal submission and
   execution before funds leave. Both fail closed when no oracle is set.
 - **Futarchy (ECIP-1117/1118):** a signal layer and a Child-DAO under ECIP-1113 §6. It
