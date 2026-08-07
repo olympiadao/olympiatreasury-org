@@ -79,7 +79,7 @@ export function DashboardHero() {
           <KpiCard
             label="Withdrawals"
             value={stats ? `${formatAmount(stats.totalOutflow)} ${config.symbol}` : "\u2014"}
-            subtitle="Governance-approved ECFPs"
+            subtitle="Governance-approved OFPs"
             icon={TrendingDown}
             loading={isLoading}
             error={!!error}

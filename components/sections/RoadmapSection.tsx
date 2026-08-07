@@ -6,11 +6,11 @@ const stages = [
     title: "Consensus Upgrades",
     status: "complete" as const,
     description:
-      "EIP-1559 fee market, protocol treasury funded by basefee revenue, and full Fusaka EVM parity in a single upgrade. Every Ethereum tool and framework works on ETC without modification.",
+      "EIP-1559 fee market, protocol treasury funded by basefee revenue, and EVM alignment in a single upgrade. Every Ethereum tool and framework works on ETC without modification.",
     deliverables: [
       "EIP-1559 fee market (ECIP-1111)",
       "Protocol treasury funded by basefee (ECIP-1112)",
-      "Fusaka EVM parity: Dencun, Pectra, Fusaka EIPs (ECIP-1121)",
+      "EVM alignment: Dencun, Pectra and Fusaka, carried into Glamsterdam (ECIP-1121)",
     ],
   },
   {
@@ -28,10 +28,11 @@ const stages = [
     title: "Prediction Markets",
     status: "research" as const,
     description:
-      "Futarchy-assisted governance uses prediction markets to inform treasury allocation, providing financially-backed public signals alongside on-chain member votes.",
+      "Futarchy runs as a Child-DAO producing financially-backed public signals alongside on-chain member votes. Its outcomes reach the main Governor as ordinary proposals; binding authority stays with Ethereum Classic's Olympia DAO.",
     deliverables: [
       "Conditional outcome tokens",
-      "Market-informed proposal ranking",
+      "Market signals submitted as ordinary proposals (ECIP-1117)",
+      "Market infrastructure funded by executed proposals (ECIP-1118)",
       "Open participation for any stakeholder",
     ],
   },
@@ -39,7 +40,7 @@ const stages = [
     title: "Treasury Distribution",
     status: "future" as const,
     description:
-      "Governance-controlled smoothing curve (ECIP-1115) optionally supplements miner security budgets as fixed-emission block subsidies decline, without touching consensus-layer rewards.",
+      "Governance-controlled smoothing curve (ECIP-1115) optionally supplements miner security budgets as fixed-emission block subsidies decline. It operates on Treasury-held basefee after deposit, leaving consensus-layer rewards untouched, while ECIP-1017 block rewards still secure the network.",
     deliverables: [
       "Treasury smoothing algorithm (ECIP-1115)",
       "Modeling through ECIP-1017 emission events",
@@ -50,10 +51,10 @@ const stages = [
     title: "Protocol Integration",
     status: "future" as const,
     description:
-      "Proven governance mechanisms elevated from the contract layer to consensus, making treasury rules immutable at the protocol level.",
+      "ECIP-1116 is the sequenced follow-on: once a curve is proven under ECIP-1115, a hard fork embeds it in block finalization. The smoothed miner allocation is then paid by the protocol rather than disbursed from the Treasury, and is no longer governance-adjustable.",
     deliverables: [
-      "Consensus-level governance encoding",
-      "Immutable treasury rules",
+      "Proven L-curve hardened into consensus (ECIP-1116)",
+      "Miner allocation paid at block finalization, outside governance",
     ],
   },
 ];
