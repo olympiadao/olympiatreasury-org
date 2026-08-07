@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   OLYMPIA_ACTIVATION_BLOCK,
   AVG_BLOCK_TIME_SECONDS,
+  OLYMPIA_FALLBACK_TARGET_ISO,
+  OLYMPIA_FALLBACK_TARGET_LABEL,
   type CountdownStatus,
 } from "@/lib/olympia-countdown";
 import { useQuery } from "@tanstack/react-query";
@@ -33,7 +35,7 @@ function DigitBox({ value, label }: { value: number; label: string }) {
   );
 }
 
-const FALLBACK_TARGET_MS = new Date("2027-01-01T00:00:00Z").getTime();
+const FALLBACK_TARGET_MS = new Date(OLYMPIA_FALLBACK_TARGET_ISO).getTime();
 
 export function CountdownBanner() {
   const chainId = useActiveChainId();
@@ -101,7 +103,7 @@ export function CountdownBanner() {
           <DigitBox value={tbdSecs} label="Seconds" />
         </div>
         <p className="mb-4 text-[10px] italic text-[var(--text-muted)] opacity-60">
-          * Countdown is set to January 1, 2027 until the ETC mainnet activation block is set
+          * Estimate — the countdown targets {OLYMPIA_FALLBACK_TARGET_LABEL} until the ETC mainnet activation block is set
         </p>
         <div className="mb-2 flex items-center justify-center gap-2">
           <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--brand-green)]" />

@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Pickaxe,
   Heart,
+  Vote,
 } from "lucide-react";
 import { AboutContractsClient } from "./AboutContractsClient";
 
@@ -89,7 +90,7 @@ const flowSteps = [
   { icon: Pickaxe, title: "Mined Income", desc: "Mining pools and solo miners can direct block rewards and tx fees to the treasury by mining to the contract address." },
   { icon: Heart, title: "Direct Donations", desc: "Anyone can send ETC directly to the treasury contract to support protocol development transparently." },
   { icon: Landmark, title: "Treasury Accumulates", desc: "All three income streams grow the vault. Balance and full history are publicly visible on-chain." },
-  { icon: FileCheck, title: "Proposals Submitted", desc: "Contributors submit ECFPs with a 1 ETC quality bond. The bond is returned in full when activated for a vote, or slashed to the treasury if the proposal fails intake review." },
+  { icon: FileCheck, title: "Proposals Submitted", desc: "Contributors submit OFPs with a 1 ETC quality bond. The bond is returned in full when activated for a vote, or slashed to the treasury if the proposal fails intake review." },
   { icon: Users, title: "Governance Approves", desc: "DAO votes and authorizes eligible proposals. Only governance can trigger fund releases." },
 ];
 
@@ -159,7 +160,7 @@ const invariants = [
   { icon: Ban, title: "No Minting", desc: "Cannot mint ETC — only holds received inflows." },
   { icon: Lock, title: "Immutable Code", desc: "No proxy patterns, no admin methods." },
   { icon: Shield, title: "Protocol-Controlled", desc: "Owned by protocol rules, not a multisig." },
-  { icon: Minimize2, title: "Minimal Interface", desc: "Accepts deposits, executes on governance signal." },
+  { icon: Minimize2, title: "Minimal Interface", desc: "Accepts deposits; a single withdrawal entry point callable only by the Executor." },
   { icon: Eye, title: "Fully Transparent", desc: "All inflows/outflows visible on-chain." },
 ];
 
@@ -183,12 +184,13 @@ function Invariants() {
 const secLayers = [
   { icon: ShieldCheck, title: "Protocol Consensus", desc: "Client implementations enforce treasury rules at the protocol level." },
   { icon: Lock, title: "Contract Immutability", desc: "No upgradeable proxy, no admin methods." },
-  { icon: Server, title: "Sanctions Defense", desc: "OFAC screening at proposal level + emergency pause." },
+  { icon: Server, title: "Sanctions Defense", desc: "OFAC screening at two checkpoints — proposal submission and execution. Both fail closed." },
+  { icon: Vote, title: "Proposal Integrity", desc: "Enforced by OpenZeppelin Governor 5.x, not by the vault. The vault checks only its caller." },
 ];
 
 function Security() {
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {secLayers.map((l, i) => (
         <div key={i} className="flex items-start gap-2">
           <l.icon size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
