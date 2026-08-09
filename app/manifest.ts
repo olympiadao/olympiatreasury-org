@@ -10,8 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#0a0f10",
     theme_color: "#0a0f10",
-    // Only icon-maskable-512.png is inset for masking; the plain tiles are not and
-    // must stay purpose "any".
+    // icon-maskable-512.png is emitted square at a 0.45 inset. The plain tiles have
+    // transparent rounded corners a squircle mask can expose, so they stay "any".
     icons: [
       {
         src: "/android-chrome-192x192.png",
