@@ -27,7 +27,7 @@ async function fetchCurrentBlock(chainId: number): Promise<number | null> {
 function DigitBox({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="flex h-14 w-16 items-center justify-center rounded-lg border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] font-mono text-2xl font-bold text-[var(--brand-green)] shadow-[0_0_12px_rgba(0,255,174,0.08)]">
+      <div className="flex h-14 w-14 items-center justify-center rounded-lg sm:w-16 border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] font-mono text-2xl font-bold text-[var(--brand-green)] shadow-[0_0_12px_rgba(0,255,174,0.08)]">
         {String(value).padStart(2, "0")}
       </div>
       <span className="mt-1.5 text-xs text-[var(--text-muted)]">{label}</span>
@@ -75,7 +75,7 @@ export function CountdownBanner() {
   }, [status, tick]);
 
   // Fallback date-based countdown for TBD state
-  // Initialize to 0 on server to avoid SSR/CSR hydration mismatch — real value set in effect
+  // Initialize to 0 on the server to avoid an SSR/CSR hydration mismatch.
   const [tbdSecondsLeft, setTbdSecondsLeft] = useState<number>(0);
 
   useEffect(() => {
@@ -96,21 +96,21 @@ export function CountdownBanner() {
 
     return (
       <div className="rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-6 text-center">
-        <div className="mb-4 flex justify-center gap-4">
+        <div className="mb-4 flex justify-center gap-2 sm:gap-4">
           <DigitBox value={tbdDays} label="Days" />
           <DigitBox value={tbdHours} label="Hours" />
           <DigitBox value={tbdMinutes} label="Minutes" />
           <DigitBox value={tbdSecs} label="Seconds" />
         </div>
         <p className="mb-4 text-[10px] italic text-[var(--text-muted)] opacity-60">
-          * Estimate — the countdown targets {OLYMPIA_FALLBACK_TARGET_LABEL} until the ETC mainnet activation block is set
+          * Estimate. The countdown targets {OLYMPIA_FALLBACK_TARGET_LABEL} until the ETC mainnet activation block is set
         </p>
         <div className="mb-2 flex items-center justify-center gap-2">
           <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--brand-green)]" />
           <span className="text-sm font-medium text-[var(--brand-green)]">Activation Block Pending</span>
         </div>
         <p className="text-sm text-[var(--text-muted)]">
-          Olympia is in final testing on the Mordor Testnet — Activation Block: TBD
+          Olympia is in final testing on the Mordor Testnet. Activation Block: TBD
         </p>
         <p className="mt-1 text-xs text-[var(--text-muted)] opacity-75">
           The exact block number will be announced after the Olympia Upgrade core developers call.

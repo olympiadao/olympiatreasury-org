@@ -28,7 +28,7 @@ export function FooterSection() {
             </span>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <a
               href="https://ethereumclassic.com"
               target="_blank"

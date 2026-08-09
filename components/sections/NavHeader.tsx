@@ -46,7 +46,7 @@ export function NavHeader() {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           <ul className="flex items-center gap-6 list-none m-0 p-0">
             {navLinks.map((link) =>
               link.page ? (
@@ -88,7 +88,7 @@ export function NavHeader() {
         {/* Mobile toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden"
+          className="lg:hidden"
           aria-label="Toggle menu"
         >
           {mobileOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
@@ -97,7 +97,7 @@ export function NavHeader() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-[var(--border-default)] bg-[var(--background)] px-6 py-4 md:hidden">
+        <div className="border-t border-[var(--border-default)] bg-[var(--background)] px-6 py-4 lg:hidden">
           <div className="mb-4 flex items-center gap-3">
             <ChainSelector />
             <ThemeToggle />

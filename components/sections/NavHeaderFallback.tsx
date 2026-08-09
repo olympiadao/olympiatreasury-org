@@ -33,7 +33,7 @@ export function NavHeaderFallback() {
           </span>
         </Link>
 
-        <ul className="hidden items-center gap-6 md:flex">
+        <ul className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
