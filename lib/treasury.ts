@@ -38,6 +38,8 @@ export interface TreasuryStats {
   baseFeeIncome: string;
   blockCount: number;
   txCount: number;
+  inflowCount: number;
+  outflowCount: number;
 }
 
 // ---------- Blockscout API ----------
@@ -287,13 +289,17 @@ export async function fetchStats(chainId: number): Promise<TreasuryStats> {
 
   let totalOutflow = 0n;
   let totalDonations = 0n;
+  let inflowCount = 0;
+  let outflowCount = 0;
 
   for (const tx of transactions) {
     const wei = BigInt(Math.round(parseFloat(tx.value) * 1e18));
     if (tx.type === "outflow") {
       totalOutflow += wei;
+      outflowCount += 1;
     } else {
       totalDonations += wei;
+      inflowCount += 1;
     }
   }
 
@@ -309,5 +315,7 @@ export async function fetchStats(chainId: number): Promise<TreasuryStats> {
     baseFeeIncome: "0",
     blockCount: minedBlocks.blockCount,
     txCount: transactions.length,
+    inflowCount,
+    outflowCount,
   };
 }

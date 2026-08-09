@@ -11,6 +11,7 @@ import {
 import { useTreasuryStats } from "@/lib/hooks/use-treasury";
 import { useChainConfig } from "@/lib/hooks/use-chain-config";
 import { CountdownBanner } from "@/components/ui/CountdownBanner";
+import { AddressLink } from "@/components/ui/AddressLink";
 
 function formatAmount(value: string): string {
   const num = parseFloat(value);
@@ -34,9 +35,11 @@ export function DashboardHero() {
           <span className="mr-3 text-xs font-medium uppercase tracking-wider text-[var(--text-subtle)]">
             Vault
           </span>
-          <code className="font-mono text-sm text-[var(--brand-green)]">
-            {config.treasury}
-          </code>
+          <AddressLink
+            address={config.treasury}
+            explorer={config.explorer}
+            className="text-sm"
+          />
         </div>
 
         {/* KPI Cards */}
@@ -88,6 +91,15 @@ export function DashboardHero() {
           <KpiCard
             label="Transactions"
             value={stats ? stats.txCount.toString() : "\u2014"}
+            subtitle={
+              stats ? (
+                <>
+                  <span className="text-[var(--brand-green)]">In: {stats.inflowCount}</span>
+                  {" \u00b7 "}
+                  <span className="text-[var(--color-warning)]">Out: {stats.outflowCount}</span>
+                </>
+              ) : undefined
+            }
             icon={Activity}
             loading={isLoading}
             error={!!error}
@@ -109,7 +121,8 @@ function KpiCard({
 }: {
   label: string;
   value: string;
-  subtitle?: string;
+  // ReactNode, not string: the transactions card colors its In/Out counts.
+  subtitle?: React.ReactNode;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   loading: boolean;
   error: boolean;
