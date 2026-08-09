@@ -7,7 +7,22 @@ export function FooterSection() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
           <div className="flex items-center gap-3">
-            <Image src="/logo.svg" alt="Olympia" width={28} height={28} />
+            {/* See NavHeader: two flat marks, CSS picks one, no client JS. */}
+            <Image
+              src="/olympia-mark-light.svg"
+              alt="Olympia"
+              width={11}
+              height={28}
+              className="dark:hidden"
+            />
+            <Image
+              src="/olympia-mark-dark.svg"
+              alt=""
+              aria-hidden="true"
+              width={11}
+              height={28}
+              className="hidden dark:block"
+            />
             <span className="text-sm font-semibold tracking-tight text-[var(--text-muted)]">
               OLYMPIA TREASURY
             </span>
