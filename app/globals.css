@@ -7,40 +7,54 @@
    ========================================== */
 
 :root {
-  /* Brand — light mode (darker green for readability on white) */
-  --brand-green: #00a872;
-  --brand-green-hover: #009966;
-  --brand-green-active: #008855;
-  --brand-green-muted: #007a53;
-  --brand-green-subtle: rgba(0, 168, 114, 0.08);
-  --brand-green-glow: rgba(0, 168, 114, 0.3);
-  --brand-amber: #F59E0B;
-  --brand-amber-subtle: rgba(245, 158, 11, 0.08);
-  --brand-amber-border: rgba(245, 158, 11, 0.3);
+  /* Adopted from olympia-brand tokens/colors.json. Do not hand-edit. */
+  --brand-green: #007a53;
+  --brand-green-hover: #006644;
+  --brand-green-active: #005238;
+  --brand-green-muted: #004d30;
+  --brand-green-subtle: rgba(0, 122, 83, 0.08);
+  --brand-green-glow: rgba(0, 122, 83, 0.2);
+  /* Reserved for this site and financial data. Not a general accent. */
+  --brand-amber: #92400e;
+  --brand-amber-hover: #7c3308;
+  --brand-amber-subtle: rgba(146, 64, 14, 0.08);
+  /* Local token. Alpha set so the composited border clears 3:1. */
+  --brand-amber-border: rgba(146, 64, 14, 0.64);
 
-  /* Light mode defaults */
   --background: #f8faf9;
   --foreground: #0a0f10;
   --bg-surface: #ffffff;
   --bg-elevated: #f1f5f3;
-  --bg-overlay: rgba(248, 250, 249, 0.85);
-  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-deep: #edf2f0;
+  --bg-overlay: rgba(248, 250, 249, 0.92);
+  --bg-card: rgba(255, 255, 255, 0.6);
 
   --text-primary: #0a0f10;
   --text-secondary: #374151;
-  --text-muted: #6b7280;
-  --text-subtle: #9ca3af;
+  --text-muted: #5f6673;
+  --text-subtle: #666d7a;
+  --text-disabled: #b6bcc6;
 
   --border-default: #e2e8f0;
   --border-subtle: rgba(0, 0, 0, 0.04);
-  --border-strong: rgba(0, 0, 0, 0.16);
-  --border-brand: rgba(0, 168, 114, 0.3);
+  /* Composite before measuring: these are control boundaries, 3:1 (SC 1.4.11). */
+  --border-strong: rgba(0, 0, 0, 0.43);
+  --border-brand: rgba(0, 122, 83, 0.73);
+  --focus-ring: #007a53;
 
-  --color-success: #059669;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
-  --color-info: #0ea5e9;
-  --color-violet: #6d28d9;
+  --color-success: #006644;
+  --color-error: #b91c1c;
+  --color-warning: #92400e;
+  --color-info: #0268a0;
+
+  --accent-violet: #6d28d9;
+  --accent-sky: #0268a0;
+  --accent-teal: #006f67;
+  --accent-rose: #c30033;
+  --accent-amber: #92400e;
+  --accent-orange: #b53400;
+  /* Alias of the published accent; not a second copy. */
+  --color-violet: var(--accent-violet);
   --color-violet-bg: rgba(109, 40, 217, 0.08);
 
   --card-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
@@ -48,35 +62,54 @@
 }
 
 .dark {
-  /* Brand — dark mode (neon green on dark backgrounds) */
+  /* Every :root token is redeclared here; one declared in a single block
+     inherits the other theme's value. */
   --brand-green: #00ffae;
   --brand-green-hover: #14f1b4;
   --brand-green-active: #00cc8a;
+  --brand-green-muted: #2d926a;
   --brand-green-subtle: rgba(0, 255, 174, 0.08);
   --brand-green-glow: rgba(0, 255, 174, 0.4);
 
+  --brand-amber: #f59e0b;
+  --brand-amber-hover: #fbbf24;
+  --brand-amber-subtle: rgba(245, 158, 11, 0.08);
+  --brand-amber-border: rgba(245, 158, 11, 0.51);   /* 3.05:1, as in light */
+
+  /* Neutral dark surfaces, per olympia-brand. */
   --background: #0a0f10;
   --foreground: #ffffff;
-  --bg-surface: #0f1614;
-  --bg-elevated: #162420;
-  --bg-overlay: rgba(10, 15, 16, 0.85);
+  --bg-surface: #111111;
+  --bg-elevated: #181818;
+  --bg-deep: #080b0c;
+  --bg-overlay: rgba(10, 15, 16, 0.92);
   --bg-card: rgba(0, 0, 0, 0.35);
 
   --text-primary: #ffffff;
   --text-secondary: #c3c5cb;
   --text-muted: #9ca3af;
-  --text-subtle: #6b7280;
+  --text-subtle: #8b93a1;
+  --text-disabled: #374151;
 
-  --border-default: #1f292b;
+  --border-default: #1a1a1a;
   --border-subtle: rgba(255, 255, 255, 0.04);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-brand: rgba(0, 255, 174, 0.3);
+  /* Control boundaries: composite before measuring, 3:1. */
+  --border-strong: rgba(255, 255, 255, 0.35);
+  --border-brand: rgba(0, 255, 174, 0.4);
+  --focus-ring: #00ffae;
 
   --color-success: #00ffae;
   --color-error: #ef4444;
-  --color-warning: #F59E0B;
+  --color-warning: #f59e0b;
   --color-info: #38bdf8;
-  --color-violet: #a78bfa;
+
+  --accent-violet: #a78bfa;
+  --accent-sky: #38bdf8;
+  --accent-teal: #00d5be;
+  --accent-rose: #ffa1ad;
+  --accent-amber: #f59e0b;
+  --accent-orange: #f97316;
+  --color-violet: var(--accent-violet);
   --color-violet-bg: rgba(167, 139, 250, 0.1);
 
   --card-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
