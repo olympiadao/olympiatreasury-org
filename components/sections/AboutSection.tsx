@@ -37,8 +37,8 @@ export function AboutSection() {
           <StagedDeployment />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Membership — the CoreNFT" defaultOpen>
-          <Membership />
+        <CollapsibleCard title="Core Contributors: the CoreNFT" defaultOpen>
+          <CoreContributors />
         </CollapsibleCard>
 
         <CollapsibleCard title="Community Funding" defaultOpen>
@@ -97,11 +97,11 @@ function CollapsibleCard({
 
 /* ---- Fund Flow ---- */
 const flowSteps = [
-  { icon: Flame, title: "Base Fee Collected", desc: "A transaction pays a base fee plus a priority-fee tip. Ethereum burns the base fee; Olympia credits it to the Treasury at block finalization instead. Only the burned half moves — tips and ECIP-1017 block rewards go to miners in full." },
+  { icon: Flame, title: "Base Fee Collected", desc: "A transaction pays a base fee plus a priority-fee tip. Ethereum burns the base fee; Olympia credits it to the Treasury at block finalization instead. Only the burned half moves. Tips and ECIP-1017 block rewards go to miners in full." },
   { icon: Landmark, title: "A Floor Under Revenue", desc: "The basefee never falls below 1 gwei. Without that floor, sustained low utilization would decay it toward zero and eliminate Treasury revenue entirely." },
   { icon: Heart, title: "Voluntary Inflows", desc: "The Treasury accepts transfers from any address and records each one on-chain. Protocols may opt in to forward a share of their fees the same way." },
   { icon: FileCheck, title: "Proposals Submitted", desc: "An OFP names recipient, amount and metadata, and states whether it is retrospective or prospective. Submission is permissionless, gated by the Governor's proposal threshold measured against the author." },
-  { icon: Users, title: "Governance Approves", desc: "Members vote; a strict majority of For over Against carries, subject to quorum. Only the Executor can then move funds." },
+  { icon: Users, title: "Governance Approves", desc: "Core contributors vote. A strict majority of For over Against carries, subject to quorum, and only the Executor can then move funds." },
 ];
 
 function FundFlow() {
@@ -128,13 +128,13 @@ function StagedDeployment() {
     <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
       <p>
         The Treasury deploys at the Olympia hard fork. The governance suite that spends
-        from it deploys later, once audited — against addresses reserved before the
+        from it deploys later, once audited, against addresses reserved before the
         Treasury exists.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="rounded-lg border border-[var(--border-subtle)] p-3">
           <p className="text-xs font-semibold text-[var(--text-primary)]">
-            Stage 1 — the fork
+            Stage 1: the fork
           </p>
           <p className="mt-1">
             Only the Treasury deploys. Basefee begins accumulating immediately, and
@@ -145,7 +145,7 @@ function StagedDeployment() {
         </div>
         <div className="rounded-lg border border-[var(--border-subtle)] p-3">
           <p className="text-xs font-semibold text-[var(--text-primary)]">
-            Stage 2 — governance
+            Stage 2: governance
           </p>
           <p className="mt-1">
             Timelock, CoreNFT, Governor, Executor and the OFP Registry deploy together,
@@ -164,24 +164,24 @@ function StagedDeployment() {
   );
 }
 
-/* ---- Membership ---- */
-const membershipFacts = [
-  { icon: Award, title: "Earned, never bought", desc: "Minted on proof of substantive, net-positive contribution to Ethereum Classic — and on nothing else. No amount of capital admits anyone." },
-  { icon: UserCheck, title: "One member, one vote", desc: "Soulbound and non-transferable, with delegation locked to the holder. A vote cannot be sold, lent, or leased." },
+/* ---- Core contributors ---- */
+const contributorFacts = [
+  { icon: Award, title: "Earned, never bought", desc: "Minted on proof of substantive, net-positive contribution to Ethereum Classic, and on nothing else. No amount of capital admits anyone." },
+  { icon: UserCheck, title: "One contributor, one vote", desc: "Soulbound and non-transferable, with delegation locked to the holder. A vote cannot be sold, lent, or leased." },
   { icon: Vote, title: "Admitted by the DAO", desc: "One governance proposal per admission, with the evidence in its metadata. No minter role, no admissions committee, no unilateral account." },
-  { icon: LogOut, title: "Revocable and resignable", desc: "A member may burn their own token at any time; the DAO may revoke by proposal on the same footing as admission. Re-admission is possible — exit is not exile." },
+  { icon: LogOut, title: "Revocable and resignable", desc: "A contributor may burn their own token at any time, and the DAO may revoke by proposal on the same footing as admission. Re-admission is possible, so exit is not exile." },
 ];
 
-function Membership() {
+function CoreContributors() {
   return (
     <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
       <p>
         Voting power comes from the CoreNFT and from nothing else. There is no fungible,
-        transferable, purchasable token — nothing to buy, sell, lend, pool or accumulate,
+        transferable, purchasable token. There is nothing to buy, sell, lend, pool or accumulate,
         and therefore nothing on which a market in votes could form.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
-        {membershipFacts.map((f, i) => (
+        {contributorFacts.map((f, i) => (
           <div key={i} className="flex items-start gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
               <f.icon size={16} aria-hidden="true" />
@@ -203,9 +203,9 @@ function Membership() {
         <span className="font-semibold text-[var(--text-primary)]">
           Access to governance is gated; influence over it is not.
         </span>{" "}
-        Membership is restricted because its vote spends protocol revenue. The futarchy
-        markets are open to anyone holding ETC or Classic USD, with no membership and no
-        application, and members read those public prices as input. Who decides is
+        Admission is restricted because the vote spends protocol revenue. The futarchy
+        markets are open to any public participant holding ETC or Classic USD, with no
+        application, and core contributors read those public prices as input. Who decides is
         restricted; who informs the decision is not.
       </p>
     </div>
@@ -219,7 +219,7 @@ function CommunityFunding() {
       <p>
         Basefee redirection is the protocol-defined funding source, and it begins at the
         Olympia hard fork. Until then the Treasury relies on voluntary support. Neither
-        route below is a protocol mechanism — both are ordinary transfers that any
+        route below is a protocol mechanism. Both are ordinary transfers that any
         address can make, and the Treasury records each one on-chain.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -232,7 +232,7 @@ function CommunityFunding() {
             <p className="mt-0.5">
               A pool or solo miner can set the Treasury as their coinbase address, sending
               their own block rewards to it. This is a choice an operator makes, not
-              something the protocol does — no ECIP directs mining revenue here.
+              something the protocol does. No ECIP directs mining revenue here.
             </p>
           </div>
         </div>
@@ -261,10 +261,10 @@ function CommunityFunding() {
 
 /* ---- Invariants ---- */
 const invariants = [
-  { icon: Ban, title: "No Minting", desc: "Cannot mint ETC — only holds received inflows." },
+  { icon: Ban, title: "No Minting", desc: "Cannot mint ETC; it only holds received inflows." },
   { icon: Lock, title: "Immutable Code", desc: "No proxy patterns, no admin methods." },
   { icon: Shield, title: "Protocol-Controlled", desc: "Owned by protocol rules, not a multisig." },
-  { icon: Minimize2, title: "Minimal Interface", desc: "Accepts deposits; a single withdrawal entry point callable only by the Executor. It performs no deduplication, and cannot — replay protection lives upstream, in the Governor and Timelock." },
+  { icon: Minimize2, title: "Minimal Interface", desc: "Accepts deposits, with a single withdrawal entry point callable only by the Executor. It performs no deduplication and cannot. Replay protection lives upstream, in the Governor and Timelock." },
   { icon: Eye, title: "Fully Transparent", desc: "All inflows/outflows visible on-chain." },
 ];
 

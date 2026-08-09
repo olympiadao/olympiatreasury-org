@@ -6,7 +6,7 @@ const stages = [
     title: "Consensus Upgrades",
     status: "active" as const,
     description:
-      "The hard fork itself, and the only stage that changes consensus rules until the last one. The EIP-1559 fee market redirects the basefee to the Treasury rather than burning it, and the Treasury contract deploys at this fork — the governance suite that spends from it does not.",
+      "The hard fork itself, and the only stage that changes consensus rules until the last one. The EIP-1559 fee market redirects the base fee to the Treasury rather than burning it. The Treasury contract deploys at this fork. The governance suite that spends from it does not.",
     deliverables: [
       "EIP-1559 fee market with basefee redirected to the Treasury (ECIP-1111)",
       "Treasury contract deployed at the fork (ECIP-1112)",
@@ -23,7 +23,7 @@ const stages = [
       "Governance suite deploys after the fork, against addresses reserved before it",
       "Timelock, CoreNFT, Governor, Executor and OFP Registry (ECIP-1113, ECIP-1114)",
       "Full proposal lifecycle: submit, vote, queue, execute",
-      "One member, one vote — the soulbound CoreNFT, delegation locked to self",
+      "One contributor, one vote, on the soulbound CoreNFT with delegation locked to self",
       "Sanctions oracle attached last; no Treasury funds are spendable before it (ECIP-1119)",
     ],
   },
@@ -31,9 +31,9 @@ const stages = [
     title: "Prediction Markets",
     status: "research" as const,
     description:
-      "Futarchy runs as a Child-DAO producing financially-backed public signals alongside member votes. Anyone holding ETC or Classic USD can take a position — no membership, no application. Its outcomes reach the Governor as ordinary proposals; binding authority stays with Ethereum Classic's Olympia DAO.",
+      "Futarchy runs as a Child-DAO producing financially backed public signals alongside core contributor votes. Anyone holding ETC or Classic USD can take a position, with no application and no contributor NFT. Participants are paid for being right, which is what makes the prices a public signal. Outcomes reach the Governor as ordinary proposals, and binding authority stays with Ethereum Classic's Olympia DAO.",
     deliverables: [
-      "Open to anyone holding ETC or Classic USD — no membership required",
+      "Open to any public participant holding ETC or Classic USD",
       "Collateral is ETC and Classic USD, both already live, custodied outside the Treasury",
       "Conditional outcome tokens on the Conditional Token Framework",
       "Market signals submitted as ordinary proposals (ECIP-1117)",
@@ -50,7 +50,7 @@ const stages = [
     deliverables: [
       "Treasury smoothing curve at the contract layer (ECIP-1115)",
       "Allocation fraction, window length and curve shape adjustable through governance, no fork required",
-      "Operates on Treasury-held basefee after deposit — consensus-layer rewards untouched",
+      "Operates on Treasury-held base fee after deposit, leaving consensus-layer rewards untouched",
       "Runs while ECIP-1017 block rewards still secure the network, so the curve is measured rather than assumed",
     ],
   },
@@ -58,10 +58,10 @@ const stages = [
     title: "Protocol Integration",
     status: "future" as const,
     description:
-      "The second hard fork, and the only other stage that changes consensus rules. Once the curve has been demonstrated in production, ECIP-1116 embeds it into block finalization — paid by the protocol rather than disbursed from the Treasury, and no longer adjustable by governance. Changing it afterward costs a fork, which is precisely the guarantee being bought.",
+      "The second hard fork, and the only other stage that changes consensus rules. Once the curve has been demonstrated in production, ECIP-1116 embeds it into block finalization. The protocol then pays it directly rather than the Treasury disbursing it, and governance can no longer adjust it. Changing it afterward costs a fork.",
     deliverables: [
       "Consensus-layer hardening of the demonstrated curve (ECIP-1116)",
-      "Paid at block finalization rather than disbursed from the Treasury — governance leaves the payment path",
+      "Paid at block finalization rather than disbursed from the Treasury, so governance leaves the payment path",
       "The Treasury's share becomes the unsmoothed remainder rather than the whole basefee",
       "Cannot activate until the contract-layer stage has produced real observational data",
     ],
@@ -86,7 +86,7 @@ export function RoadmapSection() {
             </h2>
             <p className="mt-3 text-base text-[var(--text-muted)]">
               Olympia arrives in five stages. Stages 1 and 5 are hard forks; stages 2,
-              3 and 4 are not — they are contract deployments and governance actions on
+              3 and 4 are not. Those are contract deployments and governance actions on
               a chain whose consensus rules are already settled. Each stage depends only
               on the stages before it.
             </p>

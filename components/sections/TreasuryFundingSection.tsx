@@ -28,8 +28,8 @@ export function TreasuryFundingSection() {
               Treasury Funding
             </h2>
             <p className="mt-3 max-w-xl text-base text-[var(--text-muted)]">
-              How the Olympia Treasury is funded — sustainably and without
-              impacting miners.
+              How the Olympia Treasury is funded, sustainably and without impacting
+              miners.
             </p>
           </FadeIn>
 
@@ -42,7 +42,7 @@ export function TreasuryFundingSection() {
                 The base fee is not the transaction fee. Under EIP-1559 a transaction
                 pays a base fee plus a priority-fee tip; Ethereum burns the base fee and
                 pays the tip to the block producer. Ethereum Classic changes the
-                destination of the burned half only — it is credited to the Treasury at
+                destination of the burned half only. It is credited to the Treasury at
                 block finalization, and a 1 gwei floor keeps that revenue from decaying
                 to zero at low utilization. Priority-fee tips and ECIP-1017 block rewards
                 continue to be paid to miners in full. Funding accrues from network usage

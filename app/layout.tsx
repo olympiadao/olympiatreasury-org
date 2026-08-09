@@ -38,7 +38,7 @@ const websiteJsonLd = {
   name: "Olympia Treasury",
   url: "https://olympiatreasury.org",
   description:
-    "Real-time dashboard for the Olympia Treasury — the protocol-controlled vault for Ethereum Classic funded by EIP-1559 basefee revenue.",
+    "Real-time dashboard for the Olympia Treasury, the protocol-controlled vault for Ethereum Classic funded by EIP-1559 basefee revenue.",
   publisher: {
     "@type": "Organization",
     name: "Olympia Treasury",

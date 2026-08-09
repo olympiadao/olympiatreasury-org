@@ -48,12 +48,12 @@ export default async function Home() {
               <div className="mx-auto max-w-6xl">
                 <h2 className="mb-6 text-lg font-semibold">Treasury at a Glance</h2>
                 <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 text-sm text-[var(--text-muted)]">
-                  <li>Balance — total ETC held by the vault</li>
-                  <li>BaseFee — the protocol-directed source, activating with Olympia</li>
-                  <li>Mined to the Treasury — miners choosing the vault as coinbase</li>
-                  <li>Donations — transfers sent from any address</li>
-                  <li>Withdrawals — governance-approved OFPs paid out</li>
-                  <li>Transactions — every inflow and outflow, on-chain</li>
+                  <li>Balance: total ETC held by the vault</li>
+                  <li>BaseFee: the protocol-directed source, activating with Olympia</li>
+                  <li>Mined to the Treasury: miners choosing the vault as coinbase</li>
+                  <li>Donations: transfers sent from any address</li>
+                  <li>Withdrawals: governance-approved OFPs paid out</li>
+                  <li>Transactions: every inflow and outflow, on-chain</li>
                 </ul>
               </div>
             </div>
@@ -92,7 +92,7 @@ export default async function Home() {
               <div className="mx-auto max-w-6xl">
                 <h2 className="mb-4 text-lg font-semibold">About the Treasury</h2>
                 <p className="text-sm text-[var(--text-muted)]">
-                  How funds flow into the vault, how the CoreNFT membership that governs it
+                  How funds flow into the vault, how the CoreNFT that governs it
                   works, the staged deployment, the core invariants, and the deployed contracts.
                 </p>
               </div>
