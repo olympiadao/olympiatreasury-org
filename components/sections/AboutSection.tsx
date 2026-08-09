@@ -16,6 +16,10 @@ import {
   ArrowRight,
   Pickaxe,
   Heart,
+  Vote,
+  Award,
+  UserCheck,
+  LogOut,
 } from "lucide-react";
 import { AboutContractsClient } from "./AboutContractsClient";
 
@@ -27,6 +31,14 @@ export function AboutSection() {
 
         <CollapsibleCard title="How Funds Flow" defaultOpen>
           <FundFlow />
+        </CollapsibleCard>
+
+        <CollapsibleCard title="Staged Deployment" defaultOpen>
+          <StagedDeployment />
+        </CollapsibleCard>
+
+        <CollapsibleCard title="Membership — the CoreNFT" defaultOpen>
+          <Membership />
         </CollapsibleCard>
 
         <CollapsibleCard title="Community Funding" defaultOpen>
@@ -85,12 +97,11 @@ function CollapsibleCard({
 
 /* ---- Fund Flow ---- */
 const flowSteps = [
-  { icon: Flame, title: "BaseFee Collected", desc: "After Olympia activates, EIP-1559 basefee from every block is redirected to the treasury by consensus." },
-  { icon: Pickaxe, title: "Mined Income", desc: "Mining pools and solo miners can direct block rewards and tx fees to the treasury by mining to the contract address." },
-  { icon: Heart, title: "Direct Donations", desc: "Anyone can send ETC directly to the treasury contract to support protocol development transparently." },
-  { icon: Landmark, title: "Treasury Accumulates", desc: "All three income streams grow the vault. Balance and full history are publicly visible on-chain." },
-  { icon: FileCheck, title: "Proposals Submitted", desc: "Contributors submit ECFPs specifying recipient, amount, and milestones for governance review." },
-  { icon: Users, title: "Governance Approves", desc: "DAO votes and authorizes eligible proposals. Only governance can trigger fund releases." },
+  { icon: Flame, title: "Base Fee Collected", desc: "A transaction pays a base fee plus a priority-fee tip. Ethereum burns the base fee; Olympia credits it to the Treasury at block finalization instead. Only the burned half moves — tips and ECIP-1017 block rewards go to miners in full." },
+  { icon: Landmark, title: "A Floor Under Revenue", desc: "The basefee never falls below 1 gwei. Without that floor, sustained low utilization would decay it toward zero and eliminate Treasury revenue entirely." },
+  { icon: Heart, title: "Voluntary Inflows", desc: "The Treasury accepts transfers from any address and records each one on-chain. Protocols may opt in to forward a share of their fees the same way." },
+  { icon: FileCheck, title: "Proposals Submitted", desc: "An OFP names recipient, amount and metadata, and states whether it is retrospective or prospective. Submission is permissionless, gated by the Governor's proposal threshold measured against the author." },
+  { icon: Users, title: "Governance Approves", desc: "Members vote; a strict majority of For over Against carries, subject to quorum. Only the Executor can then move funds." },
 ];
 
 function FundFlow() {
@@ -111,13 +122,105 @@ function FundFlow() {
   );
 }
 
+/* ---- Staged Deployment ---- */
+function StagedDeployment() {
+  return (
+    <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
+      <p>
+        The Treasury deploys at the Olympia hard fork. The governance suite that spends
+        from it deploys later, once audited — against addresses reserved before the
+        Treasury exists.
+      </p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-lg border border-[var(--border-subtle)] p-3">
+          <p className="text-xs font-semibold text-[var(--text-primary)]">
+            Stage 1 — the fork
+          </p>
+          <p className="mt-1">
+            Only the Treasury deploys. Basefee begins accumulating immediately, and
+            nothing can spend it: no contract yet exists at the Executor&rsquo;s address,
+            so the lock is enforced by the absence of a callable counterpart rather than
+            by any access-control decision.
+          </p>
+        </div>
+        <div className="rounded-lg border border-[var(--border-subtle)] p-3">
+          <p className="text-xs font-semibold text-[var(--text-primary)]">
+            Stage 2 — governance
+          </p>
+          <p className="mt-1">
+            Timelock, CoreNFT, Governor, Executor and the OFP Registry deploy together,
+            then the sanctions oracle is attached. There is no handover: the
+            Executor&rsquo;s address was fixed in the Treasury&rsquo;s constructor at
+            Stage 1, so deploying it populates an address the Treasury already trusts.
+          </p>
+        </div>
+      </div>
+      <p>
+        The gap between the two is the audit window for the governance layer, and the
+        reason the rollout is staged at all. It is a deliberate design property, not a
+        degraded mode.
+      </p>
+    </div>
+  );
+}
+
+/* ---- Membership ---- */
+const membershipFacts = [
+  { icon: Award, title: "Earned, never bought", desc: "Minted on proof of substantive, net-positive contribution to Ethereum Classic — and on nothing else. No amount of capital admits anyone." },
+  { icon: UserCheck, title: "One member, one vote", desc: "Soulbound and non-transferable, with delegation locked to the holder. A vote cannot be sold, lent, or leased." },
+  { icon: Vote, title: "Admitted by the DAO", desc: "One governance proposal per admission, with the evidence in its metadata. No minter role, no admissions committee, no unilateral account." },
+  { icon: LogOut, title: "Revocable and resignable", desc: "A member may burn their own token at any time; the DAO may revoke by proposal on the same footing as admission. Re-admission is possible — exit is not exile." },
+];
+
+function Membership() {
+  return (
+    <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
+      <p>
+        Voting power comes from the CoreNFT and from nothing else. There is no fungible,
+        transferable, purchasable token — nothing to buy, sell, lend, pool or accumulate,
+        and therefore nothing on which a market in votes could form.
+      </p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {membershipFacts.map((f, i) => (
+          <div key={i} className="flex items-start gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-green-subtle)] text-[var(--brand-green)]">
+              <f.icon size={16} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-[var(--text-primary)]">{f.title}</p>
+              <p className="mt-0.5">{f.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p>
+        Contribution is not only code: client and specification work, security research
+        and responsible disclosure, infrastructure operation, documentation and sustained
+        technical review all qualify. Trivial changes do not, and bad-faith conduct
+        disqualifies rather than averaging out.
+      </p>
+      <p>
+        <span className="font-semibold text-[var(--text-primary)]">
+          Access to governance is gated; influence over it is not.
+        </span>{" "}
+        Membership is restricted because its vote spends protocol revenue. The futarchy
+        markets are open to anyone holding ETC or Classic USD, with no membership and no
+        application, and members read those public prices as input. Who decides is
+        restricted; who informs the decision is not.
+      </p>
+    </div>
+  );
+}
+
 /* ---- Community Funding ---- */
 function CommunityFunding() {
   return (
     <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
       <p>
-        Until a robust EIP-1559 fee market exists on Ethereum Classic, the treasury relies on
-        voluntary community support. There are two ways to contribute:
+        Basefee redirection is the protocol-defined funding source, and it begins at the
+        Olympia hard fork. Until then the Treasury relies on voluntary support. Neither
+        route below is a protocol mechanism — both are ordinary transfers that any
+        address can make, and the Treasury records each one on-chain.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="flex items-start gap-3">
@@ -127,8 +230,9 @@ function CommunityFunding() {
           <div>
             <p className="text-xs font-semibold text-[var(--text-primary)]">Mine to the Treasury</p>
             <p className="mt-0.5">
-              Mining pools and solo miners can set the treasury contract as their coinbase address.
-              Block rewards flow directly into the vault, funding ETC development transparently.
+              A pool or solo miner can set the Treasury as their coinbase address, sending
+              their own block rewards to it. This is a choice an operator makes, not
+              something the protocol does — no ECIP directs mining revenue here.
             </p>
           </div>
         </div>
@@ -146,9 +250,10 @@ function CommunityFunding() {
         </div>
       </div>
       <p>
-        Once the Olympia upgrade is complete on ETC mainnet, EIP-1559 basefee revenue will provide a
-        sustainable, non-inflationary funding source. Community donations and mining support will remain
-        welcome as supplementary income to accelerate protocol development.
+        After activation, basefee revenue accrues automatically from network usage rather
+        than from any donor, and voluntary contributions remain welcome alongside it.
+        Smart contracts can opt in on the same terms: a protocol forwarding a share of
+        its fees on-chain gains no special claim over the funds it sends.
       </p>
     </div>
   );
@@ -159,7 +264,7 @@ const invariants = [
   { icon: Ban, title: "No Minting", desc: "Cannot mint ETC — only holds received inflows." },
   { icon: Lock, title: "Immutable Code", desc: "No proxy patterns, no admin methods." },
   { icon: Shield, title: "Protocol-Controlled", desc: "Owned by protocol rules, not a multisig." },
-  { icon: Minimize2, title: "Minimal Interface", desc: "Accepts deposits, executes on governance signal." },
+  { icon: Minimize2, title: "Minimal Interface", desc: "Accepts deposits; a single withdrawal entry point callable only by the Executor. It performs no deduplication, and cannot — replay protection lives upstream, in the Governor and Timelock." },
   { icon: Eye, title: "Fully Transparent", desc: "All inflows/outflows visible on-chain." },
 ];
 
@@ -183,12 +288,13 @@ function Invariants() {
 const secLayers = [
   { icon: ShieldCheck, title: "Protocol Consensus", desc: "Client implementations enforce treasury rules at the protocol level." },
   { icon: Lock, title: "Contract Immutability", desc: "No upgradeable proxy, no admin methods." },
-  { icon: Server, title: "Sanctions Defense", desc: "OFAC screening at proposal level + emergency pause." },
+  { icon: Server, title: "Sanctions Defense", desc: "Every Olympia contract that releases value screens the recipient immediately before release, and fails closed if the oracle is unset. For Treasury funds the binding checkpoint is the Executor." },
+  { icon: Vote, title: "Proposal Integrity", desc: "Enforced by OpenZeppelin Governor 5.x, not by the vault. The vault checks only its caller." },
 ];
 
 function Security() {
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {secLayers.map((l, i) => (
         <div key={i} className="flex items-start gap-2">
           <l.icon size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
@@ -204,11 +310,11 @@ function Security() {
 
 /* ---- Stages ---- */
 const stages = [
-  { n: 1, title: "Accumulate", status: "active" as const, desc: "BaseFee + mining + donations" },
-  { n: 2, title: "Govern", status: "next" as const, desc: "On-chain proposals and voting" },
-  { n: 3, title: "Fund", status: "planned" as const, desc: "Treasury disbursements" },
-  { n: 4, title: "Predict", status: "planned" as const, desc: "Futarchy governance" },
-  { n: 5, title: "Optimize", status: "planned" as const, desc: "Protocol improvements" },
+  { n: 1, title: "Consensus Upgrades", status: "active" as const, desc: "Hard fork; Treasury deploys" },
+  { n: 2, title: "Core Governance", status: "next" as const, desc: "Governance suite deploys" },
+  { n: 3, title: "Prediction Markets", status: "planned" as const, desc: "Futarchy signal layer" },
+  { n: 4, title: "Treasury Distribution", status: "planned" as const, desc: "Smoothing at the contract layer" },
+  { n: 5, title: "Protocol Integration", status: "planned" as const, desc: "Second hard fork; curve hardened" },
 ];
 
 const stageConfig = {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu, Layers, Code2, ShieldCheck, LayoutDashboard, Github, Vote } from "lucide-react";
+import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu, Layers, Code2, Network, ShieldCheck, LayoutDashboard, Github, Vote } from "lucide-react";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Accordion } from "@/components/ui/Accordion";
@@ -8,14 +8,16 @@ import { CountdownBanner } from "@/components/ui/CountdownBanner";
 import { PropertyCard } from "@/components/ui/PropertyCard";
 import { RoadmapSection } from "@/components/sections/RoadmapSection";
 import { NavHeader } from "@/components/sections/NavHeader";
+import { NavHeaderFallback } from "@/components/sections/NavHeaderFallback";
 import { FooterSection } from "@/components/sections/FooterSection";
 
 export const metadata: Metadata = {
-  title: "Olympia Upgrade: Fusaka EVM Alignment, EIP-1559 Fee Market, and Protocol Treasury for Ethereum Classic",
+  // Rendered as this + the root template suffix; keep the pair under ~60 chars.
+  title: "Olympia Upgrade: Glamsterdam EVM Alignment",
   description:
-    "Olympia is Ethereum Classic's most significant protocol upgrade. Full Fusaka EVM parity closes years of execution-layer divergence — every Ethereum tool works on ETC without modification. EIP-1559 fee market redirects the basefee to a protocol-managed treasury. Upgrade guides for Fukuii and Core-Geth.",
+    "Glamsterdam-era EVM alignment, an EIP-1559 fee market funding a protocol treasury, and client security parameters — activating together on Ethereum Classic.",
   keywords: [
-    "Fusaka EVM alignment",
+    "Glamsterdam EVM alignment",
     "Olympia upgrade",
     "Ethereum Classic upgrade",
     "EVM alignment",
@@ -27,6 +29,8 @@ export const metadata: Metadata = {
     "ECIP-1111",
     "ECIP-1112",
     "ECIP-1121",
+    "ECIP-1122",
+    "Glamsterdam EVM",
     "Fusaka EVM",
     "protocol treasury",
     "Ethereum Classic node upgrade",
@@ -36,6 +40,8 @@ export const metadata: Metadata = {
     "ETC upgrade",
     "Dencun",
     "Pectra",
+    "Fusaka",
+    "Glamsterdam",
     "Prague",
     "Cancun",
     "EVM upgrade",
@@ -49,6 +55,34 @@ export const metadata: Metadata = {
     "EIP-5656",
     "London hard fork ETC",
   ],
+  // Without its own block a route inherits the root og:url.
+  alternates: {
+    canonical: "./",
+  },
+  openGraph: {
+    type: "article",
+    locale: "en_US",
+    url: "https://olympiatreasury.org/upgrade",
+    siteName: "Olympia Treasury",
+    title: "Olympia Upgrade: Glamsterdam EVM Alignment, EIP-1559 Fee Market, and Protocol Treasury",
+    description:
+      "Olympia is Ethereum Classic's most significant protocol upgrade. Glamsterdam-era EVM alignment closes years of execution-layer divergence, the EIP-1559 fee market redirects the basefee to a protocol-controlled treasury, and client security parameters activate at the same block. Node upgrade guides for Fukuii and Core-Geth.",
+    images: [
+      {
+        url: "https://olympiatreasury.org/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Olympia Upgrade — Ethereum Classic",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Olympia Upgrade: Glamsterdam EVM Alignment, EIP-1559 Fee Market, and Protocol Treasury",
+    description:
+      "Glamsterdam-era EVM alignment, an EIP-1559 fee market funding a protocol-controlled treasury, and client security parameters — activating together on Ethereum Classic.",
+    images: ["https://olympiatreasury.org/og-image.png"],
+  },
 };
 
 const ecips = [
@@ -64,23 +98,50 @@ const ecips = [
     title: "Protocol Treasury",
     icon: Landmark,
     description:
-      "A protocol-controlled vault funded by basefee revenue and voluntary contributions. For the first time, institutions, developers, and network stakeholders can directly fund Ethereum Classic's core development and critical infrastructure without fielding their own team. Miners receive everything they do today: block rewards and tips remain completely untouched.",
+      "An immutable vault with one withdrawal entry point, callable only by the DAO's Executor. It validates nothing and holds no governance logic — that separation is what keeps its guarantees independent of whatever governance sits above it. It deploys at the fork and accrues revenue that nothing can spend until the governance suite follows. Miners receive everything they do today: block rewards and tips remain completely untouched.",
   },
   {
     ecip: "ECIP-1121",
-    title: "Fusaka EVM Alignment",
+    title: "Glamsterdam EVM Alignment",
     icon: Cpu,
     description:
-      "Building on Mystique and Spiral, Olympia delivers the remaining EVM execution-layer improvements from Dencun, Pectra, and Fusaka, covering every improvement that is independent of Proof-of-Stake and blob data availability. Exchanges and wallets gain modern RPC compatibility and standard transaction support. Developers gain full access to every current Ethereum tool, library, and framework: one codebase, every EVM chain.",
+      "Building on Mystique and Spiral, Olympia delivers the execution-layer improvements from Dencun, Pectra, and Fusaka that are independent of Proof-of-Stake and blob data availability, then carries that work into Glamsterdam. Exchanges and wallets gain modern RPC compatibility and standard transaction support. Developers gain access to every current Ethereum tool, library, and framework: one codebase, every EVM chain.",
+  },
+  {
+    ecip: "ECIP-1122",
+    title: "Network Security Configuration",
+    icon: ShieldCheck,
+    description:
+      "Three client parameters that activate at the same block, each encoding something the network previously assumed without specifying. A 1 gwei minimum miner tip keeps block production economically rational as fixed emission declines. The gas target becomes network-authoritative, closing the misconfiguration path that dragged the limit toward 1M in 2024. And MESS is restored, returning the chain-reorganization resistance its deactivation window removed.",
   },
 ];
+
+/** Pick a chip's label color by measured contrast; no single color serves every hue. */
+function readableOn(background: string): string {
+  const channel = (v: number) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  // Read channels directly: noUncheckedIndexedAccess types an indexed read as
+  // number | undefined.
+  const c = background.replace("#", "");
+  const r = parseInt(c.slice(0, 2), 16);
+  const g = parseInt(c.slice(2, 4), 16);
+  const b = parseInt(c.slice(4, 6), 16);
+  const L = 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+  const onWhite = 1.05 / (L + 0.05);
+  const onBlack = (L + 0.05) / 0.05;
+  return onWhite >= onBlack ? "#ffffff" : "#0a0f10";
+}
 
 const clients = [
   {
     name: "Fukuii",
     language: "Scala",
     languageColor: "#DC322F",
-    role: "Primary Client · Enterprise Grade",
+    role: "Primary",
+    description:
+      "EVM execution client in Scala 3 — one binary runs several networks at once in one JVM process, each isolated with its own state, metrics, and configuration. A further network is configuration rather than a new client. Consensus is selected per deployment: native Proof-of-Work for Ethereum Classic and Mordor, or Proof-of-Stake with a built-in consensus layer or an external client over the Engine API. Ethereum Classic's first native client — built ground-up for ETC rather than derived from an Ethereum client — and the primary ETC client for the Olympia era.",
     version: "TBD",
     runtime: "JDK 25+",
     disk: "500 GB+ (SNAP sync)",
@@ -91,14 +152,16 @@ const clients = [
       "Replace the existing binary",
       "Restart your node. Fukuii automatically follows the Olympia fork",
     ],
-    githubUrl: "https://github.com/chippr-robotics/fukuii/releases",
-    docsUrl: "https://chippr-robotics.github.io/fukuii",
+    githubUrl: "https://github.com/fukuii-project/fukuii-cli/releases",
+    docsUrl: "https://docs.fukuii.org",
   },
   {
     name: "Core-Geth",
     language: "Go",
     languageColor: "#00ADD8",
-    role: "Legacy Client · Maintenance Mode",
+    role: "Maintained",
+    description:
+      "A go-ethereum derivative maintained for Ethereum Classic, in maintenance only. It implements the full Olympia specification — ECIP-1111, 1112, 1121 and 1122 — and its Mordor sync is confirmed, so existing operators have a supported path through the upgrade. New deployments should use Fukuii.",
     version: "TBD",
     runtime: "Go 1.26+",
     disk: "500 GB+ (full sync)",
@@ -123,7 +186,7 @@ const faqItems = [
   {
     question: "What role has the ETC Cooperative played, and what changes with Olympia?",
     answer:
-      "The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by the Olympia DAO and executed by the Wyoming DAO LLC, extends beyond institutional dependency to a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can now contribute directly on-chain without fielding a team or managing a non-profit to do it.",
+      "The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by Ethereum Classic's Olympia DAO and disbursed by its on-chain Executor, extends beyond institutional dependency to a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can now contribute directly on-chain without fielding a team or managing a non-profit to do it.",
   },
   {
     question: "What is Grayscale's role in Ethereum Classic's development?",
@@ -131,14 +194,14 @@ const faqItems = [
       "Grayscale launched the Grayscale Ethereum Classic Trust (ETCG) in 2018, years before Bitcoin ETFs existed as a product category, and became a major institutional donor to the ETC Cooperative, indirectly funding the network's core client development at a time when no other investment product issuer was doing anything comparable. What Grayscale was practicing on Ethereum Classic in 2018 is now a recognized trend: ETF issuers funding protocol development, corporate treasury strategies reinvesting in network ecosystems. Taking that model on-chain is only possible on Ethereum Classic because ETC is the only Proof-of-Work blockchain with native smart contracts. Olympia DAO makes it permissionless, opening a direct on-chain contribution path to every holder, whether through ETCG, a direct wallet, or any future investment product.",
   },
   {
-    question: "What does EVM alignment to Fusaka actually mean for builders?",
+    question: "What does EVM alignment to Glamsterdam actually mean for builders?",
     answer:
-      "ECIP-1121 closes years of EVM divergence in a single upgrade, delivering every execution-layer improvement from Dencun, Pectra, and Fusaka that is independent of Proof-of-Stake and blob data availability. Before Olympia, ETC lagged behind on these EIPs, creating real friction for developers deploying across EVM chains. After Olympia, Solidity 0.8.x, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim full tooling compatibility before Olympia. After Olympia, it can.",
+      "ECIP-1121 closes years of EVM divergence in a single upgrade, delivering the execution-layer improvements from Dencun, Pectra, and Fusaka that are independent of Proof-of-Stake and blob data availability, and carrying that work into Glamsterdam. Before Olympia, ETC lagged behind on these EIPs, creating real friction for developers deploying across EVM chains. After Olympia, Solidity 0.8.x, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim full tooling compatibility before Olympia. After Olympia, it can.",
   },
   {
     question: "How does the protocol treasury work?",
     answer:
-      "The Olympia Treasury is funded by EIP-1559 basefee revenue, voluntary on-chain donations, and mining rewards directed to the treasury address. Block rewards and tips remain completely untouched and go entirely to miners. Futarchy prediction market activity generates additional transaction volume that flows back into the treasury as basefee revenue. Any stakeholder, whether exchanges, custodians, miners, investment product issuers, or institutions holding ETC on behalf of fund shareholders, can contribute directly on-chain with no overhead. Stakeholders who prefer a traditional giving model can contribute through the ETC Cooperative, a US 501(c)(3) non-profit that accepts tax-deductible donations.",
+      "The base fee is not the transaction fee. Under EIP-1559 a transaction pays a base fee plus a priority-fee tip; Ethereum Mainnet burns the base fee and pays the tip to the block producer. Olympia changes the destination of the burned half only, crediting it to the Treasury at block finalization, with a 1 gwei floor so low utilization cannot decay it to zero. Priority-fee tips and ECIP-1017 block rewards continue to be paid to miners in full. The Treasury also accepts ordinary on-chain transfers from any address, and smart contracts may opt in to forward a share of their fees the same way — once received, those funds are ordinary Treasury balance with no special claim attached. Any stakeholder, whether exchanges, custodians, miners, investment product issuers, or institutions holding ETC on behalf of fund shareholders, can contribute directly on-chain with no overhead. Stakeholders who prefer a traditional giving model can contribute through the ETC Cooperative, a US 501(c)(3) non-profit that accepts tax-deductible donations.",
   },
   {
     question: "How was Olympia tested before mainnet?",
@@ -148,7 +211,7 @@ const faqItems = [
   {
     question: "When is the mainnet activation block?",
     answer:
-      "Olympia is targeted for mainnet activation before 2027. The testnet activation block on Mordor is announced first. The mainnet activation block follows after a successful Mordor run and a coordinated stakeholder readiness check with exchanges, mining pools, node operators, and infrastructure providers. All client implementations publish Olympia-compatible releases well before activation. The process follows the same sequence used for every previous ETC hard fork.",
+      "Olympia is targeted for mainnet activation in 2027. The testnet activation block on Mordor is announced first. The mainnet activation block follows after a successful Mordor run and a coordinated stakeholder readiness check with exchanges, mining pools, node operators, and infrastructure providers. All client implementations publish Olympia-compatible releases well before activation. The process follows the same sequence used for every previous ETC hard fork.",
   },
   {
     question: "Will my miner rewards change?",
@@ -173,9 +236,10 @@ const faqItems = [
 ];
 
 const forkTimeline = [
-  { name: "Dencun", fullName: "Cancun-Deneb", year: "2024", eips: ["EIP-1153", "EIP-5656", "EIP-2935"] },
-  { name: "Pectra", fullName: "Prague-Electra", year: "2025", eips: ["EIP-7702", "EIP-2537", "EIP-6780"] },
+  { name: "Dencun", fullName: "Cancun-Deneb", year: "2024", eips: ["EIP-1153", "EIP-2935", "EIP-5656"] },
+  { name: "Pectra", fullName: "Prague-Electra", year: "2025", eips: ["EIP-2537", "EIP-6780", "EIP-7702"] },
   { name: "Fusaka", fullName: "Fulu-Osaka", year: "2025", eips: ["EIP-7623", "EIP-7642", "EIP-7823", "EIP-7825", "EIP-7939", "EIP-7951"] },
+  { name: "Glamsterdam", fullName: "Gloas-Amsterdam", year: "2026", eips: ["EIP-7975", "EIP-7997"] },
 ];
 
 const evmCategories = [
@@ -184,14 +248,14 @@ const evmCategories = [
     icon: Layers,
     eips: ["EIP-7623", "EIP-7702", "EIP-7823", "EIP-7825", "EIP-7883", "EIP-7935"],
     description:
-      "Account delegation, cheaper calldata, gas limit enforcement, MODEXP input bounds, opcode repricing, and jumpdest removal. Reduces transaction costs and enables smart account patterns without protocol changes.",
+      "Account delegation, cheaper calldata, a per-transaction gas limit cap, MODEXP input bounds and repricing, and a network-authoritative 60M gas target. Reduces transaction costs and enables smart account patterns without protocol changes.",
   },
   {
     title: "EVM Safety",
     icon: ShieldCheck,
-    eips: ["EIP-6780", "EIP-7642", "EIP-7910", "EIP-7934"],
+    eips: ["EIP-6780", "EIP-7910", "EIP-7934", "EIP-7997"],
     description:
-      "SELFDESTRUCT restricted to deployment context, eth/69 wire protocol with simplified receipts, stack size enforcement, and call target constraints. Makes contract behavior more predictable and reduces attack surface.",
+      "SELFDESTRUCT restricted to the deployment transaction, an RLP block size limit, an eth_config RPC method, and a deterministic CREATE2 factory at the same address as every other EVM chain. Makes contract behavior more predictable and reduces attack surface.",
   },
   {
     title: "Cryptographic Precompiles",
@@ -206,6 +270,13 @@ const evmCategories = [
     eips: ["EIP-1153", "EIP-2935", "EIP-5656", "EIP-7939"],
     description:
       "MCOPY for efficient memory operations, CLZ opcode for leading-zero counting, historical block hashes in state, transient storage TSTORE/TLOAD. Unlocks reentrancy guards, flash loans, and cross-contract patterns without persistent storage.",
+  },
+  {
+    title: "Networking",
+    icon: Network,
+    eips: ["EIP-7642", "EIP-7975"],
+    description:
+      "eth/69 retains total difficulty for Proof-of-Work chain selection and drops receipt bloom filters; eth/70 paginates receipts for blocks above the p2p size limit. Both activate through devp2p capability negotiation rather than a hard fork.",
   },
 ];
 
@@ -230,7 +301,7 @@ const devTools = [
 export default function UpgradePage() {
   return (
     <>
-      <Suspense><NavHeader /></Suspense>
+      <Suspense fallback={<NavHeaderFallback />}><NavHeader /></Suspense>
       <main>
         {/* Hero */}
         <section className="hero-gradient relative pt-36 pb-16">
@@ -252,7 +323,7 @@ export default function UpgradePage() {
               <ul className="mt-6 space-y-3 text-sm text-[var(--text-muted)]">
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
-                  <span><span className="font-semibold text-[var(--foreground)]">Fusaka EVM alignment:</span> closes years of divergence in a single upgrade; every current Ethereum tool, library, and framework works on ETC without modification. Solidity, Foundry, Hardhat, wagmi, viem — one codebase, every EVM chain.</span>
+                  <span><span className="font-semibold text-[var(--foreground)]">Glamsterdam EVM alignment:</span> closes years of divergence in a single upgrade; every current Ethereum tool, library, and framework works on ETC without modification. Solidity, Foundry, Hardhat, wagmi, viem — one codebase, every EVM chain.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
@@ -277,7 +348,19 @@ export default function UpgradePage() {
         <section className="py-12 px-6">
           <div className="mx-auto max-w-5xl">
             <FadeIn>
-              <Suspense>
+              {/* Client-only; the fallback is what a crawler sees. */}
+              <Suspense fallback={
+                <div className="rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-6 text-center">
+                  <p className="text-sm font-medium text-[var(--brand-green)]">
+                    Activation Block Pending
+                  </p>
+                  <p className="mt-1 text-sm text-[var(--text-muted)]">
+                    Olympia is in final testing on the Mordor Testnet, targeted for
+                    mainnet activation in 2027. The activation block is announced
+                    after the Olympia Upgrade core developers call.
+                  </p>
+                </div>
+              }>
                 <CountdownBanner />
               </Suspense>
             </FadeIn>
@@ -292,11 +375,11 @@ export default function UpgradePage() {
                 What Olympia Brings to Ethereum Classic
               </h2>
               <p className="mb-8 text-sm text-[var(--text-muted)]">
-                Three protocol upgrades in a single activation: a fee market that funds a protocol-controlled treasury, Fusaka EVM alignment that closes years of tooling divergence so every Ethereum library and framework works on ETC without modification, and the institutional access profile that follows. Delivered to the only Proof-of-Work smart contract platform in the world.
+                Four protocol changes in a single activation: a fee market that funds a protocol-controlled treasury, the Treasury contract itself, Glamsterdam EVM alignment that closes years of tooling divergence so every Ethereum library and framework works on ETC without modification, and the client security parameters that come with them. Delivered to the only Proof-of-Work smart contract platform in the world.
               </p>
             </FadeIn>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2">
               {ecips.map((item, i) => {
                 const Icon = item.icon;
                 return (
@@ -339,7 +422,7 @@ export default function UpgradePage() {
               >ECIP-1121</a>
               <h2 className="mb-2 text-2xl font-bold tracking-tight">EVM Compatibility</h2>
               <p className="mb-8 text-sm text-[var(--text-muted)]">
-                Building on Mystique and Spiral, Olympia delivers the EVM execution-layer improvements from Dencun, Pectra, and Fusaka. Every EIP is compatible with Proof-of-Work and independent of blob data availability.
+                Building on Mystique and Spiral, Olympia delivers the EVM execution-layer improvements from Dencun, Pectra, and Fusaka, and carries that work into Glamsterdam. Every EIP is compatible with Proof-of-Work and independent of blob data availability.
               </p>
             </FadeIn>
 
@@ -385,7 +468,7 @@ export default function UpgradePage() {
             <FadeIn delay={120}>
               <div className="mb-8 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-5">
                 <p className="text-sm leading-relaxed text-[var(--text-primary)]">
-                  Ethereum Classic implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deliberately deferring the EIP-1559 fee market for independent governance design. ECIP-1111 now delivers those deferred London EIPs. ECIP-1121 advances the execution layer through Dencun, Pectra, and Fusaka: every EVM improvement that is independent of Proof-of-Stake and blob data availability. Together, Olympia brings ETC to full Fusaka execution-layer parity.
+                  Ethereum Classic implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deliberately deferring the EIP-1559 fee market for independent governance design. ECIP-1111 now delivers those deferred London EIPs. ECIP-1121 advances the execution layer through Dencun, Pectra, and Fusaka — every EVM improvement that is independent of Proof-of-Stake and blob data availability — and carries that work into Glamsterdam. Together, Olympia brings ETC current through Fusaka and opens Glamsterdam.
                 </p>
               </div>
             </FadeIn>
@@ -428,7 +511,7 @@ export default function UpgradePage() {
               <div className="mb-8 rounded-xl border border-[var(--border-default)] bg-[var(--bg-elevated)] p-5">
                 <p className="text-xs leading-relaxed text-[var(--text-muted)]">
                   <span className="font-semibold text-[var(--text-primary)]">Blobs excluded by design.</span>{" "}
-                  EIPs dependent on blob data availability (EIP-4844, EIP-7516, EIP-7691) are intentionally excluded. Ethereum introduced blobs to support L2 data availability, a concern Ethereum Classic as a pure Layer 1 execution chain does not have. ETC gains every execution-layer improvement without inheriting any L2 scaffolding.
+                  EIPs dependent on blob data availability (EIP-4844, EIP-7516, EIP-7691) are intentionally excluded. Ethereum introduced blobs to support L2 data availability, a concern Ethereum Classic as a pure Layer 1 execution chain does not have. ETC takes the execution-layer improvements without inheriting any L2 scaffolding.
                 </p>
               </div>
             </FadeIn>
@@ -457,9 +540,9 @@ export default function UpgradePage() {
             <FadeIn>
               <h2 className="text-3xl font-bold tracking-tight">The Olympia Upgrade</h2>
               <div className="mt-4 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-8 space-y-4 text-base leading-relaxed text-[var(--text-secondary)]">
-                <p>Olympia is Ethereum Classic&rsquo;s most significant protocol upgrade. Three changes arrive in a single activation: Fusaka EVM alignment, EIP-1559 fee market, and a protocol-managed treasury.</p>
-                <p>The headline change is full Fusaka EVM parity &mdash; closing years of execution-layer divergence from Ethereum in a single fork. Every Solidity compiler version, every deployment tool (Foundry, Hardhat), and every major library (wagmi, viem, ethers.js) works on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim this before Olympia. After Olympia, it can.</p>
-                <p>The EIP-1559 fee market redirects the basefee &mdash; value that would otherwise be destroyed &mdash; to a protocol-managed treasury. Block rewards and tips remain completely untouched and go entirely to miners. Anyone can submit proposals on-chain. Members vote on resource allocation and execute decisions. Every step is transparent and verifiable on-chain.</p>
+                <p>Olympia is Ethereum Classic&rsquo;s most significant protocol upgrade. Three changes arrive in a single activation: Glamsterdam EVM alignment, EIP-1559 fee market, and a protocol-managed treasury.</p>
+                <p>The headline change is EVM alignment &mdash; closing years of execution-layer divergence from Ethereum in a single fork. Every Solidity compiler version, every deployment tool (Foundry, Hardhat), and every major library (wagmi, viem, ethers.js) works on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim this before Olympia. After Olympia, it can.</p>
+                <p>The EIP-1559 fee market redirects the basefee &mdash; value that would otherwise be destroyed &mdash; to a protocol-managed treasury. Block rewards and tips remain completely untouched and go entirely to miners. Funding proposals are submitted on-chain, subject to the Governor&rsquo;s proposal threshold; members vote, a strict majority carries, and only the Executor can move funds. Every step is transparent and verifiable on-chain.</p>
               </div>
             </FadeIn>
           </div>
@@ -472,7 +555,10 @@ export default function UpgradePage() {
             <FadeIn>
               <h2 className="text-3xl font-bold tracking-tight">Olympia Governance Framework</h2>
               <p className="mt-3 text-base text-[var(--text-muted)]">
-                Operational infrastructure for core developers, protocol contributors, and network security stakeholders. Governance tooling, treasury monitoring, and open-source repositories for those coordinating on critical infrastructure and emergency response.
+                Governor &rarr; Timelock &rarr; Executor &rarr; Treasury is the only path to
+                Treasury funds; no multisig, committee, foundation or legal wrapper can
+                override it. Voting power comes from the CoreNFT &mdash; soulbound, one
+                non-delegable vote per member, earned by contribution rather than bought.
               </p>
             </FadeIn>
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
@@ -524,9 +610,14 @@ export default function UpgradePage() {
         <section className="section-alt py-16 px-6">
           <div className="mx-auto max-w-5xl">
             <FadeIn>
-              <h2 className="mb-8 text-2xl font-bold tracking-tight">
+              <h2 className="mb-2 text-2xl font-bold tracking-tight">
                 Steps to Upgrade Your Client
               </h2>
+              <p className="mb-8 text-sm text-[var(--text-muted)]">
+                Fukuii and Core-Geth are the two production Olympia implementations. Besu,
+                Erigon, Ethrex, Go-Ethereum, Nethermind and Reth serve as upstream
+                cross-client references; ETC plugins for them are future work.
+              </p>
             </FadeIn>
 
             <div className="space-y-6">
@@ -537,8 +628,8 @@ export default function UpgradePage() {
                       <span
                         className="flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold"
                         style={{
-                          backgroundColor: `${client.languageColor}20`,
-                          color: client.languageColor,
+                          backgroundColor: client.languageColor,
+                          color: readableOn(client.languageColor),
                         }}
                       >
                         {client.language.slice(0, 2)}
@@ -553,6 +644,10 @@ export default function UpgradePage() {
                         Version: {client.version}
                       </span>
                     </div>
+
+                    <p className="mb-4 text-sm leading-relaxed text-[var(--text-muted)]">
+                      {client.description}
+                    </p>
 
                     {/* Prerequisites */}
                     <div className="mb-4 grid grid-cols-3 gap-2">

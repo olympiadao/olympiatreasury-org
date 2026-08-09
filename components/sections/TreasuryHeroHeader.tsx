@@ -1,8 +1,12 @@
 import { ExternalLink } from "lucide-react";
 import { CHAIN_CONFIG } from "@/lib/config";
 
-const MAINNET_TREASURY = CHAIN_CONFIG[61].treasury;
-const MAINNET_EXPLORER = CHAIN_CONFIG[61].explorer;
+/**
+ * Mordor is where the contract this dashboard reads is deployed; ECIP-1112 publishes
+ * no mainnet address. Hardcoded rather than reading ?chain= so this stays
+ * server-rendered.
+ */
+const DEMO_CHAIN = CHAIN_CONFIG[63];
 
 export function TreasuryHeroHeader() {
   return (
@@ -15,19 +19,19 @@ export function TreasuryHeroHeader() {
               <span className="text-[var(--brand-green)]">Treasury</span>
             </h1>
             <p className="mt-2 max-w-lg text-sm text-[var(--text-muted)]">
-              Live monitoring of the non-inflationary vault for Ethereum Classic
-              protocol revenue.
+              Live monitoring of the core development vault. Base fee revenue funds
+              the treasury.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <a
-              href={`${MAINNET_EXPLORER}/address/${MAINNET_TREASURY}`}
+              href={`${DEMO_CHAIN.explorer}/address/${DEMO_CHAIN.treasury}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-green)] px-5 py-2.5 text-sm font-semibold text-[var(--background)] transition-all duration-200 hover:brightness-110"
             >
-              Explorer
+              Explorer · Mordor
               <ExternalLink size={14} />
             </a>
             <a

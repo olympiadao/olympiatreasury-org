@@ -50,9 +50,9 @@ export function DashboardHero() {
 
           />
           <KpiCard
-            label="Mined Income"
+            label="Mined to the Treasury"
             value={stats ? `${formatAmount(stats.minedIncome)} ${config.symbol}` : "\u2014"}
-            subtitle={`Block rewards + tx fees${stats ? ` \u00b7 ${stats.blockCount} blocks` : ""}`}
+            subtitle={`Miners choosing the vault as coinbase${stats ? ` \u00b7 ${stats.blockCount} blocks` : ""}`}
             icon={Pickaxe}
             loading={isLoading}
             error={!!error}
@@ -61,7 +61,7 @@ export function DashboardHero() {
           <KpiCard
             label="BaseFee"
             value={stats ? `${formatAmount(stats.baseFeeIncome)} ${config.symbol}` : "\u2014"}
-            subtitle="Activates with Olympia"
+            subtitle="Protocol-directed \u00b7 activates with Olympia"
             icon={Flame}
             loading={isLoading}
             error={!!error}
@@ -79,7 +79,7 @@ export function DashboardHero() {
           <KpiCard
             label="Withdrawals"
             value={stats ? `${formatAmount(stats.totalOutflow)} ${config.symbol}` : "\u2014"}
-            subtitle="Governance-approved ECFPs"
+            subtitle="Governance-approved OFPs"
             icon={TrendingDown}
             loading={isLoading}
             error={!!error}

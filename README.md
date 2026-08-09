@@ -2,7 +2,7 @@
 
 Live treasury monitoring dashboard for the Olympia protocol-controlled vault on Ethereum Classic. Read-only — no wallet required.
 
-OlympiaDAO funds core development, critical infrastructure, and network security for Ethereum Classic through on-chain governance — smart contract-powered voting, a protocol treasury funded by basefee revenue, and verifiable membership. No multisigs. No trusted intermediaries.
+Ethereum Classic's Olympia DAO funds core development, critical infrastructure, and network security through on-chain governance — smart contract-powered voting, a protocol treasury funded by basefee revenue, and verifiable membership. No multisigs. No trusted intermediaries.
 
 ## Website
 

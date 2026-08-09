@@ -9,8 +9,9 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 
 const flowSteps = [
-  { icon: ArrowRight, label: "Transactions", sublabel: "Users pay gas fees" },
-  { icon: Coins, label: "Fee Revenue", sublabel: "Basefee + donations + mining" },
+  // The first two nodes carry the base-fee/tip split; only the base fee flows on.
+  { icon: ArrowRight, label: "Transactions", sublabel: "Base fee + priority tip" },
+  { icon: Coins, label: "Base Fee Only", sublabel: "The burned half, redirected" },
   { icon: Landmark, label: "Treasury", sublabel: "Protocol-managed vault" },
   { icon: Vote, label: "Governance", sublabel: "Community proposals" },
   { icon: Globe, label: "Ecosystem", sublabel: "Development funding" },
@@ -38,11 +39,15 @@ export function TreasuryFundingSection() {
                 Basefee revenue funds the Olympia Treasury
               </p>
               <p className="mt-3 text-sm leading-relaxed text-[var(--text-muted)]">
-                Block rewards and tips remain completely untouched — miners are
-                unaffected. The treasury receives basefee revenue, voluntary
-                on-chain donations, and mining rewards directed to the treasury
-                address. This creates sustainable, transparent funding without
-                inflation or reduced miner compensation.
+                The base fee is not the transaction fee. Under EIP-1559 a transaction
+                pays a base fee plus a priority-fee tip; Ethereum burns the base fee and
+                pays the tip to the block producer. Ethereum Classic changes the
+                destination of the burned half only — it is credited to the Treasury at
+                block finalization, and a 1 gwei floor keeps that revenue from decaying
+                to zero at low utilization. Priority-fee tips and ECIP-1017 block rewards
+                continue to be paid to miners in full. Funding accrues from network usage
+                rather than from any foundation or donor, without inflation or reduced
+                miner compensation.
               </p>
             </div>
           </FadeIn>

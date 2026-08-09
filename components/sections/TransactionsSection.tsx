@@ -95,7 +95,7 @@ export function TransactionsSection() {
                           )}
                           {tx.governance && (
                             <span className="inline-flex rounded-full border border-[var(--border-default)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">
-                              ECFP
+                              OFP
                             </span>
                           )}
                         </div>

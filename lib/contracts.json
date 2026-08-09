@@ -18,8 +18,8 @@
       "address": "0x3d19fEfB093Abad60421B89CF48f4569aaae39b6",
       "role": "Security delay enforcement"
     },
-    "ecfpRegistry": {
-      "name": "ECFPRegistry",
+    "ofpRegistry": {
+      "name": "OFPRegistry",
       "address": "0xe2b437284B0fc7A1064Afd1f60686c7cEAa7343a",
       "role": "Proposal metadata registry"
     },
@@ -46,7 +46,7 @@
     "treasury": {
       "name": "OlympiaTreasury",
       "address": "0x60d0A7394f9Cd5C469f9F5Ec4F9C803F5294d79b",
-      "role": "Protocol-funded vault"
+      "role": "Sovereignty vault — holds base fee revenue"
     }
   }
 }

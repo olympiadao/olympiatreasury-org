@@ -21,7 +21,7 @@ const organizationJsonLd = {
   name: "Olympia Treasury",
   alternateName: "OlympiaTreasury",
   url: "https://olympiatreasury.org",
-  logo: "https://olympiatreasury.org/logo.svg",
+  logo: "https://olympiatreasury.org/android-chrome-512x512.png",
   description:
     "The Olympia Treasury is a protocol-controlled vault for Ethereum Classic funded by EIP-1559 basefee revenue. Governed on-chain by the Olympia DAO.",
   foundingDate: "2025",
@@ -48,11 +48,12 @@ const websiteJsonLd = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic",
+    default: "Olympia Treasury — Sovereignty Vault for Ethereum Classic",
     template: "%s | Olympia Treasury",
   },
+  // Keep under ~155 chars; search results truncate.
   description:
-    "The Olympia Treasury is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. Non-inflationary, transparent, and auditable.",
+    "An immutable, protocol-controlled vault that receives Ethereum Classic's EIP-1559 base fee revenue and disburses it only through on-chain governance.",
   keywords: [
     "Ethereum Classic",
     "ETC",
@@ -63,12 +64,18 @@ export const metadata: Metadata = {
     "smart contract",
     "on-chain governance",
     "Olympia DAO",
+    "CoreNFT",
+    "soulbound governance token",
+    "Olympia Funding Proposal",
+    "OFP",
     "basefee",
     "miner rewards untouched",
     "block rewards",
     "EIP-1559",
     "ECIP-1112",
     "ECIP-1121",
+    "ECIP-1122",
+    "Glamsterdam",
     "Fusaka",
     "EVM upgrade",
     "EVM compatibility",
@@ -83,7 +90,8 @@ export const metadata: Metadata = {
     "Dencun",
     "Pectra",
     "Solidity compatibility",
-    "Fusaka EVM alignment",
+    "Glamsterdam EVM alignment",
+    "Glamsterdam EVM",
     "Foundry ETC",
     "Hardhat ETC",
     "wagmi ETC",
@@ -98,9 +106,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://olympiatreasury.org",
     siteName: "Olympia Treasury",
-    title: "Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic",
+    title: "Olympia Treasury — Sovereignty Vault for Ethereum Classic",
     description:
-      "Immutable, non-inflationary vault for Ethereum Classic protocol revenue. Governed by Olympia DAO on Ethereum Classic.",
+      "Live monitoring of the core development vault. Base fee revenue funds the treasury; priority-fee tips and block rewards go to miners in full.",
     images: [
       {
         url: "https://olympiatreasury.org/og-image.png",
@@ -112,18 +120,30 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Olympia Treasury — Protocol-Controlled Vault for Ethereum Classic",
+    title: "Olympia Treasury — Sovereignty Vault for Ethereum Classic",
     description:
-      "Immutable, non-inflationary vault for Ethereum Classic protocol revenue. Governed by Olympia DAO on Ethereum Classic.",
+      "Live monitoring of the core development vault. Base fee revenue funds the treasury; priority-fee tips and block rewards go to miners in full.",
     images: ["https://olympiatreasury.org/og-image.png"],
   },
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-icon.png",
   },
+  // "./" not an absolute URL: alternates is inherited, and an absolute value would
+  // stamp this canonical onto every child route.
+  alternates: {
+    canonical: "./",
+  },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
   metadataBase: new URL("https://olympiatreasury.org"),
 };
