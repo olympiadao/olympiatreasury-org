@@ -2,6 +2,7 @@ import {
   ArrowRight,
   Coins,
   Landmark,
+  Vault,
   Vote,
   Globe,
 } from "lucide-react";
@@ -11,9 +12,10 @@ import { SectionDivider } from "@/components/ui/SectionDivider";
 const flowSteps = [
   // The first two nodes carry the base-fee/tip split; only the base fee flows on.
   { icon: ArrowRight, label: "Transactions", sublabel: "Base fee + priority tip" },
-  { icon: Coins, label: "Base Fee Only", sublabel: "The burned half, redirected" },
-  { icon: Landmark, label: "Treasury", sublabel: "Protocol-managed vault" },
-  { icon: Vote, label: "Governance", sublabel: "Community proposals" },
+  { icon: Coins, label: "Base Fee Only", sublabel: "Tips stay with the miner" },
+  { icon: Vault, label: "Vault", sublabel: "Credited by consensus" },
+  { icon: Landmark, label: "Treasury", sublabel: "Swept in, held under governance" },
+  { icon: Vote, label: "Proposals", sublabel: "Voted, queued, executed" },
   { icon: Globe, label: "Ecosystem", sublabel: "Development funding" },
 ];
 
@@ -28,26 +30,26 @@ export function TreasuryFundingSection() {
               Treasury Funding
             </h2>
             <p className="mt-3 max-w-xl text-base text-[var(--text-muted)]">
-              How the Olympia Treasury is funded, sustainably and without impacting
-              miners.
+              Where the money comes from, and what it costs a miner.
             </p>
           </FadeIn>
 
           <FadeIn>
             <div className="mt-12 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-8">
               <p className="text-lg font-semibold">
-                Basefee revenue funds the Olympia Treasury
+                Base-fee revenue funds Ethereum Classic&rsquo;s own development
               </p>
               <p className="mt-3 text-sm leading-relaxed text-[var(--text-muted)]">
                 The base fee is not the transaction fee. Under EIP-1559 a transaction
-                pays a base fee plus a priority-fee tip; Ethereum burns the base fee and
-                pays the tip to the block producer. Ethereum Classic changes the
-                destination of the burned half only. It is credited to the Treasury at
-                block finalization, and a 1 gwei floor keeps that revenue from decaying
-                to zero at low utilization. Priority-fee tips and ECIP-1017 block rewards
-                continue to be paid to miners in full. Funding accrues from network usage
-                rather than from any foundation or donor, without inflation or reduced
-                miner compensation.
+                pays a base fee <em>plus</em> a priority-fee tip, and Ethereum burns its
+                base fee while paying the tip to the block producer. Ethereum Classic has
+                no base fee at all until ECIP-1111 introduces one — so nothing here is
+                being taken from somewhere else. It is credited to the Vault at block
+                finalization, and a 1 gwei floor keeps the revenue from decaying to zero
+                at low utilization. Priority-fee tips and ECIP-1017 block rewards are
+                untouched by the whole suite. Revenue scales linearly with gas consumed,
+                so it grows with adoption automatically and without governance action,
+                from usage rather than from a foundation or a donor.
               </p>
             </div>
           </FadeIn>
@@ -64,7 +66,7 @@ export function TreasuryFundingSection() {
             <div className="mt-6 hidden md:block">
               <div className="relative">
                 <div className="absolute top-6 left-10 right-10 h-px bg-[var(--border-default)]" />
-                <div className="relative grid grid-cols-5 gap-2">
+                <div className="relative grid grid-cols-6 gap-2">
                   {flowSteps.map((step, i) => (
                     <FadeIn key={step.label} delay={i * 100}>
                       <div className="text-center">
