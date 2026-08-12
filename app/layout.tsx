@@ -23,7 +23,7 @@ const organizationJsonLd = {
   url: "https://olympiatreasury.org",
   logo: "https://olympiatreasury.org/android-chrome-512x512.png",
   description:
-    "The Olympia Treasury is a protocol-controlled vault for Ethereum Classic funded by EIP-1559 basefee revenue. Governed on-chain by the Olympia DAO.",
+    "Ethereum Classic's base-fee revenue is credited to the immutable Olympia Sovereignty Vault, which sweeps it to the Olympia Treasury, governed on-chain by Ethereum Classic's Olympia DAO.",
   foundingDate: "2025",
   sameAs: [
     "https://olympiadao.org",
@@ -38,7 +38,7 @@ const websiteJsonLd = {
   name: "Olympia Treasury",
   url: "https://olympiatreasury.org",
   description:
-    "Real-time dashboard for the Olympia Treasury, the protocol-controlled vault for Ethereum Classic funded by EIP-1559 basefee revenue.",
+    "Live dashboard for Ethereum Classic's base-fee revenue: the Olympia Sovereignty Vault that receives it, and the Olympia Treasury that holds it under governance.",
   publisher: {
     "@type": "Organization",
     name: "Olympia Treasury",
@@ -48,12 +48,17 @@ const websiteJsonLd = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Olympia Treasury — Sovereignty Vault for Ethereum Classic",
+    default: "Olympia Treasury — Base-Fee Revenue for Ethereum Classic",
     template: "%s | Olympia Treasury",
   },
   // Keep under ~155 chars; search results truncate.
+  //
+  // The old pair described one contract that both received the base fee and disbursed
+  // it through governance. That is two contracts and it was the pre-respec design: the
+  // immutable receiver is the ECIP-1112 Vault, and the thing that disburses is the
+  // ECIP-1113 Timelock, which is emphatically not immutable. Keep them distinct here.
   description:
-    "An immutable, protocol-controlled vault that receives Ethereum Classic's EIP-1559 base fee revenue and disburses it only through on-chain governance.",
+    "Live monitoring of Ethereum Classic's base-fee revenue: the immutable Sovereignty Vault that receives it, and the Treasury that holds it under on-chain governance.",
   keywords: [
     "Ethereum Classic",
     "ETC",
@@ -68,11 +73,15 @@ export const metadata: Metadata = {
     "soulbound governance token",
     "Olympia Funding Proposal",
     "OFP",
-    "basefee",
+    "base fee",
+    "Sovereignty Vault",
+    "TimelockController",
     "miner rewards untouched",
     "block rewards",
     "EIP-1559",
+    "ECIP-1111",
     "ECIP-1112",
+    "ECIP-1113",
     "ECIP-1121",
     "ECIP-1122",
     "Glamsterdam",
@@ -106,9 +115,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://olympiatreasury.org",
     siteName: "Olympia Treasury",
-    title: "Olympia Treasury — Sovereignty Vault for Ethereum Classic",
+    title: "Olympia Treasury — Base-Fee Revenue for Ethereum Classic",
     description:
-      "Live monitoring of the core development vault. Base fee revenue funds the treasury; priority-fee tips and block rewards go to miners in full.",
+      "Live monitoring of the Sovereignty Vault that receives Ethereum Classic's base fee and the Treasury it sweeps into. Priority-fee tips and block rewards go to miners in full.",
     images: [
       {
         url: "https://olympiatreasury.org/og-image.png",
@@ -120,9 +129,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Olympia Treasury — Sovereignty Vault for Ethereum Classic",
+    title: "Olympia Treasury — Base-Fee Revenue for Ethereum Classic",
     description:
-      "Live monitoring of the core development vault. Base fee revenue funds the treasury; priority-fee tips and block rewards go to miners in full.",
+      "Live monitoring of the Sovereignty Vault that receives Ethereum Classic's base fee and the Treasury it sweeps into. Priority-fee tips and block rewards go to miners in full.",
     images: ["https://olympiatreasury.org/og-image.png"],
   },
   icons: {

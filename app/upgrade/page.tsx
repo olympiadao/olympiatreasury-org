@@ -4,7 +4,6 @@ import { ExternalLink, CheckCircle2, Flame, Landmark, Cpu, Layers, Code2, Networ
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Accordion } from "@/components/ui/Accordion";
-import { CountdownBanner } from "@/components/ui/CountdownBanner";
 import { PropertyCard } from "@/components/ui/PropertyCard";
 import { RoadmapSection } from "@/components/sections/RoadmapSection";
 import { NavHeader } from "@/components/sections/NavHeader";
@@ -66,7 +65,7 @@ export const metadata: Metadata = {
     siteName: "Olympia Treasury",
     title: "Olympia Upgrade: Glamsterdam EVM Alignment, EIP-1559 Fee Market, and Protocol Treasury",
     description:
-      "Olympia is Ethereum Classic's most significant protocol upgrade. Glamsterdam-era EVM alignment closes years of execution-layer divergence, the EIP-1559 fee market redirects the basefee to a protocol-controlled treasury, and client security parameters activate at the same block. Node upgrade guides for Fukuii and Core-Geth.",
+      "Olympia is Ethereum Classic's most significant protocol upgrade. Glamsterdam-era EVM alignment closes years of execution-layer divergence, the EIP-1559 fee market credits the base fee to the Olympia Sovereignty Vault instead of burning it, and client security parameters activate at the same block. Node upgrade guides for Fukuii and Core-Geth.",
     images: [
       {
         url: "https://olympiatreasury.org/og-image.png",
@@ -88,17 +87,17 @@ export const metadata: Metadata = {
 const ecips = [
   {
     ecip: "ECIP-1111",
-    title: "EIP-1559 Fee Market",
+    title: "Base Fee Market and Vault Redirection",
     icon: Flame,
     description:
-      "Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury. That is the mechanism funding open-source core development without any foundation or donor dependency. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive: legacy transactions remain valid indefinitely. Miner block rewards and tips remain completely untouched.",
+      "EIP-1559 arrives on Ethereum Classic, and the base fee it introduces is credited to the Olympia Sovereignty Vault rather than burned as Ethereum burns its own. That is the mechanism funding open-source core development without any foundation or donor dependency. A 1 gwei floor keeps the revenue from decaying to zero at low utilization. Fully additive: legacy transactions remain valid indefinitely. Miner block rewards and priority-fee tips are untouched.",
   },
   {
     ecip: "ECIP-1112",
-    title: "Protocol Treasury",
+    title: "Sovereignty Vault",
     icon: Landmark,
     description:
-      "An immutable vault with one withdrawal entry point, callable only by the DAO's Executor. It validates nothing and holds no governance logic. That separation keeps its guarantees independent of whatever governance sits above it. It deploys at the fork and accrues revenue that nothing can spend until the governance suite follows. Miners receive everything they do today: block rewards and tips remain completely untouched.",
+      "The one permanent contract in Olympia: no owner, no role, no setter, no parameter. It receives value and forwards it, unchanged, to one address fixed at construction — the Timelock that is the Olympia Treasury. sweep() is permissionless precisely because that destination is immutable, so a caller chooses only when the balance moves, never where. Everything mutable lives downstream, which is what makes the Treasury replaceable without a fork.",
   },
   {
     ecip: "ECIP-1121",
@@ -142,7 +141,6 @@ const clients = [
     role: "Primary",
     description:
       "EVM execution client in Scala 3. One binary runs several networks at once in a single JVM process, each isolated with its own state, metrics, and configuration. A further network is configuration rather than a new client. Consensus is selected per deployment: native Proof-of-Work for Ethereum Classic and Mordor, or Proof-of-Stake with a built-in consensus layer or an external client over the Engine API. Ethereum Classic's first native client, built ground-up for ETC rather than derived from an Ethereum client. It is the primary ETC client for the Olympia era.",
-    version: "TBD",
     runtime: "JDK 25+",
     disk: "500 GB+ (SNAP sync)",
     ram: "8 GB minimum",
@@ -161,8 +159,7 @@ const clients = [
     languageColor: "#00ADD8",
     role: "Maintained",
     description:
-      "A go-ethereum derivative maintained for Ethereum Classic, in maintenance only. It implements the full Olympia specification, covering ECIP-1111, 1112, 1121 and 1122, and its Mordor sync is confirmed. Existing operators have a supported path through the upgrade. New deployments should use Fukuii.",
-    version: "TBD",
+      "A go-ethereum derivative maintained for Ethereum Classic, in maintenance only. Existing operators have a supported path through the upgrade. New deployments should use Fukuii.",
     runtime: "Go 1.26+",
     disk: "500 GB+ (full sync)",
     ram: "8 GB minimum",
@@ -186,7 +183,7 @@ const faqItems = [
   {
     question: "What role has the ETC Cooperative played, and what changes with Olympia?",
     answer:
-      "The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by Ethereum Classic's Olympia DAO and disbursed by its on-chain Executor, extends beyond institutional dependency to a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can now contribute directly on-chain without fielding a team or managing a non-profit to do it.",
+      "The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by Ethereum Classic's Olympia DAO, extends beyond institutional dependency to a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can contribute directly on-chain without fielding a team or managing a non-profit to do it.",
   },
   {
     question: "What is Grayscale's role in Ethereum Classic's development?",
@@ -199,29 +196,29 @@ const faqItems = [
       "ECIP-1121 closes years of EVM divergence in a single upgrade, delivering the execution-layer improvements from Dencun, Pectra, and Fusaka that are independent of Proof-of-Stake and blob data availability, and carrying that work into Glamsterdam. Before Olympia, ETC lagged behind on these EIPs, creating real friction for developers deploying across EVM chains. After Olympia, Solidity 0.8.x, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim full tooling compatibility before Olympia. After Olympia, it can.",
   },
   {
-    question: "How does the protocol treasury work?",
+    question: "Where does base-fee revenue actually go?",
     answer:
-      "The base fee is not the transaction fee. Under EIP-1559 a transaction pays a base fee plus a priority-fee tip; Ethereum Mainnet burns the base fee and pays the tip to the block producer. Olympia changes the destination of the burned half only, crediting it to the Treasury at block finalization, with a 1 gwei floor so low utilization cannot decay it to zero. Priority-fee tips and ECIP-1017 block rewards continue to be paid to miners in full. The Treasury also accepts ordinary on-chain transfers from any address, and smart contracts may opt in to forward a share of their fees the same way. Once received, those funds are ordinary Treasury balance with no special claim attached. Any stakeholder, whether exchanges, custodians, miners, investment product issuers, or institutions holding ETC on behalf of fund shareholders, can contribute directly on-chain with no overhead. Stakeholders who prefer a traditional giving model can contribute through the ETC Cooperative, a US 501(c)(3) non-profit that accepts tax-deductible donations.",
+      "Two contracts, in that order. On Ethereum a transaction's base fee is destroyed — the burned half of what every transaction pays — while the priority-fee tip goes to the block producer. Ethereum Classic has no base fee today at all: EIP-1559 is not active here, so the component does not exist rather than being zero. ECIP-1111 introduces it and credits it at block finalization to the Olympia Sovereignty Vault instead of burning it. A 1 gwei floor keeps that revenue from decaying to zero at low utilization. The Vault holds nothing for long: sweep() forwards its whole balance to a TimelockController, which is the Olympia Treasury, and that is where funds sit until a passed proposal releases them. The base fee is not the transaction fee — a transaction pays base fee plus a priority-fee tip, and tips and ECIP-1017 block rewards are untouched by the whole suite. Both contracts also accept ordinary transfers from any address, so exchanges, custodians, miners, investment product issuers, and institutions can contribute on-chain with no overhead. Stakeholders who prefer a traditional giving model can contribute through the ETC Cooperative, a US 501(c)(3) non-profit that accepts tax-deductible donations.",
   },
   {
-    question: "How was Olympia tested before mainnet?",
+    question: "Why two contracts rather than one?",
     answer:
-      "Olympia activates on the Mordor testnet first. Mordor is Ethereum Classic's Proof-of-Work testnet and mirrors mainnet conditions closely. Multiple independent client implementations run the Mordor fork before any mainnet activation is scheduled. Cross-client validation using the Hive integration testing framework confirms consensus compatibility across implementations. The mainnet activation block is not set until Mordor has run cleanly and major network stakeholders, including exchanges, custodians, and mining pools, have confirmed readiness.",
+      "Because the address consensus commits to can only change by hard fork, and governance has to be able to change without one. Wiring a permanent address straight into a governance stack makes every component that address transitively commits to permanent as well. So the network makes the smallest possible thing permanent: a contract with no owner, no role, no setter and no parameter, whose entire behavior is to receive value and forward it unchanged to one immutable destination. Everything mutable — the Governor, the Timelock, CoreNFT, the sanctions oracle, the OFP Registry — lives strictly downstream and is replaceable by ordinary governance. Exactly one contract in Olympia is permanent, and it is the Vault. That asymmetry is what makes the Treasury replaceable, and it is the single largest structural gain in the design.",
   },
   {
-    question: "When is the mainnet activation block?",
+    question: "How is Olympia tested, and how is an activation block chosen?",
     answer:
-      "Olympia is targeted for mainnet activation in 2027. The testnet activation block on Mordor is announced first. The mainnet activation block follows after a successful Mordor run and a coordinated stakeholder readiness check with exchanges, mining pools, node operators, and infrastructure providers. All client implementations publish Olympia-compatible releases well before activation. The process follows the same sequence used for every previous ETC hard fork.",
+      "Mordor first. Mordor is Ethereum Classic's Proof-of-Work testnet and mirrors mainnet conditions closely, and cross-client state-transition equivalence must be demonstrated there before a mainnet activation block is scheduled. The mainnet block is set only after Mordor has run cleanly and network stakeholders — exchanges, custodians, mining pools, node operators and infrastructure providers — have confirmed readiness, and client releases are published well ahead of it. That sequence is the same one used for every previous ETC hard fork.",
   },
   {
-    question: "Will my miner rewards change?",
+    question: "Do miner rewards change?",
     answer:
-      "No. Block rewards and tips remain completely untouched. Olympia redirects the EIP-1559 basefee to the protocol treasury. The basefee is a value that would otherwise be destroyed and has never been part of miner compensation. Miner revenue is unchanged.",
+      "ECIP-1017 block rewards and priority-fee tips are untouched by the whole Olympia suite. Two things are worth separating. At the minimum gas price, the Vault's gwei is new cost borne by the sender rather than a transfer out of miner revenue, and ECIP-1122's 1 gwei minimum miner tip makes the floor beneath the miner enforceable for the first time — today it is 1 wei by client default, with 1 gwei being a wallet convention rather than anything enforced. Above the floor, at a fixed total gas price, one gwei does move from the miner to the Vault. How large a share of fee income that is depends on the prevailing tip, and what bounds it is that fee income of either kind is small against ECIP-1017 subsidies at Ethereum Classic's measured utilization.",
   },
   {
-    question: "What happens if I don't upgrade my node?",
+    question: "What happens to a node that is not upgraded?",
     answer:
-      "Nodes that are not upgraded before the activation block will stop following the canonical chain. You will need to upgrade your client and resync from the fork point. Exchanges, wallets, RPC providers, and services running outdated clients will be unable to process transactions on the post-Olympia chain. Client release announcements are published well in advance to give operators time to upgrade.",
+      "It stops following the canonical chain at the activation block, as with any consensus change. Recovering means upgrading the client and resyncing from the fork point. Exchanges, wallets, RPC providers, and services running outdated clients cannot process transactions on the post-Olympia chain. Client release announcements are published well in advance to give operators time to upgrade.",
   },
   {
     question: "Is Ethereum Classic a security or commodity after Olympia?",
@@ -231,7 +228,7 @@ const faqItems = [
   {
     question: "Can I roll back if something goes wrong?",
     answer:
-      "In the unlikely event of a critical issue after activation, the same client teams that have managed every ETC emergency response since 2016 would coordinate a patch release promptly. The established stakeholder communication channels, including the ETC Cooperative, client maintainers, and major exchange contacts, are the same ones used for every previous upgrade. Olympia has broader test coverage across more independent client implementations than any previous ETC hard fork, and the Mordor testnet run provides a real network validation environment before mainnet activation.",
+      "In the unlikely event of a critical issue after activation, the same client teams that have managed every ETC emergency response since 2016 coordinate a patch release. The established stakeholder communication channels, including the ETC Cooperative, client maintainers, and major exchange contacts, are the same ones used for every previous upgrade, and the Mordor run provides a real network validation environment before mainnet activation. One thing is worth stating plainly rather than overclaimed: the clients carrying this work are forks maintained by the specification's own authoring team, so agreement between them shows the rule runs, not that four teams read the specification the same way. Cross-client test vectors are what convert that into independent confirmation.",
   },
 ];
 
@@ -255,7 +252,7 @@ const evmCategories = [
     icon: ShieldCheck,
     eips: ["EIP-6780", "EIP-7910", "EIP-7934", "EIP-7997"],
     description:
-      "SELFDESTRUCT restricted to the deployment transaction, an RLP block size limit, an eth_config RPC method, and a deterministic CREATE2 factory at the same address as every other EVM chain. Makes contract behavior more predictable and reduces attack surface.",
+      "SELFDESTRUCT restricted to the deployment transaction, an RLP block size limit, an eth_config RPC method, and a deterministic factory contract at the same address as every other EVM chain. Makes contract behavior more predictable and reduces attack surface.",
   },
   {
     title: "Cryptographic Precompiles",
@@ -327,11 +324,11 @@ export default function UpgradePage() {
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
-                  <span><span className="font-semibold text-[var(--foreground)]">EIP-1559 fee market:</span> unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury, funding open-source core development without any foundation or donor dependency. Predictable gas pricing, modern tooling compatibility, legacy transactions remain valid indefinitely.</span>
+                  <span><span className="font-semibold text-[var(--foreground)]">EIP-1559 fee market:</span> Ethereum burns its base fee; Ethereum Classic credits its own to the Olympia Sovereignty Vault, funding open-source core development without any foundation or donor dependency. Predictable gas pricing, modern tooling compatibility, legacy transactions remain valid indefinitely.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
-                  <span><span className="font-semibold text-[var(--foreground)]">Protocol treasury:</span> base fee revenue is value set to be destroyed under EIP-1559. Olympia redirects it to a protocol-managed treasury, funding open-source core development, infrastructure, and long-term network security. Block rewards and tips remain completely untouched.</span>
+                  <span><span className="font-semibold text-[var(--foreground)]">Protocol treasury:</span> the Vault sweeps into a Timelock the network governs, funding core development, infrastructure, and long-term network security. Base fee is not the transaction fee — priority-fee tips and ECIP-1017 block rewards go to miners in full.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="mt-0.5 shrink-0 text-[var(--brand-green)]">·</span>
@@ -344,28 +341,13 @@ export default function UpgradePage() {
 
         <SectionDivider />
 
-        {/* Activation Status */}
-        <section className="py-12 px-6">
-          <div className="mx-auto max-w-5xl">
-            <FadeIn>
-              {/* Client-only; the fallback is what a crawler sees. */}
-              <Suspense fallback={
-                <div className="rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-6 text-center">
-                  <p className="text-sm font-medium text-[var(--brand-green)]">
-                    Activation Block Pending
-                  </p>
-                  <p className="mt-1 text-sm text-[var(--text-muted)]">
-                    Olympia is in final testing on the Mordor Testnet, targeted for
-                    mainnet activation in 2027. The activation block is announced
-                    after the Olympia Upgrade core developers call.
-                  </p>
-                </div>
-              }>
-                <CountdownBanner />
-              </Suspense>
-            </FadeIn>
-          </div>
-        </section>
+        {/*
+          An "Activation Status" banner stood here, carrying a countdown that fell back
+          to a target date whenever no activation block was set. Both are timestamps in
+          disguise: a completed upgrade does not count down to itself, and a date read
+          two years later dates the page rather than informing anyone. What the section
+          explains instead is the mechanism, which needs no updating. Do not restore it.
+        */}
 
         {/* What Olympia Brings: ECIP explainer */}
         <section className="section-alt py-16 px-6">
@@ -540,9 +522,9 @@ export default function UpgradePage() {
             <FadeIn>
               <h2 className="text-3xl font-bold tracking-tight">The Olympia Upgrade</h2>
               <div className="mt-4 rounded-xl border border-[var(--border-brand)] bg-[var(--brand-green-subtle)] p-8 space-y-4 text-base leading-relaxed text-[var(--text-secondary)]">
-                <p>Olympia is Ethereum Classic&rsquo;s most significant protocol upgrade. Three changes arrive in a single activation: Glamsterdam EVM alignment, EIP-1559 fee market, and a protocol-managed treasury.</p>
+                <p>Olympia is Ethereum Classic&rsquo;s most significant protocol upgrade. Three changes arrive in a single activation: Glamsterdam EVM alignment, EIP-1559 fee market, and a protocol-governed treasury.</p>
                 <p>The headline change is EVM alignment, closing years of execution-layer divergence from Ethereum in a single fork. Every Solidity compiler version, every deployment tool (Foundry, Hardhat), and every major library (wagmi, viem, ethers.js) works on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim this before Olympia. After Olympia, it can.</p>
-                <p>The EIP-1559 fee market redirects the basefee to a protocol-managed treasury rather than destroying it. Block rewards and tips remain completely untouched and go entirely to miners. Funding proposals are submitted on-chain, subject to the Governor&rsquo;s proposal threshold; core contributors vote, a strict majority carries, and only the Executor can move funds. Every step is transparent and verifiable on-chain.</p>
+                <p>The EIP-1559 fee market credits the base fee to the Olympia Sovereignty Vault instead of burning it, and the Vault sweeps into the Timelock that is the Olympia Treasury. Block rewards and priority-fee tips are untouched and go entirely to miners. Funding proposals are submitted on-chain, subject to the Governor&rsquo;s proposal threshold; core contributors vote, a strict majority carries, and the Governor is the Timelock&rsquo;s sole executor. Every step is verifiable on-chain.</p>
               </div>
             </FadeIn>
           </div>
@@ -555,11 +537,13 @@ export default function UpgradePage() {
             <FadeIn>
               <h2 className="text-3xl font-bold tracking-tight">Olympia Governance Framework</h2>
               <p className="mt-3 text-base text-[var(--text-muted)]">
-                Governor &rarr; Timelock &rarr; Executor &rarr; Treasury is the only path to
-                Treasury funds; no multisig, committee, foundation or legal wrapper can
-                override it. Voting power comes from the CoreNFT: soulbound, one
-                non-delegable vote per core contributor, earned by contribution rather
-                than bought.
+                The Governor is the Timelock&rsquo;s sole executor, and that is the only
+                path to Treasury funds; no multisig, committee, foundation or legal
+                wrapper can override it. There is no separate executor contract — the
+                compliance gate is an override on the Governor&rsquo;s own execution
+                path, above the Timelock, so it screens whole batches. Voting power comes
+                from the CoreNFT: soulbound, one non-delegable vote per core contributor,
+                earned by contribution rather than bought.
               </p>
             </FadeIn>
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
@@ -642,9 +626,14 @@ export default function UpgradePage() {
                           {client.role} · {client.language}
                         </span>
                       </div>
-                      <span className="ml-auto rounded-full border border-[var(--border-default)] px-3 py-1 font-mono text-xs text-[var(--text-muted)]">
-                        Version: {client.version}
-                      </span>
+                      <a
+                        href={client.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-auto rounded-full border border-[var(--border-default)] px-3 py-1 font-mono text-xs text-[var(--text-muted)] transition hover:border-[var(--brand-green)] hover:text-[var(--brand-green)]"
+                      >
+                        Latest release
+                      </a>
                     </div>
 
                     <p className="mb-4 text-sm leading-relaxed text-[var(--text-muted)]">

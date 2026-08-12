@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Olympia Treasury",
     short_name: "Treasury",
     description:
-      "Protocol-controlled vault for Ethereum Classic basefee revenue",
+      "Live monitoring of Ethereum Classic's base-fee revenue, from the Vault that receives it to the Treasury that holds it",
     start_url: "/",
     display: "standalone",
     background_color: "#0a0f10",
