@@ -411,6 +411,27 @@ path in a tracked file is a leak and is useless off this machine.
 - Use a color outside the Olympia palette
 - Use `any` without justification, or silence a type error with `@ts-ignore`
 - Put an address into `lib/contracts.json`, or invent one anywhere
+- Re-add `.github/dependabot.yml` — see below
+
+## Dependency updates are not automated here
+
+**`.github/dependabot.yml` was removed by operator decision on 2026-08-12**, together
+with the five open version-bump PRs and their branches. **Its absence is a decision,
+not a gap: do not re-add it as a conformance fix.** A tool or a checklist that flags
+the missing file is reporting what it was told to look for, not a defect.
+
+What that leaves, stated so nobody has to re-derive it:
+
+| Channel | State |
+|---|---|
+| Version updates (scheduled bumps, the file above) | **off** |
+| Security updates (automated fix PRs) | **off** — already disabled before this |
+| Dependabot alerts (CVE notification, opens nothing) | **on** |
+
+Every dependency change is therefore a deliberate, manual act. Route it to the
+`sentinel` agent, and note that removing the config also removed this repo's
+7-day/21-day cooldown gate, so a bump taken here gets the release-age check from the
+machine-wide pnpm setting alone rather than from two independent places.
 
 ## Upstream sources of truth
 

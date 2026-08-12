@@ -288,6 +288,16 @@ Do not modify without an explicit request:
 - `public/logo.svg`, `public/og-image.png`, `app/icon.svg`, `app/favicon.ico`
 - `tsconfig.json`, `next.config.ts`
 
+## Dependency updates are not automated here
+
+**`.github/dependabot.yml` was removed by operator decision on 2026-08-12**, together
+with the five open version-bump PRs and their branches. **Its absence is a decision,
+not a gap: do not re-add it as a conformance fix.** Version updates are off, automated
+security-fix PRs are off, and Dependabot alerts remain on — alerts notify and open
+nothing. Every dependency change is a deliberate, manual act, and removing the config
+also removed this repo's cooldown gate, so the release-age check comes from the
+machine-wide package-manager setting alone.
+
 ## Never
 
 - Commit `.env` files, credentials, or anything under `.local/`
@@ -295,3 +305,4 @@ Do not modify without an explicit request:
 - Use `any` without justification, or silence a type error with `@ts-ignore`
 - Use a color outside the Olympia palette
 - Put an address into `lib/contracts.json`, or invent one anywhere
+- Re-add `.github/dependabot.yml` — see above
