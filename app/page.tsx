@@ -5,6 +5,7 @@ import { NavHeaderFallback } from "@/components/sections/NavHeaderFallback";
 import { TreasuryHeroHeader } from "@/components/sections/TreasuryHeroHeader";
 import { DashboardHero } from "@/components/sections/DashboardHero";
 import { BalanceChart } from "@/components/sections/BalanceChart";
+import { VaultToTreasurySection } from "@/components/sections/VaultToTreasurySection";
 import { TreasuryFundingSection } from "@/components/sections/TreasuryFundingSection";
 import { TransactionsSection } from "@/components/sections/TransactionsSection";
 import { AboutSection } from "@/components/sections/AboutSection";
@@ -46,14 +47,17 @@ export default async function Home() {
           <Suspense fallback={
             <div className="px-6 py-8">
               <div className="mx-auto max-w-6xl">
-                <h2 className="mb-6 text-lg font-semibold">Treasury at a Glance</h2>
+                <h2 className="mb-6 text-lg font-semibold">Vault and Treasury at a Glance</h2>
                 <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 text-sm text-[var(--text-muted)]">
-                  <li>Balance: total ETC held by the vault</li>
-                  <li>BaseFee: the protocol-directed source, activating with Olympia</li>
-                  <li>Mined to the Treasury: miners choosing the vault as coinbase</li>
-                  <li>Donations: transfers sent from any address</li>
-                  <li>Withdrawals: governance-approved OFPs paid out</li>
-                  <li>Transactions: every inflow and outflow, on-chain</li>
+                  <li>In the Vault: arrived and not yet swept</li>
+                  <li>In the Treasury: funds under governance control</li>
+                  <li>Last sweep: when the Vault was last emptied into the Treasury</li>
+                  <li>Total received: lifetime inflow to the Vault, from every source</li>
+                  <li>Mined to the Vault: miners choosing it as coinbase</li>
+                  <li>Contributions: transfers sent from any address</li>
+                  <li>Swept to the Treasury: the one route out of the Vault</li>
+                  <li>Disbursed: paid out by executed proposals</li>
+                  <li>Transactions: every movement at both addresses</li>
                 </ul>
               </div>
             </div>
@@ -67,39 +71,33 @@ export default async function Home() {
               <div className="mx-auto max-w-6xl">
                 <h2 className="mb-6 text-lg font-semibold">Balance History</h2>
                 <p className="text-sm text-[var(--text-muted)]">
-                  Treasury balance history: cumulative ETC inflows to the Olympia protocol vault over time.
+                  Both balances over time: base-fee revenue arriving in the Olympia
+                  Sovereignty Vault, and the sweeps that move it to the Treasury.
                 </p>
               </div>
             </div>
           }>
             <BalanceChart />
           </Suspense>
+          <VaultToTreasurySection />
           <TreasuryFundingSection />
           <Suspense fallback={
             <div className="px-6 py-8">
               <div className="mx-auto max-w-6xl">
                 <h2 className="mb-6 text-lg font-semibold">Recent Transactions</h2>
                 <p className="text-sm text-[var(--text-muted)]">
-                  Recent treasury transactions: governance-approved withdrawals and protocol inflows.
+                  Every movement at both addresses: contributions in, sweeps from the
+                  Vault to the Treasury, and disbursements executed by governance.
                 </p>
               </div>
             </div>
           }>
             <TransactionsSection />
           </Suspense>
-          <Suspense fallback={
-            <div className="px-6 py-8">
-              <div className="mx-auto max-w-6xl">
-                <h2 className="mb-4 text-lg font-semibold">About the Treasury</h2>
-                <p className="text-sm text-[var(--text-muted)]">
-                  How funds flow into the vault, how the CoreNFT that governs it
-                  works, the staged deployment, the core invariants, and the deployed contracts.
-                </p>
-              </div>
-            </div>
-          }>
-            <AboutSection />
-          </Suspense>
+          {/* No Suspense: with no address to read, this section takes no chain
+              parameter, so it needs no useSearchParams(). A crawler gets the contracts
+              rather than a fallback carrying only the heading. */}
+          <AboutSection />
         </main>
       </HydrationBoundary>
       <FooterSection />

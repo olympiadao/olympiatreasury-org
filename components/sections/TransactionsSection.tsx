@@ -3,6 +3,19 @@
 import { ArrowDownLeft, ArrowUpRight, ExternalLink } from "lucide-react";
 import { useTreasuryTransactions } from "@/lib/hooks/use-treasury";
 import { useChainConfig } from "@/lib/hooks/use-chain-config";
+import type { TransactionKind } from "@/lib/treasury";
+
+/**
+ * A row's label comes from which monitored address it touched, because the same
+ * movement means different things at each end. Value leaves the Vault only by sweep,
+ * and leaves the Treasury only by an executed proposal.
+ */
+const kindLabel: Record<TransactionKind, string> = {
+  contribution: "Contribution",
+  sweep: "Sweep",
+  disbursement: "Disbursement",
+  transfer: "Transfer",
+};
 
 function truncateHash(hash: string): string {
   return `${hash.slice(0, 10)}\u2026${hash.slice(-6)}`;
@@ -31,15 +44,26 @@ export function TransactionsSection() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex items-center justify-between">
           <h2 id="transactions-heading" className="text-lg font-semibold">Recent Transactions</h2>
-          <a
-            href={`${config.explorer}/address/${config.treasury}?tab=txs`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
-          >
-            View all on Explorer
-            <ExternalLink size={12} />
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href={`${config.explorer}/address/${config.vault}?tab=txs`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+            >
+              Vault on Explorer
+              <ExternalLink size={12} />
+            </a>
+            <a
+              href={`${config.explorer}/address/${config.treasury}?tab=txs`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--brand-green)]"
+            >
+              Treasury on Explorer
+              <ExternalLink size={12} />
+            </a>
+          </div>
         </div>
 
         <div
@@ -67,6 +91,7 @@ export function TransactionsSection() {
                 <thead>
                   <tr className="border-b border-[var(--border-default)] text-left text-xs font-medium uppercase tracking-wider text-[var(--text-subtle)]">
                     <th className="px-5 py-3">Type</th>
+                    <th className="px-5 py-3">Account</th>
                     <th className="px-5 py-3">Hash</th>
                     <th className="px-5 py-3">From / To</th>
                     <th className="px-5 py-3 text-right">Amount</th>
@@ -81,24 +106,22 @@ export function TransactionsSection() {
                       className="border-b border-[var(--border-subtle)] transition-colors hover:bg-[var(--bg-elevated)]"
                     >
                       <td className="px-5 py-3">
-                        <div className="flex flex-col gap-0.5">
-                          {tx.type === "inflow" ? (
-                            <span className="inline-flex items-center gap-1 text-[var(--brand-green)]">
-                              <ArrowDownLeft size={14} />
-                              Donation
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-[var(--text-muted)]">
-                              <ArrowUpRight size={14} />
-                              Withdrawal
-                            </span>
-                          )}
-                          {tx.governance && (
-                            <span className="inline-flex rounded-full border border-[var(--border-default)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">
-                              OFP
-                            </span>
-                          )}
-                        </div>
+                        {tx.direction === "in" ? (
+                          <span className="inline-flex items-center gap-1 text-[var(--brand-green)]">
+                            <ArrowDownLeft size={14} />
+                            {kindLabel[tx.kind]}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[var(--text-muted)]">
+                            <ArrowUpRight size={14} />
+                            {kindLabel[tx.kind]}
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-5 py-3">
+                        <span className="inline-flex rounded-full border border-[var(--border-default)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">
+                          {tx.account === "vault" ? "Vault" : "Treasury"}
+                        </span>
                       </td>
                       <td className="px-5 py-3">
                         <a
@@ -112,7 +135,7 @@ export function TransactionsSection() {
                       </td>
                       <td className="px-5 py-3">
                         <span className="font-mono text-xs text-[var(--text-muted)]">
-                          {tx.type === "inflow"
+                          {tx.direction === "in"
                             ? truncateAddress(tx.from)
                             : truncateAddress(tx.to || "")}
                         </span>
@@ -120,12 +143,12 @@ export function TransactionsSection() {
                       <td className="px-5 py-3 text-right">
                         <span
                           className={`font-mono text-xs font-medium ${
-                            tx.type === "inflow"
+                            tx.direction === "in"
                               ? "text-[var(--brand-green)]"
                               : "text-[var(--text-muted)]"
                           }`}
                         >
-                          {tx.type === "inflow" ? "+" : "\u2212"}
+                          {tx.direction === "in" ? "+" : "\u2212"}
                           {parseFloat(tx.value).toFixed(4)} {config.symbol}
                         </span>
                       </td>

@@ -8,12 +8,15 @@ import { ChainSelector } from "@/components/chain-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useChainConfig } from "@/lib/hooks/use-chain-config";
 import { navLinks } from "@/lib/nav-links";
+import architecture from "@/lib/contracts.json";
 
 export function NavHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const config = useChainConfig();
 
-  const badgeLabel = `Demo v0.3 \u00b7 ${config.name}`;
+  // Read the release from contracts.json rather than repeating it here: a second copy
+  // goes stale silently, and this is the file the contract set is described in.
+  const badgeLabel = `${architecture.release} \u00b7 ${config.name}`;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border-default)] bg-[var(--bg-overlay)] backdrop-blur-sm">

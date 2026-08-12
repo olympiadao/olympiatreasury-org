@@ -11,8 +11,6 @@ import {
   Eye,
   ShieldCheck,
   Server,
-  CircleCheck,
-  Clock,
   ArrowRight,
   Pickaxe,
   Heart,
@@ -21,31 +19,33 @@ import {
   UserCheck,
   LogOut,
 } from "lucide-react";
-import { AboutContractsClient } from "./AboutContractsClient";
+import { AboutContracts } from "./AboutContracts";
 
 export function AboutSection() {
   return (
     <section id="about" aria-labelledby="about-heading" className="px-6 py-8">
       <div className="mx-auto max-w-6xl space-y-4">
-        <h2 id="about-heading" className="text-lg font-semibold">About the Treasury</h2>
+        <h2 id="about-heading" className="text-lg font-semibold">
+          About the Vault and the Treasury
+        </h2>
 
         <CollapsibleCard title="How Funds Flow" defaultOpen>
           <FundFlow />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Staged Deployment" defaultOpen>
-          <StagedDeployment />
+        <CollapsibleCard title="Deployment Order" defaultOpen>
+          <DeploymentOrder />
         </CollapsibleCard>
 
         <CollapsibleCard title="Core Contributors: the CoreNFT" defaultOpen>
           <CoreContributors />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Community Funding" defaultOpen>
+        <CollapsibleCard title="Contributing Directly" defaultOpen>
           <CommunityFunding />
         </CollapsibleCard>
 
-        <CollapsibleCard title="Governance Stages" defaultOpen>
+        <CollapsibleCard title="The Five Stages" defaultOpen>
           <Stages />
         </CollapsibleCard>
 
@@ -58,7 +58,7 @@ export function AboutSection() {
         </CollapsibleCard>
 
         <CollapsibleCard title="Contracts" defaultOpen>
-          <AboutContractsClient />
+          <AboutContracts />
         </CollapsibleCard>
       </div>
     </section>
@@ -97,11 +97,31 @@ function CollapsibleCard({
 
 /* ---- Fund Flow ---- */
 const flowSteps = [
-  { icon: Flame, title: "Base Fee Collected", desc: "A transaction pays a base fee plus a priority-fee tip. Ethereum burns the base fee; Olympia credits it to the Treasury at block finalization instead. Only the burned half moves. Tips and ECIP-1017 block rewards go to miners in full." },
-  { icon: Landmark, title: "A Floor Under Revenue", desc: "The basefee never falls below 1 gwei. Without that floor, sustained low utilization would decay it toward zero and eliminate Treasury revenue entirely." },
-  { icon: Heart, title: "Voluntary Inflows", desc: "The Treasury accepts transfers from any address and records each one on-chain. Protocols may opt in to forward a share of their fees the same way." },
-  { icon: FileCheck, title: "Proposals Submitted", desc: "An OFP names recipient, amount and metadata, and states whether it is retrospective or prospective. Submission is permissionless, gated by the Governor's proposal threshold measured against the author." },
-  { icon: Users, title: "Governance Approves", desc: "Core contributors vote. A strict majority of For over Against carries, subject to quorum, and only the Executor can then move funds." },
+  {
+    icon: Flame,
+    title: "Base Fee Credited",
+    desc: "A transaction pays a base fee plus a priority-fee tip. On Ethereum the base fee is destroyed — the burned half of what every transaction pays. Ethereum Classic has no base fee at all until ECIP-1111 introduces one, and credits it to the Vault at block finalization rather than burning it. Tips and ECIP-1017 block rewards go to miners in full.",
+  },
+  {
+    icon: Landmark,
+    title: "A Floor Under Revenue",
+    desc: "The base fee never falls below 1 gwei. Without that floor, sustained low utilization would decay it toward zero and eliminate the revenue entirely.",
+  },
+  {
+    icon: ArrowRight,
+    title: "Swept to the Treasury",
+    desc: "sweep() moves the Vault's whole balance to the Treasury. Anyone may call it and it costs the caller gas; it is safe because the destination is immutable, so a caller chooses only when the balance moves, never where.",
+  },
+  {
+    icon: FileCheck,
+    title: "Proposals Submitted",
+    desc: "An OFP names recipient, amount and metadata, and states whether it is retrospective or prospective. Submission is permissionless and carries no bond, gated only by the Governor's proposal threshold measured against the author.",
+  },
+  {
+    icon: Users,
+    title: "Governance Approves",
+    desc: "Core contributors vote. A strict majority of For over Against carries, subject to quorum. The Governor is the Timelock's sole executor, and every execution passes its sanctions gate before the Timelock pays anyone.",
+  },
 ];
 
 function FundFlow() {
@@ -114,7 +134,9 @@ function FundFlow() {
           </div>
           <div>
             <p className="text-xs font-semibold">{s.title}</p>
-            <p className="mt-0.5 text-xs leading-relaxed text-[var(--text-muted)]">{s.desc}</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-[var(--text-muted)]">
+              {s.desc}
+            </p>
           </div>
         </div>
       ))}
@@ -122,43 +144,50 @@ function FundFlow() {
   );
 }
 
-/* ---- Staged Deployment ---- */
-function StagedDeployment() {
+/* ---- Deployment order ---- */
+function DeploymentOrder() {
   return (
     <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
       <p>
-        The Treasury deploys at the Olympia hard fork. The governance suite that spends
-        from it deploys later, once audited, against addresses reserved before the
-        Treasury exists.
+        <span className="font-semibold text-[var(--text-primary)]">
+          Nothing is predicted.
+        </span>{" "}
+        No address is computed in advance from a salt or a deployer nonce, and no client
+        recomputes one — each hardcodes the Vault&rsquo;s real deployed address, published
+        together with the network it is on. Mainnet and Mordor are independent values.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="rounded-lg border border-[var(--border-subtle)] p-3">
           <p className="text-xs font-semibold text-[var(--text-primary)]">
-            Stage 1: the fork
+            Dependency order, not a schedule
           </p>
           <p className="mt-1">
-            Only the Treasury deploys. Basefee begins accumulating immediately, and
-            nothing can spend it: no contract yet exists at the Executor&rsquo;s address,
-            so the lock is enforced by the absence of a callable counterpart rather than
-            by any access-control decision.
+            The Timelock deploys first, because CoreNFT holds its address as an immutable
+            constructor argument and cannot be built before it exists. CoreNFT, then the
+            Governor, then the Timelock&rsquo;s role grants, then the Vault — whose
+            immutable destination must be the Timelock&rsquo;s real address. The sanctions
+            oracle and the OFP Registry attach through Timelock-gated setters and are a
+            constructor argument to nothing.
           </p>
         </div>
         <div className="rounded-lg border border-[var(--border-subtle)] p-3">
           <p className="text-xs font-semibold text-[var(--text-primary)]">
-            Stage 2: governance
+            The fork commits to code that already exists
           </p>
           <p className="mt-1">
-            Timelock, CoreNFT, Governor, Executor and the OFP Registry deploy together,
-            then the sanctions oracle is attached. There is no handover: the
-            Executor&rsquo;s address was fixed in the Treasury&rsquo;s constructor at
-            Stage 1, so deploying it populates an address the Treasury already trusts.
+            The activation fork is the last step. Everything the hardcoded address
+            transitively commits to — the Vault, the Timelock it forwards to, the Governor
+            and CoreNFT that spend from it — is deployed, audited and readable on-chain
+            before the block that starts crediting it. The alternative asks the network to
+            trust a future deployment rather than inspect a present one.
           </p>
         </div>
       </div>
       <p>
-        The gap between the two is the audit window for the governance layer, and the
-        reason the rollout is staged at all. It is a deliberate design property, not a
-        degraded mode.
+        No account holds an admin role once the role grants complete, and the Timelock
+        administers its own roles from that point on. The Governor holds{" "}
+        <code className="font-mono">EXECUTOR_ROLE</code> and nothing else does, which is
+        what makes the sanctions gate binding rather than advisory.
       </p>
     </div>
   );
@@ -166,10 +195,26 @@ function StagedDeployment() {
 
 /* ---- Core contributors ---- */
 const contributorFacts = [
-  { icon: Award, title: "Earned, never bought", desc: "Minted on proof of substantive, net-positive contribution to Ethereum Classic, and on nothing else. No amount of capital admits anyone." },
-  { icon: UserCheck, title: "One contributor, one vote", desc: "Soulbound and non-transferable, with delegation locked to the holder. A vote cannot be sold, lent, or leased." },
-  { icon: Vote, title: "Admitted by the DAO", desc: "One governance proposal per admission, with the evidence in its metadata. No minter role, no admissions committee, no unilateral account." },
-  { icon: LogOut, title: "Revocable and resignable", desc: "A contributor may burn their own token at any time, and the DAO may revoke by proposal on the same footing as admission. Re-admission is possible, so exit is not exile." },
+  {
+    icon: Award,
+    title: "Earned, never bought",
+    desc: "Minted on proof of substantive, net-positive contribution to Ethereum Classic, and on nothing else. No amount of capital admits anyone, and no identity verification is required or may be imposed.",
+  },
+  {
+    icon: UserCheck,
+    title: "One contributor, one vote",
+    desc: "Soulbound and non-transferable, with delegation locked to the holder. A vote cannot be sold, lent, or leased.",
+  },
+  {
+    icon: Vote,
+    title: "Admitted by the DAO",
+    desc: "One governance proposal per admission, with the evidence in its metadata. No minter role, no admissions committee, no unilateral account.",
+  },
+  {
+    icon: LogOut,
+    title: "Revocable and resignable",
+    desc: "A contributor may burn their own token at any time, and the DAO may revoke by proposal on the same footing as admission. Re-admission is possible, so exit is not exile.",
+  },
 ];
 
 function CoreContributors() {
@@ -177,8 +222,8 @@ function CoreContributors() {
     <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
       <p>
         Voting power comes from the CoreNFT and from nothing else. There is no fungible,
-        transferable, purchasable token. There is nothing to buy, sell, lend, pool or accumulate,
-        and therefore nothing on which a market in votes could form.
+        transferable, purchasable token. There is nothing to buy, sell, lend, pool or
+        accumulate, and therefore nothing on which a market in votes could form.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {contributorFacts.map((f, i) => (
@@ -187,7 +232,9 @@ function CoreContributors() {
               <f.icon size={16} aria-hidden="true" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-[var(--text-primary)]">{f.title}</p>
+              <p className="text-xs font-semibold text-[var(--text-primary)]">
+                {f.title}
+              </p>
               <p className="mt-0.5">{f.desc}</p>
             </div>
           </div>
@@ -200,27 +247,23 @@ function CoreContributors() {
         disqualifies rather than averaging out.
       </p>
       <p>
-        <span className="font-semibold text-[var(--text-primary)]">
-          Access to governance is gated; influence over it is not.
-        </span>{" "}
-        Admission is restricted because the vote spends protocol revenue. The futarchy
-        markets are open to any public participant holding ETC or Classic USD, with no
-        application, and core contributors read those public prices as input. Who decides is
-        restricted; who informs the decision is not.
+        Membership grows by proposal and supply is unbounded, so the electorate is open
+        to earn and closed to buy — never a fixed council. Quorum tracks admissions
+        automatically, because it is measured as a fraction of the supply at each
+        proposal&rsquo;s snapshot.
       </p>
     </div>
   );
 }
 
-/* ---- Community Funding ---- */
+/* ---- Contributing directly ---- */
 function CommunityFunding() {
   return (
     <div className="space-y-3 text-xs leading-relaxed text-[var(--text-muted)]">
       <p>
-        Basefee redirection is the protocol-defined funding source, and it begins at the
-        Olympia hard fork. Until then the Treasury relies on voluntary support. Neither
-        route below is a protocol mechanism. Both are ordinary transfers that any
-        address can make, and the Treasury records each one on-chain.
+        Base-fee redirection is the protocol-defined funding source. Neither route below
+        is a protocol mechanism: both are ordinary transfers any address can make, and
+        the chain records each one.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="flex items-start gap-3">
@@ -228,10 +271,12 @@ function CommunityFunding() {
             <Pickaxe size={16} aria-hidden="true" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-[var(--text-primary)]">Mine to the Treasury</p>
+            <p className="text-xs font-semibold text-[var(--text-primary)]">
+              Mine to the Vault
+            </p>
             <p className="mt-0.5">
-              A pool or solo miner can set the Treasury as their coinbase address, sending
-              their own block rewards to it. This is a choice an operator makes, not
+              A pool or solo miner can set the Vault as their coinbase address, sending
+              their own block rewards to it. That is a choice an operator makes, not
               something the protocol does. No ECIP directs mining revenue here.
             </p>
           </div>
@@ -241,19 +286,22 @@ function CommunityFunding() {
             <Heart size={16} aria-hidden="true" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-[var(--text-primary)]">Send a Donation</p>
+            <p className="text-xs font-semibold text-[var(--text-primary)]">
+              Contribute directly
+            </p>
             <p className="mt-0.5">
-              Anyone can send ETC directly to the treasury address. Every donation is recorded on-chain
-              and visible in the transactions table above. All withdrawals require governance approval.
+              The Vault accepts incoming transfers unconditionally, and every one is
+              visible in the transactions table above. Whatever arrives leaves by the
+              same single route as base-fee revenue: a sweep to the Treasury, and then
+              only a passed proposal.
             </p>
           </div>
         </div>
       </div>
       <p>
-        After activation, basefee revenue accrues automatically from network usage rather
-        than from any donor, and voluntary contributions remain welcome alongside it.
-        Smart contracts can opt in on the same terms: a protocol forwarding a share of
-        its fees on-chain gains no special claim over the funds it sends.
+        Smart contracts can opt in on the same terms. A protocol forwarding a share of
+        its fees on-chain gains no special claim over the funds it sends, and the Vault
+        keeps no record distinguishing them — it holds no internal accounting at all.
       </p>
     </div>
   );
@@ -261,11 +309,31 @@ function CommunityFunding() {
 
 /* ---- Invariants ---- */
 const invariants = [
-  { icon: Ban, title: "No Minting", desc: "Cannot mint ETC; it only holds received inflows." },
-  { icon: Lock, title: "Immutable Code", desc: "No proxy patterns, no admin methods." },
-  { icon: Shield, title: "Protocol-Controlled", desc: "Owned by protocol rules, not a multisig." },
-  { icon: Minimize2, title: "Minimal Interface", desc: "Accepts deposits, with a single withdrawal entry point callable only by the Executor. It performs no deduplication and cannot. Replay protection lives upstream, in the Governor and Timelock." },
-  { icon: Eye, title: "Fully Transparent", desc: "All inflows/outflows visible on-chain." },
+  {
+    icon: Ban,
+    title: "No Minting",
+    desc: "Neither contract can mint ETC. Each holds only what it receives.",
+  },
+  {
+    icon: Lock,
+    title: "Immutable Vault",
+    desc: "No proxy, no delegatecall, no selfdestruct, no admin. Deployed exactly once.",
+  },
+  {
+    icon: Shield,
+    title: "No Authorization State",
+    desc: "The Vault has no owner, role, guardian, or pause flag, so no sequence of calls can change who may do what.",
+  },
+  {
+    icon: Minimize2,
+    title: "One Way Out",
+    desc: "Balance leaves the Vault only through sweep(), and sweep() can send only to the immutable destination. Both are provable by reading thirty lines.",
+  },
+  {
+    icon: Eye,
+    title: "No Internal Accounting",
+    desc: "The Vault keeps no deposit counter. The consensus credit runs no EVM code, so a contract releasing funds against an internal total would release nothing.",
+  },
 ];
 
 function Invariants() {
@@ -273,7 +341,11 @@ function Invariants() {
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
       {invariants.map((inv, i) => (
         <div key={i} className="flex items-start gap-2">
-          <inv.icon size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
+          <inv.icon
+            size={16}
+            aria-hidden="true"
+            className="mt-0.5 shrink-0 text-[var(--brand-green)]"
+          />
           <div>
             <p className="text-xs font-semibold">{inv.title}</p>
             <p className="mt-0.5 text-xs text-[var(--text-muted)]">{inv.desc}</p>
@@ -286,10 +358,26 @@ function Invariants() {
 
 /* ---- Security ---- */
 const secLayers = [
-  { icon: ShieldCheck, title: "Protocol Consensus", desc: "Client implementations enforce treasury rules at the protocol level." },
-  { icon: Lock, title: "Contract Immutability", desc: "No upgradeable proxy, no admin methods." },
-  { icon: Server, title: "Sanctions Defense", desc: "Every Olympia contract that releases value screens the recipient immediately before release, and fails closed if the oracle is unset. For Treasury funds the binding checkpoint is the Executor." },
-  { icon: Vote, title: "Proposal Integrity", desc: "Enforced by OpenZeppelin Governor 5.x, not by the vault. The vault checks only its caller." },
+  {
+    icon: ShieldCheck,
+    title: "Protocol Consensus",
+    desc: "Every client credits the base fee to the same hardcoded address at block finalization. Any deviation forks.",
+  },
+  {
+    icon: Lock,
+    title: "A Permanent Commitment, Minimized",
+    desc: "What the fork makes unchangeable is only that revenue lands in the Timelock. Which Governor spends it, under which rules, stays replaceable.",
+  },
+  {
+    icon: Server,
+    title: "Sanctions Screening",
+    desc: "The Governor screens every externally-directed target immediately before execution and fails closed if the oracle is unset. It sits above the Timelock, so it sees whole batches rather than one recipient at a time.",
+  },
+  {
+    icon: Vote,
+    title: "Proposal Integrity",
+    desc: "Enforced by OpenZeppelin Governor 5.x, whose proposal identifier is the hash of targets, values, calldatas and description. Neither the Vault nor the Timelock validates a proposal.",
+  },
 ];
 
 function Security() {
@@ -297,7 +385,11 @@ function Security() {
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {secLayers.map((l, i) => (
         <div key={i} className="flex items-start gap-2">
-          <l.icon size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--brand-green)]" />
+          <l.icon
+            size={16}
+            aria-hidden="true"
+            className="mt-0.5 shrink-0 text-[var(--brand-green)]"
+          />
           <div>
             <p className="text-xs font-semibold">{l.title}</p>
             <p className="mt-0.5 text-xs text-[var(--text-muted)]">{l.desc}</p>
@@ -308,28 +400,58 @@ function Security() {
   );
 }
 
-/* ---- Stages ---- */
+/* ---- The five stages ---- */
+/*
+ * Stage numbers describe how the system is built, which is a structural fact and stays.
+ * What was here before also carried an "active / next / planned" status per stage,
+ * which is a progress bar in disguise: it dates the page, and every reading of it goes
+ * stale without anyone editing the file. The stages keep their order and lose their
+ * position marker.
+ */
 const stages = [
-  { n: 1, title: "Consensus Upgrades", status: "active" as const, desc: "Hard fork; Treasury deploys" },
-  { n: 2, title: "Core Governance", status: "next" as const, desc: "Governance suite deploys" },
-  { n: 3, title: "Prediction Markets", status: "planned" as const, desc: "Futarchy signal layer" },
-  { n: 4, title: "Treasury Distribution", status: "planned" as const, desc: "Smoothing at the contract layer" },
-  { n: 5, title: "Protocol Integration", status: "planned" as const, desc: "Second hard fork; curve hardened" },
+  {
+    n: 1,
+    title: "Consensus Upgrades",
+    ecips: "1111, 1112, 1121, 1122",
+    desc: "Hard fork. The Vault begins receiving base fee and sweeping it to the Timelock.",
+  },
+  {
+    n: 2,
+    title: "Core Governance",
+    ecips: "1113, 1114, 1119",
+    desc: "Governance goes live: binding the sanctions oracle and the OFP Registry, after which the DAO can spend.",
+  },
+  {
+    n: 3,
+    title: "Prediction Markets",
+    ecips: "1117, 1118",
+    desc: "Contract deployment, seeded by an OFP the Governor passes.",
+  },
+  {
+    n: 4,
+    title: "Treasury Distribution",
+    ecips: "1115",
+    desc: "Smoothing runs as a governance-configured experiment on Treasury-held revenue.",
+  },
+  {
+    n: 5,
+    title: "Protocol Integration",
+    ecips: "1116",
+    desc: "A second, separate hard fork embeds the demonstrated curve into block finalization.",
+  },
 ];
-
-const stageConfig = {
-  active: { icon: CircleCheck, color: "text-[var(--brand-green)]" },
-  next: { icon: ArrowRight, color: "text-[var(--text-secondary)]" },
-  planned: { icon: Clock, color: "text-[var(--text-subtle)]" },
-};
 
 function Stages() {
   return (
-    <div className="flex flex-wrap gap-3">
-      {stages.map((s) => {
-        const cfg = stageConfig[s.status];
-        const StatusIcon = cfg.icon;
-        return (
+    <div className="space-y-3">
+      <p className="text-xs leading-relaxed text-[var(--text-muted)]">
+        Stages 1 and 5 are hard forks; stages 2, 3 and 4 are not — they are contract
+        deployments and governance actions on a chain whose consensus rules are already
+        settled, and none can cause a client to diverge. Each stage depends only on the
+        stages before it.
+      </p>
+      <div className="flex flex-wrap gap-3">
+        {stages.map((s) => (
           <div
             key={s.n}
             className="flex items-center gap-2 rounded-lg border border-[var(--border-default)] px-3 py-2"
@@ -338,12 +460,13 @@ function Stages() {
               {s.n}
             </span>
             <span className="text-xs font-semibold">{s.title}</span>
-            <StatusIcon size={12} aria-hidden="true" className={cfg.color} />
+            <span className="font-mono text-[10px] text-[var(--brand-green)]">
+              ECIP-{s.ecips}
+            </span>
             <span className="text-[10px] text-[var(--text-subtle)]">{s.desc}</span>
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }
-

@@ -1,12 +1,12 @@
 import { ExternalLink } from "lucide-react";
-import { CHAIN_CONFIG } from "@/lib/config";
+import { CHAIN_CONFIG, DEFAULT_CHAIN_ID } from "@/lib/config";
 
 /**
- * Mordor is where the contract this dashboard reads is deployed; ECIP-1112 publishes
- * no mainnet address. Hardcoded rather than reading ?chain= so this stays
- * server-rendered.
+ * Reads the default chain rather than `?chain=`, so this stays server-rendered and a
+ * crawler receives the H1, the subtitle and both calls to action. The live sections
+ * below are the ones that follow the chain selector.
  */
-const DEMO_CHAIN = CHAIN_CONFIG[63];
+const DEFAULT_CHAIN = CHAIN_CONFIG[DEFAULT_CHAIN_ID];
 
 export function TreasuryHeroHeader() {
   return (
@@ -18,20 +18,29 @@ export function TreasuryHeroHeader() {
               Olympia{" "}
               <span className="text-[var(--brand-green)]">Treasury</span>
             </h1>
-            <p className="mt-2 max-w-lg text-sm text-[var(--text-muted)]">
-              Live monitoring of the core development vault. Base fee revenue funds
-              the treasury.
+            <p className="mt-2 max-w-xl text-sm text-[var(--text-muted)]">
+              Live monitoring of Ethereum Classic&rsquo;s base-fee revenue, from the
+              Sovereignty Vault that receives it to the Treasury that holds it.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <a
-              href={`${DEMO_CHAIN.explorer}/address/${DEMO_CHAIN.treasury}`}
+              href={`${DEFAULT_CHAIN.explorer}/address/${DEFAULT_CHAIN.vault}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-green)] px-5 py-2.5 text-sm font-semibold text-[var(--background)] transition-all duration-200 hover:brightness-110"
             >
-              Explorer · Mordor
+              Vault on the explorer
+              <ExternalLink size={14} />
+            </a>
+            <a
+              href={`${DEFAULT_CHAIN.explorer}/address/${DEFAULT_CHAIN.treasury}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border-default)] px-5 py-2.5 text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:border-[var(--brand-green)] hover:text-[var(--brand-green)]"
+            >
+              Treasury on the explorer
               <ExternalLink size={14} />
             </a>
             <a

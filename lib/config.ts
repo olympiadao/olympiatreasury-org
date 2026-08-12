@@ -1,13 +1,25 @@
 import { defineChain } from "viem";
-import deployment from "./contracts.json";
 
 export type SupportedChainId = 61 | 63;
 export const DEFAULT_CHAIN_ID: SupportedChainId = 63;
 
+/**
+ * The two addresses this dashboard monitors, per network.
+ *
+ * `vault` is the base-fee destination — where consensus credits land and where
+ * `sweep()` empties from. `treasury` is the TimelockController it sweeps into, which
+ * holds the funds while governance decides.
+ *
+ * They live here rather than in `contracts.json` because an address is a property of
+ * one network, not of the architecture. ECIP-1112 makes Mainnet's and Mordor's
+ * independent published values and forbids deriving either from a salt or a deployer
+ * nonce, so nothing here may be computed and nothing may be assumed equal across
+ * chains. `contracts.json` carries the architecture and no addresses at all.
+ */
 export const CHAIN_CONFIG = {
   63: {
-    treasury: deployment.contracts.treasury.address as `0x${string}`,
-    executor: deployment.contracts.executor.address as `0x${string}`,
+    vault: "0x60d0A7394f9Cd5C469f9F5Ec4F9C803F5294d79b" as `0x${string}`,
+    treasury: "0x3d19fEfB093Abad60421B89CF48f4569aaae39b6" as `0x${string}`,
     explorer: "https://etc-mordor.blockscout.com",
     api: "https://etc-mordor.blockscout.com/api/v2",
     eraLength: 2_000_000,
@@ -16,8 +28,8 @@ export const CHAIN_CONFIG = {
     testnet: true,
   },
   61: {
-    treasury: deployment.contracts.treasury.address as `0x${string}`,
-    executor: deployment.contracts.executor.address as `0x${string}`,
+    vault: "0x60d0A7394f9Cd5C469f9F5Ec4F9C803F5294d79b" as `0x${string}`,
+    treasury: "0x3d19fEfB093Abad60421B89CF48f4569aaae39b6" as `0x${string}`,
     explorer: "https://etc.blockscout.com",
     api: "https://etc.blockscout.com/api/v2",
     eraLength: 5_000_000,
@@ -35,11 +47,7 @@ export function getChainConfig(chainId: number): ChainConfig {
   return config;
 }
 
-// Backward compat
-export const TREASURY_ADDRESS = CHAIN_CONFIG[63].treasury;
 export const MORDOR_EXPLORER = CHAIN_CONFIG[63].explorer;
-export const MORDOR_API = CHAIN_CONFIG[63].api;
-export const ERA_LENGTH = CHAIN_CONFIG[63].eraLength;
 
 export const mordor = defineChain({
   id: 63,
