@@ -1,123 +1,184 @@
-# Olympia Treasury — Sovereignty Vault for Ethereum Classic
+# Olympia Treasury — Base-Fee Revenue for Ethereum Classic
 
-> The Olympia Treasury is an immutable, protocol-controlled vault that receives EIP-1559 basefee revenue and disburses funds through on-chain governance. Non-inflationary, transparent, and auditable.
+> Live monitoring of Ethereum Classic's base-fee revenue: the immutable Olympia Sovereignty Vault that receives it, and the Olympia Treasury that holds it under on-chain governance. Non-inflationary, transparent, auditable, and read-only — no wallet is connected.
 
-## What is the Olympia Treasury?
+## One system, two contracts
 
-The Olympia Treasury (ECIP-1112) is an immutable, protocol-controlled vault funded by EIP-1559 basefee revenue from every block on Ethereum Classic. It exposes exactly one external function, `withdraw(recipient, amount)`, callable only by the Olympia DAO's Executor. It validates nothing: no proposal checks, no metadata hashing, no governance logic, and no duplicate-execution tracking, which it could not perform since it receives only a recipient and an amount. No new ETC coins are minted. All withdrawals require on-chain governance approval.
+This site monitors two addresses, and the difference between them is the whole design.
 
-## Olympia Protocol Upgrade
+| | Olympia Sovereignty Vault | Olympia Treasury |
+|---|---|---|
+| Spec | ECIP-1112 | ECIP-1113 §1.3 |
+| Is | the permanent hardcoded BASEFEE destination | the stock OpenZeppelin TimelockController |
+| Funds | land here | live here while governance decides |
+| Balance means | revenue arrived and not yet swept | funds under governance control |
+| Changes by | consensus credit in, sweep() out | sweep() in, executed proposals out |
+| Lifetime | immutable, never replaced | replaceable by governance, no fork |
 
-Olympia is Ethereum Classic's most significant protocol upgrade: delivering the EVM ecosystem's most widely adopted fee market, a protocol-controlled treasury, and Glamsterdam-era EVM alignment to the only Proof-of-Work smart contract platform in the world.
+An empty Vault beside a funded Treasury means revenue completed its journey, not that revenue is missing.
 
-**ECIP-1111, EIP-1559 Fee Market:** Unlike Ethereum where the basefee is burned, ETC redirects it to the protocol treasury. That is the mechanism funding open-source core development without any foundation or donor dependency. Dynamic gas pricing delivers predictable fees for users and applications. Fully additive: legacy transactions remain valid indefinitely. Miner block rewards and tips remain completely untouched.
+Exactly one contract in Olympia is permanent, and it is the Vault. The Treasury is emphatically not immutable: it is replaceable by ordinary governance without a hard fork, as are the Governor, CoreNFT, the sanctions oracle and the OFP Registry. Never attribute the Treasury to ECIP-1112 — that ECIP specifies the Vault and only the Vault.
 
-**ECIP-1112, Protocol Treasury:** An immutable vault with a single withdrawal entry point callable only by the DAO's Executor. No admin keys, no multisig, no upgrade path. It deploys at the hard fork via plain CREATE from a reserved deployer nonce; the governance suite that spends from it deploys later. Only on-chain governance can release funds.
+## The Olympia Sovereignty Vault (ECIP-1112)
 
-**ECIP-1121, EVM Compatibility:** Advances the ETC execution layer through Dencun (Cancun-Deneb), Pectra (Prague-Electra), and Fusaka (Fulu-Osaka), and carries that work into Glamsterdam (Gloas-Amsterdam). ETC implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deferring the EIP-1559 fee market for independent governance design. ECIP-1111 delivers those deferred London fee market EIPs (EIP-1559). ECIP-1121 delivers the remaining execution-layer EIPs from Dencun, Pectra, and Fusaka that are independent of Proof-of-Stake and blob data availability, plus the two Glamsterdam execution-layer EIPs that carry no blocking dependency.
+The contract at the address ECIP-1111 credits at the consensus layer, and the only permanent contract in the Olympia suite. It has no owner, no role, no setter and no parameter. Its entire behavior is to receive value and forward it, unchanged, to one address fixed at construction — the ECIP-1113 TimelockController.
 
-Glamsterdam EVM alignment: 18 EIPs spanning London through Glamsterdam, grouped as in ECIP-1121's Specification:
+- **Balance leaves only through sweep().** There is no other state-changing function, no fallback that moves value, no delegatecall, no selfdestruct.
+- **sweep() can send only to `destination`.** The recipient is immutable and is not a parameter of any function, which is exactly why sweep() can be permissionless: a caller chooses only when the balance moves, never where. This inverts the OP Stack BaseFeeVault pattern, whose recipient is mutable state behind a proxy — the one property of that design that must not be copied.
+- **There is no authorization state to corrupt.** No owner, role, admin, guardian, pause flag or setter exists, so no sequence of calls can change who may do what.
+- **No internal accounting.** The Vault must not track received value in a state variable. The ECIP-1111 credit is a direct state write performed during block finalization: it executes no EVM code, so no receive() body runs, no event fires, and no counter increments. A contract releasing funds against an internal total would release nothing.
+- **No minimum sweep threshold**, deliberately. On a chain whose revenue is small until adoption grows, a threshold is a way for funds to be stranded below it.
+- **Swept(destination, amount) is the only event**, emitted before the external call and carrying no governance metadata.
+- **Nothing causes sweep() to be called.** It is permissionless and unincentivized, so at low revenue the gas can exceed the amount moved. A funding proposal that executes while the balance still sits in the Vault reverts for want of value in the Timelock, so a disbursement batch should lead with a sweep. Nothing is stranded — anyone may call it at any time, including the DAO.
+- **Nothing is predicted.** No salted derivation, no init-code freeze, no reserved deployer nonce, and no address computed in advance is permitted as the basis of the consensus commitment. Clients hardcode the published deployed address and must not recompute it. Mainnet (chain 61) and Mordor (chain 63) are independent published values and are not required to be equal.
+
+## The Olympia Treasury (ECIP-1113 §1.3)
+
+The Olympia Treasury is OpenZeppelin's TimelockController, unmodified. It custodies the base-fee revenue the Vault sweeps into it, and it is that Vault's immutable destination. Its delay is strictly greater than zero; only the Governor may queue or trigger execution; batched actions execute atomically or revert entirely.
+
+The Timelock forwards arbitrary (target, value, payload) operations, and that capability is required rather than tolerated: seeding an Affiliated DAO, funding milestone-gated disbursement, and running a smoothing schedule all need the Treasury to interact with contracts rather than merely pay addresses. What bounds the capability is the execution gate above it, not the Timelock's own interface.
+
+**There is no separate executor contract, and none may be introduced.** Execution is TimelockController.execute()/executeBatch(), gated on EXECUTOR_ROLE, which is granted to the Governor and to nothing else. The compliance checkpoint is an override on the Governor's own execution path — a virtual function OpenZeppelin declares for the purpose — not a contract.
+
+## Why two contracts rather than one
+
+Because the address consensus commits to can only change by hard fork, while governance must be able to change without one. Connecting a permanent address directly to a mutable governance stack forces every component that address transitively commits to become permanent as well.
+
+So the network makes the smallest, most auditable object permanent: a contract with no authorization at all, whose whole security argument is decidable by reading roughly thirty lines. Everything mutable lives strictly downstream and is replaceable by ordinary governance. That is what makes the Treasury replaceable, and it is the single largest structural gain in the design.
+
+A Treasury replacement is a governance program rather than a single act: the incumbent remains the standing inbox for base-fee revenue, so it forwards to its successor for as long as revenue keeps arriving. What it never requires is a fork.
+
+## How funds move
+
+1. **Consensus credits the Vault** at block finalization, as a direct state write that executes no EVM code.
+2. **sweep() moves the balance to the Treasury.** Permissionless, costs the caller gas, safe because the destination is immutable. No minimum threshold.
+3. **Swept(destination, amount) is emitted**, before the external call.
+4. **The Treasury holds the funds** until a passed proposal releases them, through the Governor.
+
+```
+BASEFEE → ECIP-1112 Vault → ECIP-1113 Treasury → OFP seeds a season → ECIP-1117 allocates
+                              (Olympia DAO votes)     (ECIP-1114)        (the public decides)
+```
+
+## What this dashboard can and cannot show
+
+- **No on-chain total exists.** The ECIP-1111 credit runs no EVM code and the Vault keeps no counter, so a "total received" figure is derived off-chain — from block headers (gasUsed × baseFeePerGas) or from an explorer's balance history. This site derives it from the explorer's balance history, as current balance plus everything that has left.
+- **A lifetime inflow figure is total received, not base-fee revenue.** It counts every source, including blocks mined with the Vault as coinbase and direct contributions.
+- **A balance delta between sweeps is not base-fee revenue either.** sweep() is permissionless, so period boundaries are caller-chosen, and direct contributions are an intended path. ECIP-1115 §2.1 rejects both sources by name.
+- **The only event is Swept.** Anything presented as a receipt log is a sweep log, and the two differ: value arrives many times between sweeps.
+- **Time since last sweep, and balance sitting unswept, are what this dashboard surfaces** in place of a figure the chain does not keep.
+
+## Olympia protocol upgrade
+
+Olympia is Ethereum Classic's most significant protocol upgrade: the EVM ecosystem's most widely adopted fee market, a protocol-governed treasury, and Glamsterdam-era EVM alignment, delivered to the only Proof-of-Work smart contract platform in the world.
+
+**ECIP-1111, Base Fee Market and Vault Redirection:** activates EIP-1559 and EIP-3198. On Ethereum the base fee is destroyed — the burned half of what every transaction pays — while the tip goes to the block producer. Ethereum Classic has no base fee today at all: EIP-1559 is not active here, so the component does not exist rather than being zero. This ECIP introduces it and credits it to the Vault rather than burning it. The credit is the block-level product gasUsed × baseFeePerGas, computed once at finalization. A MIN_BASE_FEE floor of 1 gwei keeps the revenue from decaying to zero, because below one percent block utilization there is no congestion for EIP-1559 to price. Fully additive: legacy transactions remain valid indefinitely. Miner block rewards and priority-fee tips are unaffected.
+
+**ECIP-1112, Sovereignty Vault:** the one permanent contract. See above.
+
+**ECIP-1121, EVM Compatibility:** advances the ETC execution layer through Dencun (Cancun-Deneb), Pectra (Prague-Electra), and Fusaka (Fulu-Osaka), and carries that work into Glamsterdam (Gloas-Amsterdam). ETC implemented partial London EIPs in Mystique (2022) and partial Shanghai EIPs in Spiral (2024), deferring the EIP-1559 fee market for independent governance design. ECIP-1111 delivers those deferred London fee market EIPs. ECIP-1121 delivers the remaining execution-layer EIPs from Dencun, Pectra and Fusaka that are independent of Proof-of-Stake and blob data availability, plus the two Glamsterdam execution-layer EIPs that carry no blocking dependency.
+
+**ECIP-1122, Network Security Configuration:** three client parameters activating at the same block. A 1 gwei minimum miner tip keeps block production economically rational as fixed emission declines. The gas target becomes network-authoritative, overriding operator configuration rather than defaulting. MESS is restored, returning the chain-reorganization resistance its deactivation window removed.
+
+EVM alignment: 18 EIPs spanning London through Glamsterdam, grouped as in ECIP-1121's Specification:
 - Gas Accounting and State Access: EIP-7702 (set code for EOAs), EIP-7623 (increase calldata cost), EIP-7825 (transaction gas limit cap), EIP-7823 (MODEXP input bounds), EIP-7883 (MODEXP gas cost increase), EIP-7935 (60M gas target, network-authoritative on ETC)
-- EVM Safety and Forward Compatibility: EIP-6780 (SELFDESTRUCT only in same transaction), EIP-7934 (RLP block size limit, 8 MiB on ETC), EIP-7910 (eth_config JSON-RPC method), EIP-7997 (deterministic CREATE2 factory)
+- EVM Safety and Forward Compatibility: EIP-6780 (SELFDESTRUCT only in same transaction), EIP-7934 (RLP block size limit, 8 MiB), EIP-7910 (eth_config JSON-RPC method), EIP-7997 (deterministic factory contract)
 - Cryptographic and Precompile Enhancements: EIP-2537 (BLS12-381 for ZK-friendly proofs), EIP-7951 (P256VERIFY for WebAuthn / passkeys)
 - Execution Context Optimizations: EIP-5656 (MCOPY memory copy), EIP-2935 (historical block hashes in state), EIP-1153 (transient storage TSTORE/TLOAD), EIP-7939 (CLZ opcode)
 - Networking: EIP-7642 (eth/69), EIP-7975 (eth/70). Both activate through devp2p capability negotiation, not a hard fork.
 
-Glamsterdam scope: of Glamsterdam's seven execution-layer EIPs, ECIP-1121 includes two: EIP-7975 (eth/70) and EIP-7997 (deterministic CREATE2 factory). The other five are blocked behind EIP-7928 (Block-Level Access Lists), a consensus-layer change that requires its own ECIP, and behind EIP-4788, which ETC excludes as beacon-chain dependent. These are dependency exclusions, not Proof-of-Stake exclusions.
+Glamsterdam scope: of Glamsterdam's seven execution-layer EIPs, ECIP-1121 includes two — EIP-7975 (eth/70) and EIP-7997 (deterministic factory contract). The other five are blocked behind EIP-7928 (Block-Level Access Lists), a consensus-layer change that requires its own ECIP, and behind EIP-4788, which ETC excludes as beacon-chain dependent. These are dependency exclusions, not Proof-of-Stake exclusions, and this is not full Glamsterdam parity.
 
 Explicitly excluded: all blob-dependent EIPs (EIP-4844, EIP-7516, EIP-7691). Ethereum Classic is a pure Layer 1 execution chain with no data availability requirement. Blobs are L2 scaffolding ETC does not need.
 
 Developer impact: Solidity 0.8.x+, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification or ETC-specific forks after Olympia.
 
-## Activation Status
+## Funding proposals
 
-Olympia is in final testing on the Mordor Testnet and targeted for mainnet activation in 2027. The activation block is TBD, announced after the Olympia Upgrade core developers call. All client implementations publish Olympia-compatible releases well before activation.
+An Olympia Funding Proposal (OFP, ECIP-1114) names recipient, amount and content-addressed metadata. Submission is permissionless and carries no bond, subject only to the Governor's proposalThreshold() measured against the author's own voting power — the Registry calls proposeFor() rather than propose(). There is no bond, no slash, and no intake review; the last would imply an off-chain gatekeeper ECIP-1114 forbids.
 
-## How Funds Flow
+The OFP Registry is the standard path, not a chokepoint. Governor.propose() is public by design, so a proposal targeting the Timelock reaches the same pipeline without touching the Registry — facing identical voting, quorum, Timelock and gate constraints, but arriving without a payout identifier or content-addressed metadata. The path to funds is exclusive; the Registry is not.
 
-1. **Base Fee Collected:** The base fee is not the transaction fee. Under EIP-1559 a transaction pays a base fee plus a priority-fee tip; Ethereum Mainnet burns the base fee and pays the tip to the block producer. Olympia changes the destination of the burned half only, crediting it to the Treasury at block finalization as the block-level product of gas used and base fee per gas. Priority-fee tips and ECIP-1017 block rewards continue to be paid to miners in full.
-2. **A Floor Under Revenue:** The basefee never falls below MIN_BASE_FEE = 1 gwei (ECIP-1111). Without it, sustained low utilization would decay the basefee toward zero and eliminate Treasury revenue.
-3. **Voluntary Inflows:** The Treasury accepts ordinary transfers from any address and emits a Received event. Smart contracts may opt in to forward a share of their fees; those funds become ordinary Treasury balance with no special claim.
-4. **Proposals Submitted:** An Olympia Funding Proposal (OFP, ECIP-1114) names recipient, amount and content-addressed metadata. Submission is permissionless, subject to the Governor's proposalThreshold() measured against the author's own voting power.
+An OFP takes one of two forms, stated in its metadata. **Retrospective is the preferred form:** the work is already complete and independently verifiable when the proposal is submitted, so the DAO votes on delivered work and the proposal carries evidence — merged changes, a published audit, an operated service with a usage record — rather than a plan. **Prospective** funding is available where the work cannot reasonably be delivered first, such as a third-party audit, infrastructure that must be paid for before it can run, or sustained work no contributor can self-finance; such a proposal must say why, and should pay against verified milestones rather than as a lump sum. Two things follow and are easy to get backwards: completed work creates **no claim** on the Treasury, since a retrospective OFP may be declined like any other. And the preference is a **governance norm, not a contract rule** — nothing in the contracts distinguishes the two forms, and voters enforce the preference by how they vote.
 
-   An OFP takes one of two forms, stated in its metadata. **Retrospective is the preferred form:** the work is already complete and independently verifiable when the proposal is submitted, so the DAO votes on delivered work and the proposal carries evidence such as merged changes, a published audit, or an operated service with a usage record, rather than a plan. **Prospective** funding is available where the work cannot reasonably be delivered first, such as a third-party audit, infrastructure that must be paid for before it can run, or sustained work no contributor can self-finance; such a proposal must say why, and should pay against verified milestones rather than as a lump sum. Two things follow and are easy to get backwards: completed work creates **no claim** on the Treasury, since a retrospective OFP may be declined like any other and performing work confers no entitlement to payment. The preference is also a **governance norm, not a contract rule**. Nothing in the contracts distinguishes the two forms; both reach the Treasury through the same pipeline, and voters enforce the preference by how they vote.
-5. **Governance Approves:** Core contributors vote. Approval is a strict majority of For over Against, with Abstain counting toward quorum only; quorum is a governance-updatable fraction of total voting supply. Only the Executor can then call the Treasury.
+ECIP-1118 specifies milestone-gated disbursement as an alternative to lump-sum payment, available to any Olympia funding proposal rather than only futarchy-originated ones. Lump-sum payment gives a recipient the whole allocation before any work is verified; milestone-gating releases funds against verified deliverables and permits governance to reclaim the undisbursed remainder if a project fails.
 
-The Treasury's share is the whole basefee under ECIP-1111. If ECIP-1116 later activates at a second hard fork, a fraction f is paid directly to miners at block finalization and the Treasury receives the remainder. That is a consensus change, not a governance decision.
+Approval is a strict majority of For over Against under GovernorCountingSimple, with Abstain counting toward quorum only. There is no configurable approval percentage and no supermajority. Quorum is a governance-updatable fraction of total voting supply, measured at each proposal's snapshot.
 
-## Core Invariants
+## Core invariants
 
-- No Minting: Cannot mint ETC, only holds received inflows
-- Immutable Code: No proxy patterns, no admin methods
-- Protocol-Controlled: Owned by protocol rules, not a multisig
-- Minimal Interface: Accepts deposits and exposes a single withdrawal entry point, `withdraw(recipient, amount)`, callable only by the Executor
-- Fully Transparent: All inflows and outflows visible on-chain
+- No minting: neither contract can mint ETC; each holds only what it receives
+- Immutable Vault: no proxy, no delegatecall, no selfdestruct, no admin; deployed exactly once
+- No authorization state: no owner, role, guardian or pause flag on the Vault, so no sequence of calls can change who may do what
+- One way out: balance leaves the Vault only through sweep(), and sweep() can send only to the immutable destination
+- No internal accounting: the Vault keeps no deposit counter, because the consensus credit runs no EVM code
+- Fully transparent: every inflow and outflow at both addresses is visible on-chain
 
-## Security Model
+## Security model
 
-Governance stack: OpenZeppelin Governor 5.x → TimelockController → Executor → Treasury. This pipeline is the exclusive on-chain path to Treasury funds; no multisig, committee, foundation or legal wrapper can override it.
+The Governor is the Timelock's sole executor, and that is the only path to Treasury funds; no multisig, committee, foundation or legal wrapper can override it.
 
-- Protocol Consensus: Client implementations enforce treasury rules at the protocol level
-- Contract Immutability: No upgradeable proxy, no admin methods. Of the Treasury, Timelock and Executor, none is upgradeable; the Governor is the sole replaceable component, swapped by Timelock role reassignment
-- No Admin Key: The Timelock is deployed with admin = address(0). No account, whether EOA, multisig or legal entity, ever holds its admin role at any point including deployment
-- Proposal Integrity: Enforced by OpenZeppelin Governor 5.x, whose proposal identifier is the hash of the target, value, calldata and description. The Treasury performs no proposal validation, metadata hashing, or governance logic of its own; `withdraw()` checks only that the caller is the Executor
-- Sanctions Defense (ECIP-1119): Every Olympia contract that releases value to a named recipient consults the oracle immediately before that release and reverts if the recipient is flagged or the oracle is unset. For Treasury disbursements the binding checkpoint is the Executor, and the compliance guarantee rests on it alone; the OFP Registry's submission-time check is a fail-fast convenience, not a second independent barrier. The guarantee is over receipt of funds, not over participation in governance
+- Protocol consensus: every client credits the base fee to the same hardcoded address at block finalization. Any deviation forks
+- A permanent commitment, minimized: what the fork makes unchangeable is only that revenue lands in the Timelock. Which Governor spends it, under which rules, and against which sanctions oracle are all replaceable through ordinary governance
+- Role invariants: EXECUTOR_ROLE must never be granted to address(0), which would make the role open and let anyone execute; it must be held by the Governor and by nothing else; and CANCELLER_ROLE must be held by the Governor and the Timelock itself and by no other account. All three are established at deployment, verified from chain state, and each is fatal if missed
+- Sanctions screening (ECIP-1119): the Governor screens every externally-directed target immediately before execution and fails closed if the oracle is unset. Placing the gate above the Timelock is what lets it see whole batches rather than one recipient at a time. The OFP Registry's submission check is a fail-fast convenience, not a second independent barrier. The guarantee is over receipt of funds, never over participation in governance
+- Proposal integrity: enforced by OpenZeppelin Governor 5.x, whose proposal identifier is the hash of targets, values, calldatas and description. Neither the Vault nor the Timelock validates a proposal
 
-## Governance Token: CoreNFT
+## Governance token: CoreNFT
 
 Olympia's governance token is CoreNFT (ECIP-1113 §1.2): a soulbound, non-transferable ERC-721 carrying exactly one non-delegable vote per core contributor. Voting power comes from it and from nothing else.
 
 - Earned, never bought: minted on proof of substantive, net-positive contribution to Ethereum Classic. It cannot be purchased or acquired from a holder, and no amount of capital admits anyone
+- No identity verification is required, and none may be imposed. Contribution is evidenced by the work itself, which is public and attributable without knowing who the contributor is. Pseudonymous contributors hold seats on the same terms as named ones
 - Contribution is not only code: client and specification work, security research and responsible disclosure, infrastructure operation, documentation and sustained technical review all qualify. Trivial changes do not; bad-faith conduct disqualifies and does not net against positive contributions
 - One contributor, one vote: minting reverts for an address that already holds one, and delegation is restricted to self so voting power cannot be leased. delegateBySig reverts
-- Supply is unbounded: the contributor set grows by governance proposal, one per admission, with the evidence in the proposal metadata. There is no minter role and no admissions committee. The DAO admits core contributors, or nobody does
+- Supply is unbounded: the contributor set grows by governance proposal, one per admission, with the evidence in the proposal metadata. There is no minter role and no admissions committee. Quorum tracks admissions automatically, because it is measured against total supply at each proposal's snapshot
 - Revocable and resignable: a core contributor may burn their own token at any time; the DAO may revoke by proposal on the same footing as admission. Burning is not retroactive and cannot withdraw a vote already cast. Re-admission is possible
 - No fungible token: Olympia has nothing to buy, sell, lend, pool or accumulate, and therefore nothing on which a market in votes could form
 
-Access to governance is gated; influence over it is not. The futarchy markets (ECIP-1117) are open to anyone holding ETC or Classic USD, with no CoreNFT and no application, and core contributors read those public prices as input. Who decides is restricted; who informs the decision is not.
+The electorate is open to earn and closed to buy — never a closed, exclusive, or fixed council.
 
-## Staged Deployment
+## Affiliated DAOs and futarchy
 
-The Treasury deploys at the Olympia hard fork (Stage 1). The governance suite deploys at Stage 2, once audited, against addresses predicted beforehand. Address derivation is split deliberately: the Treasury and Timelock derive from the deployer and a reserved nonce (CREATE), while CoreNFT, the Executor and the Governor derive from a salt and init code (CREATE2). Using the salted form for both halves of a pair would make the dependency circular; the split avoids it.
+An Affiliated DAO (ECIP-1113 §6) is a separate, mission-scoped body working alongside Ethereum Classic's Olympia DAO, not beneath it. Neither is the other's parent. Olympia DAO is scoped to the network's core — client development and maintenance, network security, critical infrastructure. An Affiliated DAO pursues a mandate Olympia DAO does not hold, and the core is not available as an Affiliated DAO mandate.
 
-Throughout Stage 1 the Treasury accumulates revenue that nothing can spend, because no contract exists at the Executor's address to call it. The lock is enforced by the absence of a callable counterpart rather than by any access-control decision. This is a design property, not a degraded mode.
+What binds them is funding, not hierarchy. An Affiliated DAO reaches the Treasury exactly as any other funded body does: by an ordinary ECIP-1114 proposal the main Governor votes on and the Timelock executes. It receives no standing allocation, no direct claim on the base fee, and no privileged interface.
 
-## Olympia Roadmap
+**Futarchy (ECIP-1117/1118) decides allocation.** The distinction is two-part and both halves matter:
 
-Olympia arrives in five stages (ECIP-1121). Stages 1 and 5 are hard forks; stages 2, 3 and 4 are not. Those are contract deployments and governance actions on a chain whose consensus rules are already settled, and none of them can cause a client to diverge. Each stage depends only on the stages before it.
+- **Olympia DAO decides whether and how much to seed a season** — a binding CoreNFT vote in the main Governor, competing against client maintenance and security response under the same quorum and the same voting period. It may confine a season to a stated theme. Futarchy has no authority there and no claim on the Treasury.
+- **Within a seeded season the market decides who receives grants.** ECIP-1117: "the community decides which projects receive grants and the decision is aggregated by markets rather than by a committee." ECIP-1113 §6: once transferred, "Olympia DAO has no say in how it is allocated."
 
-1. **Consensus Upgrades** (Active; ECIP-1111, 1112, 1121, 1122): The hard fork. Client and consensus changes activate; the Treasury deploys and begins accumulating basefee. Activation blocks are TBD on both Mordor and ETC Mainnet.
-2. **Core Governance** (Active; ECIP-1113, 1114, 1119): Contract deployment. The governance suite that spends the Stage 1 vault: Timelock, CoreNFT, Governor, Executor and OFPRegistry, then the sanctions oracle.
-3. **Prediction Markets** (Research; ECIP-1117, 1118, and 1119, which applies here too because funds move): Contract deployment, seeded by an OFP from the Stage 2 DAO. Futarchy runs as a Child-DAO producing public signals; it holds no Treasury-facing interface and receives no basefee directly. Collateral is ETC and Classic USD, custodied by the Conditional Token Framework rather than the Treasury. Binding authority stays with Ethereum Classic's Olympia DAO.
-4. **Treasury Distribution** (Future; ECIP-1115): Governance activation. An L-curve smoothing experiment on Treasury-held revenue, with the allocation fraction, window and curve shape all adjustable through governance without a fork. It runs while ECIP-1017 block rewards still secure the network, so the curve is measured rather than assumed.
-5. **Protocol Integration** (Future; ECIP-1116): The second hard fork. The curve ECIP-1115 demonstrated is embedded into block finalization, paid by the protocol rather than disbursed from the Treasury, and leaves governance control. It cannot activate before ECIP-1115 has been observed in production.
+Olympia DAO decides whether, how much, and within what scope; the public decides to whom. Futarchy is not advisory, not signal-only, and not non-binding.
 
-## Specified Contracts
+The allocation unit is a **season**, not a round. A season must be seeded before it opens, must not draw on another season's seed, and must not roll an unallocated remainder forward — absent a statement in the seeding proposal, a remainder returns to the Timelock. No season is automatic. The DAO itself is permanent; its seasons are not, and between them it holds nothing to allocate.
 
-Six contracts, deployed across two stages:
+Markets are open to anyone holding ETC or Classic USD, with no membership, application, sponsor or CoreNFT. Collateral is custodied by the Conditional Token Framework, never by the Treasury. No base fee is routed to any contract in ECIP-1117 or ECIP-1118; their infrastructure is funded by an ordinary executed OFP like any other line item. Access to governance is gated; influence over it is not.
 
-- OlympiaTreasury (CREATE, Stage 1): holds basefee revenue; one withdrawal entry point, callable only by the Executor
-- TimelockController (CREATE, Stage 2): mandatory execution delay; no admin key, ever
-- CoreNFT (CREATE2, Stage 2): governance token, soulbound, one non-delegable vote per core contributor
-- OlympiaGovernor (CREATE2, Stage 2): proposal lifecycle and vote tallying, on OpenZeppelin Governor 5.x
-- OlympiaExecutor (CREATE2, Stage 2): sole authorized caller of the Treasury; bytecode frozen at Stage 1
-- OFPRegistry (CREATE2, Stage 2): binds funding-proposal metadata to a Governor proposal
+## How Olympia is built: five stages
 
-## Deployed Contracts
+Stages 1 and 5 are hard forks; stages 2, 3 and 4 are not — they are contract deployments and governance actions on a chain whose consensus rules are already settled, and none of them can cause a client to diverge. Each stage depends only on the stages before it.
 
-The addresses this dashboard reads. Every figure on the dashboard is derived from these contracts on the selected network. Addresses are identical on Mordor Testnet (chain 63) and ETC Mainnet (chain 61):
+1. **Consensus Upgrades** (ECIP-1111, 1112, 1121, 1122): the hard fork. The Vault begins receiving base fee and sweeping it to the Timelock. Every contract the fork commits to is already deployed, audited and readable on-chain before that block.
+2. **Core Governance** (ECIP-1113, 1114, 1119): governance becomes able to spend. The sanctions oracle and the OFP Registry each attach through a Timelock-gated setter and are a constructor argument to nothing, so each may be audited and bound on either side of the fork. Until the oracle is bound the Governor's gate fails closed and revenue accrues unspendably.
+3. **Prediction Markets** (ECIP-1117, 1118, and 1119, which applies because funds move): contract deployment, seeded by an OFP the DAO passes.
+4. **Treasury Distribution** (ECIP-1115): smoothing runs as a governance-configured experiment on Treasury-held revenue, with allocation fraction, window and curve shape all adjustable without a fork. It runs while ECIP-1017 block rewards still secure the network, so the curve is measured rather than assumed.
+5. **Protocol Integration** (ECIP-1116): a second, separate hard fork embeds the demonstrated curve into block finalization, paid by the protocol rather than disbursed from the Treasury, and no longer governance-adjustable. It cannot activate before ECIP-1115 has been observed in production.
 
-- OlympiaTreasury: Protocol-controlled vault
-- OlympiaGovernor: On-chain governance
-- OlympiaExecutor: Proposal execution
-- TimelockController: Security timelock
-- OFPRegistry: Proposal registry
-- OlympiaMemberNFT: Non-transferable membership NFT
-- SanctionsOracle: Compliance screening
-- OlympiaMemberRenderer: On-chain SVG membership cards
-- MembershipVerifier: Sybil resistance
+Staging is a rollout schedule, not a deployment mechanism: stages 1 and 2 do not correspond to two rounds of deployment.
 
-## Client Implementations
+## Contract set
+
+Six contracts. Addresses are published per network with the network they are on, and are not derived, predicted or assumed equal across chains.
+
+- OlympiaSovereigntyVault (ECIP-1112): the permanent address consensus credits. No owner, no role, no setter, no parameter. It holds nothing for long
+- TimelockController (ECIP-1113 §1.3): the Olympia Treasury. Holds the funds and carries out approved proposals after a mandatory delay. Stock OpenZeppelin, replaceable by governance without a fork
+- OlympiaGovernor (ECIP-1113 §1.1): proposal lifecycle, vote tallying, and the execution-time compliance gate. The only account that can tell the Treasury to pay
+- CoreNFT (ECIP-1113 §1.2): soulbound membership. One non-delegable vote per core contributor, minted only by a passed proposal
+- SanctionsOracle (ECIP-1119): the list the Governor screens every outward address against before the Treasury releases anything
+- OFPRegistry (ECIP-1114): funding-proposal metadata, bound to the proposal that executes it so voters read what runs
+
+## Client implementations
 
 Two production Olympia implementations. Besu, Erigon, Ethrex, Go-Ethereum, Nethermind and Reth serve as upstream cross-client references rather than production Olympia implementations. ETC plugins are the path by which they reach Olympia.
 
@@ -126,15 +187,15 @@ Two production Olympia implementations. Besu, Erigon, Ethrex, Go-Ethereum, Nethe
 
 ETC plugins are the long-term path for the upstream clients: compatibility layers on those codebases, so no dedicated fork has to be maintained.
 
-Node operators must upgrade before the activation block. Block rewards and tips remain completely untouched. The Olympia upgrade only redirects EIP-1559 basefee to the treasury.
+Node operators must upgrade before the activation block. Block rewards and priority-fee tips are untouched by the whole suite.
 
 ## Network
 
 - Mordor Testnet: Chain ID 63
 - ETC Mainnet: Chain ID 61
-- Activation Block: TBD, announced after the Olympia Upgrade core developers call
+- Cross-client state-transition equivalence is demonstrated on Mordor before a Mainnet activation block is scheduled
 
-## Regulatory Positioning
+## Regulatory positioning
 
 ETC's regulatory surface spans two distinct trajectories: the commodity classification path that Proof-of-Work networks established, and the programmable finance frameworks being built around smart contract platforms.
 
@@ -143,56 +204,56 @@ ETC's regulatory surface spans two distinct trajectories: the commodity classifi
 - European Union: decentralized asset under MiCA (Markets in Crypto-Assets Regulation), exempt from issuer obligations as a fully decentralized protocol
 - Japan: recognized crypto-asset on the FSA Green List (JVCEA), fast-track listing across all Japanese regulated exchanges
 
-## Web Properties
+## Web properties
 
-- olympiatreasury.org: This site (treasury monitoring dashboard)
-- olympiadao.org: Governance landing page
-- app.olympiadao.org: Proposal submission, voting, and execution
-- ethereumclassicdao.org: Institutional (Ethereum Classic DAO LLC)
-- github.com/olympiadao: Open-source repositories
+- olympiatreasury.org: this site (Vault and Treasury monitoring dashboard)
+- olympiadao.org: governance landing page
+- app.olympiadao.org: proposal submission, voting, and execution
+- ethereumclassicdao.org: institutional (Ethereum Classic DAO LLC)
+- github.com/olympiadao: open-source repositories
 
-## Frequently Asked Questions
+## Frequently asked questions
 
 These mirror the FAQ rendered on /upgrade; the page and this file are kept in sync.
 
 **Who is coordinating the Olympia upgrade?**
-Olympia is coordinated by the same developers, organizations, and community stewards who have delivered every Ethereum Classic network upgrade since 2016: Gotham, Die Hard, Defuse Difficulty Bomb, Thanos, and the full EVM compatibility series spanning Gas Reprice, Atlantis, Agharta, Phoenix, Magneto, Mystique, and Spiral. The ETC Cooperative, a US 501(c)(3) non-profit, funds Ethereum Classic's client development teams and has managed the hard fork coordination process throughout that history. Stakeholder outreach, client release sequencing, and cross-client testing are all established practice. Olympia is a significant upgrade carried forward by a team with a clean delivery record across a decade of ETC network upgrades.
+Olympia is coordinated by the same developers, organizations, and community stewards who have delivered every Ethereum Classic network upgrade since 2016: Gotham, Die Hard, Defuse Difficulty Bomb, Thanos, and the full EVM compatibility series spanning Gas Reprice, Atlantis, Agharta, Phoenix, Magneto, Mystique, and Spiral. The ETC Cooperative, a US 501(c)(3) non-profit, funds Ethereum Classic's client development teams and has managed the hard fork coordination process throughout that history. Stakeholder outreach, client release sequencing, and cross-client testing are all established practice.
 
 **What role has the ETC Cooperative played, and what changes with Olympia?**
-The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Every hard fork, every client release, and every cross-client coordination effort has been backed by their balance sheet. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by Ethereum Classic's Olympia DAO and disbursed by its on-chain Executor, extends beyond institutional dependency to a durable financial foundation that scales with network usage. The model changes, not the commitment. The ETC Cooperative continues as an active steward, and any developer, mining operation, hardware manufacturer, or individual worldwide can now contribute directly on-chain without fielding a team or managing a non-profit to do it.
+The ETC Cooperative is a US 501(c)(3) non-profit that has funded Ethereum Classic's core client development for years, contributing millions of dollars to the network's client teams and infrastructure through every upgrade cycle. Olympia is what they were building toward: a protocol-native funding model that does not depend on any single organization's continued generosity. The Olympia Treasury, governed on-chain by Ethereum Classic's Olympia DAO, extends beyond institutional dependency to a durable financial foundation that scales with network usage. The model changes, not the commitment.
 
 **What is Grayscale's role in Ethereum Classic's development?**
-Grayscale launched the Grayscale Ethereum Classic Trust (ETCG) in 2018, years before Bitcoin ETFs existed as a product category, and became a major institutional donor to the ETC Cooperative, indirectly funding the network's core client development at a time when no other investment product issuer was doing anything comparable. What Grayscale was practicing on Ethereum Classic in 2018 is now a recognized trend: ETF issuers funding protocol development, corporate treasury strategies reinvesting in network ecosystems. Taking that model on-chain is only possible on Ethereum Classic because ETC is the only Proof-of-Work blockchain with native smart contracts. Olympia DAO makes it permissionless, opening a direct on-chain contribution path to every holder, whether through ETCG, a direct wallet, or any future investment product.
+Grayscale launched the Grayscale Ethereum Classic Trust (ETCG) in 2018, years before Bitcoin ETFs existed as a product category, and became a major institutional donor to the ETC Cooperative, indirectly funding the network's core client development at a time when no other investment product issuer was doing anything comparable. Taking that model on-chain is only possible on Ethereum Classic because ETC is the only Proof-of-Work blockchain with native smart contracts. Olympia DAO makes it permissionless, opening a direct on-chain contribution path to every holder.
 
 **What does EVM alignment to Glamsterdam actually mean for builders?**
-ECIP-1121 closes years of EVM divergence in a single upgrade, delivering the execution-layer improvements from Dencun, Pectra, and Fusaka that are independent of Proof-of-Stake and blob data availability, and carrying that work into Glamsterdam. Before Olympia, ETC lagged behind on these EIPs, creating real friction for developers deploying across EVM chains. After Olympia, Solidity 0.8.x, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain. ETC could not credibly claim full tooling compatibility before Olympia. After Olympia, it can.
+ECIP-1121 closes years of EVM divergence in a single upgrade, delivering the execution-layer improvements from Dencun, Pectra, and Fusaka that are independent of Proof-of-Stake and blob data availability, and carrying that work into Glamsterdam. Solidity 0.8.x, Foundry, Hardhat, wagmi, viem, and ethers.js all work on ETC without modification, patching, or ETC-specific overrides. One codebase deploys to every EVM chain.
 
-**How does the protocol treasury work?**
-The base fee is not the transaction fee. Under EIP-1559 a transaction pays a base fee plus a priority-fee tip; Ethereum Mainnet burns the base fee and pays the tip to the block producer. Olympia changes the destination of the burned half only, crediting it to the Treasury at block finalization, with a 1 gwei floor so low utilization cannot decay it to zero. Priority-fee tips and ECIP-1017 block rewards continue to be paid to miners in full. The Treasury also accepts ordinary on-chain transfers from any address, and smart contracts may opt in to forward a share of their fees the same way. Once received, those funds are ordinary Treasury balance with no special claim attached. Any stakeholder, whether exchanges, custodians, miners, investment product issuers, or institutions holding ETC on behalf of fund shareholders, can contribute directly on-chain with no overhead. Stakeholders who prefer a traditional giving model can contribute through the ETC Cooperative, a US 501(c)(3) non-profit that accepts tax-deductible donations.
+**Where does base-fee revenue actually go?**
+Two contracts, in that order. On Ethereum a transaction's base fee is destroyed — the burned half of what every transaction pays — while the priority-fee tip goes to the block producer. Ethereum Classic has no base fee today at all: EIP-1559 is not active here, so the component does not exist rather than being zero. ECIP-1111 introduces it and credits it at block finalization to the Olympia Sovereignty Vault instead of burning it. A 1 gwei floor keeps that revenue from decaying to zero at low utilization. The Vault holds nothing for long: sweep() forwards its whole balance to a TimelockController, which is the Olympia Treasury, and that is where funds sit until a passed proposal releases them. The base fee is not the transaction fee — a transaction pays base fee plus a priority-fee tip, and tips and ECIP-1017 block rewards are untouched by the whole suite. Both contracts also accept ordinary transfers from any address, so exchanges, custodians, miners, investment product issuers, and institutions can contribute on-chain with no overhead. Stakeholders who prefer a traditional giving model can contribute through the ETC Cooperative, which accepts tax-deductible donations.
 
-**How was Olympia tested before mainnet?**
-Olympia activates on the Mordor testnet first. Mordor is Ethereum Classic's Proof-of-Work testnet and mirrors mainnet conditions closely. Multiple independent client implementations run the Mordor fork before any mainnet activation is scheduled. Cross-client validation using the Hive integration testing framework confirms consensus compatibility across implementations. The mainnet activation block is not set until Mordor has run cleanly and major network stakeholders, including exchanges, custodians, and mining pools, have confirmed readiness.
+**Why two contracts rather than one?**
+Because the address consensus commits to can only change by hard fork, and governance has to be able to change without one. Wiring a permanent address straight into a governance stack makes every component that address transitively commits to permanent as well. So the network makes the smallest possible thing permanent: a contract with no owner, no role, no setter and no parameter, whose entire behavior is to receive value and forward it unchanged to one immutable destination. Everything mutable — the Governor, the Timelock, CoreNFT, the sanctions oracle, the OFP Registry — lives strictly downstream and is replaceable by ordinary governance. Exactly one contract in Olympia is permanent, and it is the Vault.
 
-**When is the mainnet activation block?**
-Olympia is targeted for mainnet activation in 2027. The testnet activation block on Mordor is announced first. The mainnet activation block follows after a successful Mordor run and a coordinated stakeholder readiness check with exchanges, mining pools, node operators, and infrastructure providers. All client implementations publish Olympia-compatible releases well before activation. The process follows the same sequence used for every previous ETC hard fork.
+**How is Olympia tested, and how is an activation block chosen?**
+Mordor first. Mordor is Ethereum Classic's Proof-of-Work testnet and mirrors mainnet conditions closely, and cross-client state-transition equivalence must be demonstrated there before a mainnet activation block is scheduled. The mainnet block is set only after Mordor has run cleanly and network stakeholders — exchanges, custodians, mining pools, node operators and infrastructure providers — have confirmed readiness, and client releases are published well ahead of it. That sequence is the same one used for every previous ETC hard fork.
 
-**Will my miner rewards change?**
-No. Block rewards and tips remain completely untouched. Olympia redirects the EIP-1559 basefee to the protocol treasury. The basefee is a value that would otherwise be destroyed and has never been part of miner compensation. Miner revenue is unchanged.
+**Do miner rewards change?**
+ECIP-1017 block rewards and priority-fee tips are untouched by the whole Olympia suite. Two things are worth separating. At the minimum gas price, the Vault's gwei is new cost borne by the sender rather than a transfer out of miner revenue, and ECIP-1122's 1 gwei minimum miner tip makes the floor beneath the miner enforceable for the first time — today it is 1 wei by client default, with 1 gwei being a wallet convention rather than anything enforced. Above the floor, at a fixed total gas price, one gwei does move from the miner to the Vault. How large a share of fee income that is depends on the prevailing tip, and what bounds it is that fee income of either kind is small against ECIP-1017 subsidies at Ethereum Classic's measured utilization.
 
-**What happens if I don't upgrade my node?**
-Nodes that are not upgraded before the activation block will stop following the canonical chain. You will need to upgrade your client and resync from the fork point. Exchanges, wallets, RPC providers, and services running outdated clients will be unable to process transactions on the post-Olympia chain. Client release announcements are published well in advance to give operators time to upgrade.
+**What happens to a node that is not upgraded?**
+It stops following the canonical chain at the activation block, as with any consensus change. Recovering means upgrading the client and resyncing from the fork point. Exchanges, wallets, RPC providers, and services running outdated clients cannot process transactions on the post-Olympia chain. Client release announcements are published well in advance to give operators time to upgrade.
 
 **Is Ethereum Classic a security or commodity after Olympia?**
-Olympia strengthens ETC's regulatory profile. As a Proof-of-Work blockchain with no pre-mine, no ICO, no foundation controlling the protocol, and now a community-governed on-chain treasury, ETC is positioned for classification as a digital commodity under the CLARITY Act. In the EU, ETC qualifies as a decentralized asset under MiCA, exempt from per-asset issuer requirements. Japan's FSA lists ETC among approved digital assets. UK and UAE regulatory frameworks treat Proof-of-Work assets with distinct treatment from staking-based networks. The three-layer governance structure of protocol clients, Wyoming DAO LLC, and the on-chain Olympia DAO maintains clear decentralization while satisfying compliance requirements at the legal entity layer. The network remains decentralized, and governance is open to any qualified participant worldwide.
+Olympia strengthens ETC's regulatory profile. As a Proof-of-Work blockchain with no pre-mine, no ICO, no foundation controlling the protocol, and a community-governed on-chain treasury, ETC is positioned for classification as a digital commodity under the CLARITY Act. In the EU, ETC qualifies as a decentralized asset under MiCA, exempt from per-asset issuer requirements. Japan's FSA lists ETC among approved digital assets. UK and UAE regulatory frameworks treat Proof-of-Work assets distinctly from staking-based networks. The three-layer structure of protocol clients, Wyoming DAO LLC, and the on-chain Olympia DAO maintains clear decentralization while satisfying compliance requirements at the legal entity layer.
 
 **Can I roll back if something goes wrong?**
-In the unlikely event of a critical issue after activation, the same client teams that have managed every ETC emergency response since 2016 would coordinate a patch release promptly. The established stakeholder communication channels, including the ETC Cooperative, client maintainers, and major exchange contacts, are the same ones used for every previous upgrade. Olympia has broader test coverage across more independent client implementations than any previous ETC hard fork, and the Mordor testnet run provides a real network validation environment before mainnet activation.
+In the unlikely event of a critical issue after activation, the same client teams that have managed every ETC emergency response since 2016 coordinate a patch release. The established stakeholder communication channels, including the ETC Cooperative, client maintainers, and major exchange contacts, are the same ones used for every previous upgrade, and the Mordor run provides a real network validation environment before mainnet activation. One thing is worth stating plainly rather than overclaimed: the clients carrying this work are forks maintained by the specification's own authoring team, so agreement between them shows the rule runs, not that four teams read the specification the same way. Cross-client test vectors are what convert that into independent confirmation.
 
 ## Authors
 
 - Cody Burns (github.com/realcodywburns)
 - Chris Mercer (github.com/chris-mercer)
 
-## Parent Organization
+## Parent organization
 
 Ethereum Classic DAO LLC, a Wyoming DAO LLC (Filing ID 2025-001671865)
